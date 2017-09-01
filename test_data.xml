@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hmdb xmlns="http://www.hmdb.ca">
+<metabolite>
+  <version>3.6</version>
+  <creation_date>2005-11-16 15:48:42 UTC</creation_date>
+  <update_date>2017-07-25 19:49:26 UTC</update_date>
+  <accession>HMDB00008</accession>
+  <secondary_accessions>
+  </secondary_accessions>
+  <name>2-Hydroxybutyric acid</name>
+  <description>2-Hydroxybutyric acid (alpha-hydroxybutyrate) is an organic acid derived from alpha-ketobutyrate. Alpha-ketobutyrate is produced by amino acid catabolism (threonine and methionine) and glutathione anabolism (cysteine formation pathway) and is metabolized to propionyl-CoA and carbon dioxide (PMID: 20526369 ). 2-Hydroxybutyric acid is formed as a by-product during the formation of Alpha-ketobutyrate via a reaction catalyzed by lactate dehydrogenase (LDH) or alpha–hydroxybutyrate dehydrogenase (alpha–HBDH). Alpha-hydroxybutyric acid is primarily produced in mammalian hepatic tissues that catabolize L-threonine or synthesize glutathione. Oxidative stress or detoxification of xenobiotics in the liver can dramatically increase the rate of hepatic glutathione synthesis. Under such metabolic stress conditions, supplies of L-cysteine for glutathione synthesis become limiting, so homocysteine is diverted from the transmethylation pathway (which forms methionine) into the transsulfuration pathway (which forms cystathionine). 2-Hydroxybutyrate is released as a byproduct when cystathionine is cleaved to cysteine that is incorporated into glutathione. Chronic shifts in the rate of glutathione synthesis may be reflected by urinary excretion of 2-hydroxybutyrate. 2-hydroxybutyrate is an early marker for both insulin resistance and impaired glucose regulation that appears to arise due to increased lipid oxidation and oxidative stress (PMID: 20526369 ). 2-Hydroxybutyric acid is often found in the urine of patients suffering from lactic acidosis and ketoacidosis. 2-Hydroxybutyric acid generally appears at high concentrations in situations related to deficient energy metabolism (e.g., birth asphyxia) and also in inherited metabolic diseases affecting the central nervous system during neonatal development, such as "cerebral" lactic acidosis, glutaric aciduria type II, dihydrolipoyl dehydrogenase (E3) deficiency, and propionic acidemia. More recently it has been noted that elevated levels of alpha-hydroxybutyrate in the plasma is a good marker for early stage type II diabetes (PMID:19166731 ). It was concluded from studies done in the mid 1970's that an increased NADH2/NAD ratio was the most important factor for the production of 2-hydroxybutyric acid (PMID:168632 ).</description>
+  <synonyms>
+    <synonym>(RS)-2-Hydroxybutyrate</synonym>
+    <synonym>(RS)-2-Hydroxybutyric acid</synonym>
+    <synonym>2-Hydroxy-Butanoate</synonym>
+  </synonyms>
+  <chemical_formula>C4H8O3</chemical_formula>
+  <average_molecular_weight>104.1045</average_molecular_weight>
+  <monisotopic_molecular_weight>104.047344122</monisotopic_molecular_weight>
+  <iupac_name>2-hydroxybutanoic acid</iupac_name>
+  <traditional_iupac>α-hydroxybutyric acid</traditional_iupac>
+  <cas_registry_number>600-15-7</cas_registry_number>
+  <smiles>CCC(O)C(O)=O</smiles>
+  <inchi>InChI=1S/C4H8O3/c1-2-3(5)4(6)7/h3,5H,2H2,1H3,(H,6,7)</inchi>
+  <inchikey>AFENDNXGAFYKQO-UHFFFAOYSA-N</inchikey>
+  <ontology>
+    <status>quantified</status>
+    <origins>
+      <origin>Endogenous</origin>
+    </origins>
+    <biofunctions>
+    </biofunctions>
+    <applications>
+    </applications>
+    <cellular_locations>
+      <cellular_location>Cytoplasm</cellular_location>
+      <cellular_location>Extracellular</cellular_location>
+    </cellular_locations>
+  </ontology>
+  <state>Solid</state>
+  <experimental_properties>
+    <property>
+      <kind>melting_point</kind>
+      <value>44.2 °C</value>
+      <source></source>
+    </property>
+  </experimental_properties>
+  <predicted_properties>
+    <property>
+      <kind>logp</kind>
+      <value>-0.16</value>
+      <source>ALOGPS</source>
+    </property>
+    <property>
+      <kind>logs</kind>
+      <value>0.67</value>
+      <source>ALOGPS</source>
+    </property>
+    <property>
+      <kind>solubility</kind>
+      <value>484 g/L</value>
+      <source>ALOGPS</source>
+    </property>
+    <property>
+      <kind>logp</kind>
+      <value>0.051</value>
+      <source>ChemAxon</source>
+    </property>
+  </predicted_properties>
+  <spectra>
+    <spectrum>
+      <type>Specdb::CMs</type>
+      <spectrum_id>278</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::CMs</type>
+      <spectrum_id>279</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::CMs</type>
+      <spectrum_id>919</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::CMs</type>
+      <spectrum_id>3385</spectrum_id>
+    </spectrum>
+  </spectra>
+  <biofluid_locations>
+    <biofluid>Blood</biofluid>
+    <biofluid>Cerebrospinal Fluid (CSF)</biofluid>
+    <biofluid>Feces</biofluid>
+    <biofluid>Saliva</biofluid>
+    <biofluid>Sweat</biofluid>
+    <biofluid>Urine</biofluid>
+  </biofluid_locations>
+  <tissue_locations>
+    <tissue>Prostate</tissue>
+  </tissue_locations>
+  <pathways>
+  </pathways>
+  <normal_concentrations>
+    <concentration>
+      <biofluid>Blood</biofluid>
+      <concentration_value>8.00-80.0</concentration_value>
+      <concentration_units>uM</concentration_units>
+      <subject_age>Adult (&gt;18 years old)</subject_age>
+      <subject_sex>Both</subject_sex>
+      <subject_condition>Normal</subject_condition>
+      <references>
+        <reference>
+          <reference_text>Hoffmann GF, Meier-Augenstein W, Stockler S, Surtees R, Rating D, Nyhan WL: Physiology and pathophysiology of organic acids in cerebrospinal fluid. J Inherit Metab Dis. 1993;16(4):648-69.</reference_text>
+          <pubmed_id>8412012</pubmed_id>
+        </reference>
+      </references>
+    </concentration>
+    <concentration>
+      <biofluid>Blood</biofluid>
+      <concentration_value></concentration_value>
+      <concentration_units></concentration_units>
+      <subject_age>Adult (&gt;18 years old)</subject_age>
+      <subject_sex>Both</subject_sex>
+      <subject_condition>Normal</subject_condition>
+      <comment>Detected by GC-TOFMS</comment>
+      <references>
+        <reference>
+          <reference_text>Yang J, Chen T, Sun L, Zhao Z, Qi X, Zhou K, Cao Y, Wang X, Qiu Y, Su M, Zhao A, Wang P, Yang P, Wu J, Feng G, He L, Jia W, Wan C: Potential metabolite markers of schizophrenia. Mol Psychiatry. 2013 Jan;18(1):67-78. doi: 10.1038/mp.2011.131. Epub 2011 Oct 25.</reference_text>
+          <pubmed_id>22024767</pubmed_id>
+        </reference>
+      </references>
+    </concentration>
+  </abnormal_concentrations>
+  <diseases>
+    <disease>
+      <name>Schizophrenia</name>
+      <omim_id>181500</omim_id>
+      <references>
+        <reference>
+          <reference_text>Harnryd C, Bjerkenstedt L, Grimm VE, Sedvall G: Reduction of MOPEG levels in cerebrospinal fluid of psychotic women after electroconvulsive treatment. Psychopharmacology (Berl). 1979 Aug 8;64(2):131-4.</reference_text>
+          <pubmed_id>115032</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Prell GD, Green JP, Kaufmann CA, Khandelwal JK, Morrishow AM, Kirch DG, Linnoila M, Wyatt RJ: Histamine metabolites in cerebrospinal fluid of patients with chronic schizophrenia: their relationships to levels of other aminergic transmitters and ratings of symptoms. Schizophr Res. 1995 Jan;14(2):93-104.</reference_text>
+          <pubmed_id>7711000</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Alfredsson G, Wiesel FA: Monoamine metabolites and amino acids in serum from schizophrenic patients before and during sulpiride treatment. Psychopharmacology (Berl). 1989;99(3):322-7.</reference_text>
+          <pubmed_id>2480613</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Do KQ, Lauer CJ, Schreiber W, Zollinger M, Gutteck-Amsler U, Cuenod M, Holsboer F: gamma-Glutamylglutamine and taurine concentrations are decreased in the cerebrospinal fluid of drug-naive patients with schizophrenic disorders. J Neurochem. 1995 Dec;65(6):2652-62.</reference_text>
+          <pubmed_id>7595563</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Kobayashi K, Koide Y, Yoshino K, Shohmori T: [P-hydroxyphenylacetic acid concentrations in cerebrospinal fluid]. No To Shinkei. 1982 Aug;34(8):769-74.</reference_text>
+          <pubmed_id>7126379</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Walker EF, Bonsall R, Walder DJ: Plasma hormones and catecholamine metabolites in monozygotic twins discordant for psychosis. Neuropsychiatry Neuropsychol Behav Neurol. 2002 Mar;15(1):10-7.</reference_text>
+          <pubmed_id>11877547</pubmed_id>
+        </reference>
+      </references>
+    </disease>
+    <disease>
+      <name>Pyruvate dehydrogenase deficiency</name>
+      <omim_id>312170</omim_id>
+      <references>
+        <reference>
+          <reference_text>OMIM 238331</reference_text>
+          <pubmed_id/>
+        </reference>
+      </references>
+    </disease>
+  </diseases>
+  <drugbank_id></drugbank_id>
+  <drugbank_metabolite_id/>
+  <phenol_explorer_compound_id/>
+  <phenol_explorer_metabolite_id/>
+  <foodb_id>FDB021867</foodb_id>
+  <knapsack_id></knapsack_id>
+  <chemspider_id>10792</chemspider_id>
+  <kegg_id>C05984</kegg_id>
+  <biocyc_id>CPD-3564</biocyc_id>
+  <bigg_id>47130</bigg_id>
+  <wikipidia>2-Hydroxybutyric acid</wikipidia>
+  <nugowiki>4</nugowiki>
+  <metagene></metagene>
+  <metlin_id>3783</metlin_id>
+  <pubchem_compound_id>11266</pubchem_compound_id>
+  <het_id></het_id>
+  <chebi_id>1148</chebi_id>
+  <synthesis_reference>Carlier, J. P.; Henry, C.; Lorin, V.; Rouffignat, K. Conversion of DL-threonine, D-threonine and 2-oxobutyrate into propionate and 2-hydroxybutyrate by Fusobacterium species. Letters in Applied Microbiology  (1997),  25(5),  371-374.  </synthesis_reference>
+  <general_references>
+    <reference>
+      <reference_text>Sweatman BC, Farrant RD, Holmes E, Ghauri FY, Nicholson JK, Lindon JC: 600 MHz 1H-NMR spectroscopy of human cerebrospinal fluid: effects of sample manipulation and assignment of resonances. J Pharm Biomed Anal. 1993 Aug;11(8):651-64.</reference_text>
+      <pubmed_id>8257730</pubmed_id>
+    </reference>
+  </general_references>
+  <protein_associations>
+    <protein>
+      <protein_accession>HMDBP00054</protein_accession>
+      <name>Dihydrolipoyl dehydrogenase, mitochondrial</name>
+      <uniprot_id>P09622</uniprot_id>
+      <gene_name>DLD</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00893</protein_accession>
+      <name>L-lactate dehydrogenase A-like 6A</name>
+      <uniprot_id>Q6ZMR3</uniprot_id>
+      <gene_name>LDHAL6A</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+  </protein_associations>
+</metabolite>
+<metabolite>
+  <version>3.6</version>
+  <creation_date>2005-11-16 15:48:42 UTC</creation_date>
+  <update_date>2017-07-19 16:32:14 UTC</update_date>
+  <accession>HMDB00064</accession>
+  <secondary_accessions>
+  </secondary_accessions>
+  <name>Creatine</name>
+  <description>Creatine is an amino acid that occurs in vertebrate tissues and in urine. In muscle tissue, creatine generally occurs as phosphocreatine. Creatine is excreted as creatinine in the urine. Creatine functions as part of the cell's energy shuttle. The high energy phosphate group of ATP is transferred to creatine to form phosphocreatine in the following reaction: Cr + ATP &lt;-&gt; PCr + ADP. This reaction is reversibly catalyzed by creatine kinase. In the human body creatine is synthesized mainly in the liver by the use of parts from three different amino acids - arginine, glycine, and methionine. 95% of it is later stored in the skeletal muscles, with the rest in the brain, heart, testes.</description>
+  <synonyms>
+    <synonym>((amino(imino)methyl)(methyl)amino)acetate</synonym>
+    <synonym>((amino(imino)methyl)(methyl)amino)acetic acid</synonym>
+    <synonym>(alpha-Methylguanido)acetate</synonym>
+    <synonym>(alpha-Methylguanido)acetic acid</synonym>
+  </synonyms>
+  <chemical_formula>C4H9N3O2</chemical_formula>
+  <average_molecular_weight>131.1332</average_molecular_weight>
+  <monisotopic_molecular_weight>131.069476547</monisotopic_molecular_weight>
+  <iupac_name>2-(1-methylcarbamimidamido)acetic acid</iupac_name>
+  <traditional_iupac>creatine</traditional_iupac>
+  <cas_registry_number>57-00-1</cas_registry_number>
+  <smiles>CN(CC(O)=O)C(N)=N</smiles>
+  <inchi>InChI=1S/C4H9N3O2/c1-7(4(5)6)2-3(8)9/h2H2,1H3,(H3,5,6)(H,8,9)</inchi>
+  <inchikey>CVSVTCORWBXHQV-UHFFFAOYSA-N</inchikey>
+  <taxonomy>
+    <description>This compound belongs to the class of chemical entities known as alpha amino acids and derivatives. These are amino acids in which the amino group is attached to the carbon atom immediately adjacent to the carboxylate group (alpha carbon), or a derivative thereof.</description>
+    <direct_parent>Alpha amino acids and derivatives</direct_parent>
+    <kingdom>Chemical entities</kingdom>
+    <super_class>Organic compounds</super_class>
+    <class>Organic acids and derivatives</class>
+    <sub_class>Carboxylic acids and derivatives</sub_class>
+    <molecular_framework>Aliphatic acyclic compounds</molecular_framework>
+    <alternative_parents>
+      <alternative_parent>Carbonyl compounds</alternative_parent>
+      <alternative_parent>Organopnictogen compounds</alternative_parent>
+    </alternative_parents>
+    <substituents>
+      <substituent>Aliphatic acyclic compound</substituent>
+      <substituent>Alpha-amino acid or derivatives</substituent>
+      <substituent>Carbonyl group</substituent>
+      <substituent>Organopnictogen compound</substituent>
+    </substituents>
+  </taxonomy>
+  <ontology>
+    <status>quantified</status>
+    <origins>
+      <origin>Endogenous</origin>
+    </origins>
+    <biofunctions>
+      <biofunction>Component of Arginine and proline metabolism</biofunction>
+      <biofunction>Component of Glycine, serine and threonine metabolism</biofunction>
+    </biofunctions>
+    <applications>
+    </applications>
+    <cellular_locations>
+      <cellular_location>Cytoplasm</cellular_location>
+      <cellular_location>Extracellular</cellular_location>
+      <cellular_location>Mitochondria</cellular_location>
+    </cellular_locations>
+  </ontology>
+  <state>Solid</state>
+  <experimental_properties>
+    <property>
+      <kind>water_solubility</kind>
+      <value>13.3 mg/mL at 18 °C</value>
+      <source/>
+    </property>
+    <property>
+      <kind>melting_point</kind>
+      <value>303 °C</value>
+      <source/>
+    </property>
+  </experimental_properties>
+  <predicted_properties>
+    <property>
+      <kind>logp</kind>
+      <value>-1.59</value>
+      <source>ALOGPS</source>
+    </property>
+  </predicted_properties>
+  <spectra>
+    <spectrum>
+      <type>Specdb::EiMs</type>
+      <spectrum_id>1033</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::NmrOneD</type>
+      <spectrum_id>1064</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::MsMs</type>
+      <spectrum_id>105</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::MsMs</type>
+      <spectrum_id>106</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::MsMs</type>
+      <spectrum_id>107</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::MsMs</type>
+      <spectrum_id>2716</spectrum_id>
+    </spectrum>
+  </spectra>
+  <biofluid_locations>
+    <biofluid>Blood</biofluid>
+    <biofluid>Breast Milk</biofluid>
+    <biofluid>Cerebrospinal Fluid (CSF)</biofluid>
+    <biofluid>Feces</biofluid>
+    <biofluid>Saliva</biofluid>
+    <biofluid>Sweat</biofluid>
+    <biofluid>Urine</biofluid>
+  </biofluid_locations>
+  <tissue_locations>
+    <tissue>Adipose Tissue</tissue>
+    <tissue>Platelet</tissue>
+    <tissue>Prostate</tissue>
+  </tissue_locations>
+  <pathways>
+    <pathway>
+      <name>3-Phosphoglycerate dehydrogenase deficiency</name>
+      <smpdb_id>SMP00721</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>Arginine and Proline Metabolism</name>
+      <smpdb_id>SMP00020</smpdb_id>
+      <kegg_map_id>map00330</kegg_map_id>
+    </pathway>
+  </pathways>
+  <normal_concentrations>
+    <concentration>
+      <biofluid>Blood</biofluid>
+      <concentration_value>54.8 +/-  21.0</concentration_value>
+      <concentration_units>uM</concentration_units>
+      <subject_age>Adult (&gt;18 years old)</subject_age>
+      <subject_sex>Female</subject_sex>
+      <subject_condition>Normal</subject_condition>
+      <references>
+        <reference>
+          <reference_text>Marescau B, De Deyn PP, Holvoet J, Possemiers I, Nagels G, Saxena V, Mahler C: Guanidino compounds in serum and urine of cirrhotic patients. Metabolism. 1995 May;44(5):584-8.</reference_text>
+          <pubmed_id>7752905</pubmed_id>
+        </reference>
+      </references>
+    </concentration>
+    <concentration>
+      <biofluid>Blood</biofluid>
+      <concentration_value>30.1 +/- 12.3</concentration_value>
+      <concentration_units>uM</concentration_units>
+      <subject_age>Adult (&gt;18 years old)</subject_age>
+      <subject_sex>Male</subject_sex>
+      <subject_condition>Normal</subject_condition>
+      <references>
+        <reference>
+          <reference_text>Marescau B, De Deyn PP, Holvoet J, Possemiers I, Nagels G, Saxena V, Mahler C: Guanidino compounds in serum and urine of cirrhotic patients. Metabolism. 1995 May;44(5):584-8.</reference_text>
+          <pubmed_id>7752905</pubmed_id>
+        </reference>
+      </references>
+    </concentration>
+    <concentration>
+      <biofluid>Blood</biofluid>
+      <concentration_value>84.0 +/- 23.2</concentration_value>
+      <concentration_units>uM</concentration_units>
+      <subject_age>Newborn (0-30 days old)</subject_age>
+      <subject_sex>Not Specified</subject_sex>
+      <subject_condition>Normal</subject_condition>
+      <references>
+        <reference>
+          <reference_text>Geigy Scientific Tables, 8th Rev edition, pp. 90. Edited by C. Lentner, West Cadwell, N.J.: Medical education Div., Ciba-Geigy Corp., Basel, Switzerland c1981-1992.</reference_text>
+          <pubmed_id/>
+        </reference>
+      </references>
+    </concentration>
+  </normal_concentrations>
+  <abnormal_concentrations>
+    <concentration>
+      <biofluid>Blood</biofluid>
+      <concentration_value>33.8 +/- 37.7</concentration_value>
+      <concentration_units>uM</concentration_units>
+      <patient_age>Adult (&gt;18 years old)</patient_age>
+      <patient_sex>Both</patient_sex>
+      <patient_information>Heart Transplant</patient_information>
+      <references>
+        <reference>
+          <reference_text>Psychogios N, Hau DD, Peng J, Guo AC, Mandal R, Bouatra S, Sinelnikov I, Krishnamurthy R, Eisner R, Gautam B, Young N, Xia J, Knox C, Dong E, Huang P, Hollander Z, Pedersen TL, Smith SR, Bamforth F, Greiner R, McManus B, Newman JW, Goodfriend T, Wishart DS: The human serum metabolome. PLoS One. 2011 Feb 16;6(2):e16957. doi: 10.1371/journal.pone.0016957.</reference_text>
+          <pubmed_id>21359215</pubmed_id>
+        </reference>
+      </references>
+    </concentration>
+    <concentration>
+      <biofluid>Blood</biofluid>
+      <concentration_value>40.3 (28.3-56.6)</concentration_value>
+      <concentration_units>uM</concentration_units>
+      <patient_age>Adult (&gt;18 years old)</patient_age>
+      <patient_sex>Female</patient_sex>
+      <patient_information>Cirrhosis</patient_information>
+      <references>
+        <reference>
+          <reference_text>Marescau B, De Deyn PP, Holvoet J, Possemiers I, Nagels G, Saxena V, Mahler C: Guanidino compounds in serum and urine of cirrhotic patients. Metabolism. 1995 May;44(5):584-8.</reference_text>
+          <pubmed_id>7752905</pubmed_id>
+        </reference>
+      </references>
+    </concentration>
+  </abnormal_concentrations>
+  <diseases>
+    <disease>
+      <name>Cirrhosis</name>
+      <omim_id/>
+      <references>
+        <reference>
+          <reference_text>Cynober LA: Plasma amino acid levels with a note on membrane transport: characteristics, regulation, and metabolic significance. Nutrition. 2002 Sep;18(9):761-6.</reference_text>
+          <pubmed_id>12297216</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Pinna G, Meinhold H, Hiedra L, Thoma R, Hoell T, Graf KJ, Stoltenburg-Didinger G, Eravci M, Prengel H, Brodel O, Finke R, Baumgartner A: Elevated 3,5-diiodothyronine concentrations in the sera of patients with nonthyroidal illnesses and brain tumors. J Clin Endocrinol Metab. 1997 May;82(5):1535-42.</reference_text>
+          <pubmed_id>9141546</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Halperin G, Elisaf M, Leitersdorf E, Harats D: A new method for determination of serum cholestanol by high-performance liquid chromatography with ultraviolet detection. J Chromatogr B Biomed Sci Appl. 2000 Jun 9;742(2):345-52.</reference_text>
+          <pubmed_id>10901139</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Yoshida Y: [Analysis of methionine metabolism studied by the gas chromatographic determination of 3-methylthiopropionate in urine and its clinical application]. Hokkaido Igaku Zasshi. 1985 Mar;60(2):183-94.</reference_text>
+          <pubmed_id>3997054</pubmed_id>
+        </reference>
+      </references>
+    </disease>
+    <disease>
+      <name>Schizophrenia</name>
+      <omim_id>181500</omim_id>
+      <references>
+        <reference>
+          <reference_text>Harnryd C, Bjerkenstedt L, Grimm VE, Sedvall G: Reduction of MOPEG levels in cerebrospinal fluid of psychotic women after electroconvulsive treatment. Psychopharmacology (Berl). 1979 Aug 8;64(2):131-4.</reference_text>
+          <pubmed_id>115032</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Prell GD, Green JP, Kaufmann CA, Khandelwal JK, Morrishow AM, Kirch DG, Linnoila M, Wyatt RJ: Histamine metabolites in cerebrospinal fluid of patients with chronic schizophrenia: their relationships to levels of other aminergic transmitters and ratings of symptoms. Schizophr Res. 1995 Jan;14(2):93-104.</reference_text>
+          <pubmed_id>7711000</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Alfredsson G, Wiesel FA: Monoamine metabolites and amino acids in serum from schizophrenic patients before and during sulpiride treatment. Psychopharmacology (Berl). 1989;99(3):322-7.</reference_text>
+          <pubmed_id>2480613</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Do KQ, Lauer CJ, Schreiber W, Zollinger M, Gutteck-Amsler U, Cuenod M, Holsboer F: gamma-Glutamylglutamine and taurine concentrations are decreased in the cerebrospinal fluid of drug-naive patients with schizophrenic disorders. J Neurochem. 1995 Dec;65(6):2652-62.</reference_text>
+          <pubmed_id>7595563</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Kobayashi K, Koide Y, Yoshino K, Shohmori T: [P-hydroxyphenylacetic acid concentrations in cerebrospinal fluid]. No To Shinkei. 1982 Aug;34(8):769-74.</reference_text>
+          <pubmed_id>7126379</pubmed_id>
+        </reference>
+      </references>
+    </disease>
+    <disease>
+      <name>Lung Cancer</name>
+      <omim_id>211980</omim_id>
+      <references>
+        <reference>
+          <reference_text>Wishart DS, Knox C, Guo AC, Eisner R, Young N, Gautam B, Hau DD, Psychogios N, Dong E, Bouatra S, Mandal R, Sinelnikov I, Xia J, Jia L, Cruz JA, Lim E, Sobsey CA, Shrivastava S, Huang P, Liu P, Fang L, Peng J, Fradette R, Cheng D, Tzur D, Clements M, Lewis A, De Souza A, Zuniga A, Dawe M, Xiong Y, Clive D, Greiner R, Nazyrova A, Shaykhutdinov R, Li L, Vogel HJ, Forsythe I: HMDB: a knowledgebase for the human metabolome. Nucleic Acids Res. 2009 Jan;37(Database issue):D603-10. doi: 10.1093/nar/gkn810.  Epub 2008 Oct 25.</reference_text>
+          <pubmed_id>18953024</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Stretch C, Eastman T, Mandal R, Eisner R, Wishart DS, Mourtzakis M, Prado CM, Damaraju S, Ball RO, Greiner R, Baracos VE: Prediction of skeletal muscle and fat mass in patients with advanced cancer using a metabolomic approach. J Nutr. 2012 Jan;142(1):14-21. doi: 10.3945/jn.111.147751. Epub 2011 Dec 7.</reference_text>
+          <pubmed_id>22157537</pubmed_id>
+        </reference>
+      </references>
+    </disease>
+    <disease>
+      <name>Rhabdomyolysis</name>
+      <omim_id/>
+      <references>
+        <reference>
+          <reference_text>Bairaktari E, Seferiadis K, Liamis G, Psihogios N, Tsolas O, Elisaf M: Rhabdomyolysis-related renal tubular damage studied by proton nuclear magnetic resonance spectroscopy of urine. Clin Chem. 2002 Jul;48(7):1106-9.</reference_text>
+          <pubmed_id>12089184</pubmed_id>
+        </reference>
+      </references>
+    </disease>
+  </diseases>
+  <drugbank_id>DB00148</drugbank_id>
+  <drugbank_metabolite_id/>
+  <phenol_explorer_compound_id/>
+  <phenol_explorer_metabolite_id/>
+  <foodb_id>FDB005403</foodb_id>
+  <knapsack_id/>
+  <chemspider_id>566</chemspider_id>
+  <kegg_id>C00300</kegg_id>
+  <biocyc_id>CREATINE</biocyc_id>
+  <bigg_id>34543</bigg_id>
+  <wikipidia>Creatine</wikipidia>
+  <nugowiki>47</nugowiki>
+  <metagene>ARGININEMIA. HYPERARGININEMIA, ARGINASE DEFICIENCY: 60; CREATINE DEFICIENCY, GUANIDINOACETATE METHYLTRANSFERASE DEFICIENCY: 349; X-LINKED CREATINE-TRANSPORTER DEFECT: 488; L-ARGININE:GLYCINE AMIDINOTRANSFERASE DEFICIENCY: 491</metagene>
+  <metlin_id>7</metlin_id>
+  <pubchem_compound_id>586</pubchem_compound_id>
+  <het_id>CRN</het_id>
+  <chebi_id>16919</chebi_id>
+  <synthesis_reference>Thalhammer, Franz; Gastner, Thomas.  Preparation of creatine, creatine monohydrate and guanidinoacetic acid.    Ger. Offen.  (2007),     5pp. </synthesis_reference>
+  <general_references>
+    <reference>
+      <reference_text>Subramanian A, Gupta A, Saxena S, Gupta A, Kumar R, Nigam A, Kumar R, Mandal SK, Roy R: Proton MR CSF analysis and a new software as predictors for the differentiation of meningitis in children. NMR Biomed. 2005 Jun;18(4):213-25.</reference_text>
+      <pubmed_id>15627241</pubmed_id>
+    </reference>
+  </general_references>
+  <protein_associations>
+    <protein>
+      <protein_accession>HMDBP00426</protein_accession>
+      <name>Guanidinoacetate N-methyltransferase</name>
+      <uniprot_id>Q14353</uniprot_id>
+      <gene_name>GAMT</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00463</protein_accession>
+      <name>Glycine amidinotransferase, mitochondrial</name>
+      <uniprot_id>P50440</uniprot_id>
+      <gene_name>GATM</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+  </protein_associations>
+</metabolite>
