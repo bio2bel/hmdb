@@ -6,7 +6,7 @@ Work in progress:
 - add foreign keys and back population between tables
 """
 
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -19,7 +19,7 @@ class Metabolite(Base):
     id = Column(Integer, primary_key=True)
     accession = Column(String, nullable=False)
     formula = Column(String, nullable=False)
-    mol_weight = Column(float, nullable=True)
+    mol_weight = Column(Float, nullable=True)
     iupac = Column(String, nullable = False)
     trivial = Column(String, nullable=True)
     cas_id = Column(String, nullable=True)
