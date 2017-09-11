@@ -9,20 +9,20 @@ Work in progress
 
 import configparser
 import logging
-import os
-
-import requests
 import zipfile
-from io import BytesIO
 
+import os
+import requests
+from io import BytesIO
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .models import Base #import database tables
+
 from .constants import (
     DATA_URL,
     HMDB_SQLITE_PATH,
     HMDB_CONFIG_FILE_PATH,
 )
+from .models import Base  # import database tables
 
 log = logging.getLogger(__name__)
 
@@ -88,7 +88,3 @@ class Manager(object):
             pass
 
         raise NotImplementedError
-
-
-
-

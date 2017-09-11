@@ -6,11 +6,12 @@ Work in progress:
 - add foreign keys and back population between tables
 """
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
+
 
 class Metabolite(Base):
     """Table which stores the metabolite and its descriptive information."""
@@ -20,7 +21,7 @@ class Metabolite(Base):
     accession = Column(String, nullable=False)
     formula = Column(String, nullable=False)
     mol_weight = Column(Float, nullable=True)
-    iupac = Column(String, nullable = False)
+    iupac = Column(String, nullable=False)
     trivial = Column(String, nullable=True)
     cas_id = Column(String, nullable=True)
     smiles = Column(String, nullable=True)
@@ -29,12 +30,14 @@ class Metabolite(Base):
 
     biofluids = relationship('')
 
+
 class Biofluid_loc(Base):
     """possible biofluids"""
     __tablename__ = "biofluid location"
 
     id = Column(Integer, primary_key=True)
     biofluid = Column(String, nullable=False)
+
 
 class Substituents(Base):
     """Stores the different substituents"""
@@ -43,6 +46,7 @@ class Substituents(Base):
     id = Column(Integer, primary_key=True)
     substituent = Column(String, nullable=False)
 
+
 class Cellular_loc(Base):
     """Stores the possible cellular locations"""
     __tablename__ = "cellular location"
@@ -50,10 +54,10 @@ class Cellular_loc(Base):
     id = Column(Integer, primary_key=True)
     cellular_loc = Column(String, nullable=False)
 
+
 class Tissues(Base):
     """Stores the possible tissues"""
     __tablename__ = "tissues"
 
     id = Column(Integer, primary_key=True)
     tissue = Column(String, nullable=False)
-
