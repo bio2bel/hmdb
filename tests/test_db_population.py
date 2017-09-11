@@ -10,7 +10,6 @@ import unittest
 import os
 
 from bio2bel_hmdb.manager import Manager
-from bio2bel_hmdb.models import #import database models
 
 
 class TestBuildDB(unittest.TestCase):

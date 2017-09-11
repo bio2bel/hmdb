@@ -17,7 +17,7 @@ from io import BytesIO
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .models import Base, #import database tables
+from .models import Base #import database tables
 from .constants import (
     DATA_URL,
     HMDB_SQLITE_PATH,
