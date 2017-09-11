@@ -85,6 +85,9 @@ class Manager(object):
         if not source:
             text = get_data()
         else:
+            pass
+
+        raise NotImplementedError
 
 
 
