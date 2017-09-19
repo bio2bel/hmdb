@@ -22,7 +22,7 @@ from .constants import (
     HMDB_SQLITE_PATH,
     HMDB_CONFIG_FILE_PATH,
 )
-from .models import Base, Metabolite, Biofluids, MetaboliteBiofluid, Synonyms  # import database tables
+from .models import Base, Metabolite, Biofluids, MetaboliteBiofluid, Synonyms, SecondaryAccessions  # import database tables
 
 log = logging.getLogger(__name__)
 

@@ -55,6 +55,15 @@ class Metabolite(Base):
     chebi_id = Column(String, nullable=True, doc="Chebi ID of the metabolite")
     synthesis_reference = Column(String, nullable=True, doc="Synthesis reference citation of the metabolite")
 
+class SecondaryAccessions(Base):
+    """Table storing the synonyms of metabolites."""
+    __tablename__ = "secondary_accessions"
+
+    id = Column(Integer, primary_key=True)
+    secondary_accession = Column(String, nullable=False, unique=True, doc="Other accession numbers for the metabolite")
+    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+    metabolite = relationship("Metabolite", backref="secondary_accession")
+
 class Biofluids(Base):
     """Table storing the different biofluids"""
     __tablename__ = "biofluids"
