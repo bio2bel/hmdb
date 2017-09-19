@@ -22,7 +22,7 @@ from .constants import (
     HMDB_SQLITE_PATH,
     HMDB_CONFIG_FILE_PATH,
 )
-from .models import Base, Metabolite  # import database tables
+from .models import Base, Metabolite, Biofluids, MetaboliteBiofluid  # import database tables
 
 log = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ def get_data(source=None):
     """Download HMDB data"""
 
     if not source:
-        req = requests.get('http://www.hmdb.ca/system/downloads/current/hmdb_metabolites.zip')
+        req = requests.get(DATA_URL)
         hmdb_zip = zipfile.ZipFile(BytesIO(req.content))
         hmdb_zip.extract("hmdb_metabolites.xml")
         source = "hmdb_metabolites.xml"

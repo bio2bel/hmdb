@@ -6,9 +6,10 @@ Work in progress:
 - add foreign keys and back population between tables
 """
 
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy import create_engine
 
 Base = declarative_base()
 
@@ -64,5 +65,9 @@ class Biofluids(Base):
 class MetaboliteBiofluid(Base):
     """Table representing the Metabolite and Biofluid relations"""
     __tablename__ = "metabolite_biofluid"
+
     id = Column(Integer, primary_key=True)
-    #add relationship and foreignkeys
+    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+    metabolite = relationship("Metabolite", backref="biofluid")
+    biofluid_id = Column(Integer, ForeignKey("biofluids.id"))
+    biofluid = relationship("Biofluids", backref="biofluid")
