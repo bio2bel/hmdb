@@ -6,7 +6,6 @@
 """
 
 import unittest
-
 import os
 import tempfile
 
@@ -33,11 +32,14 @@ class TestBuildDB(unittest.TestCase):
         os.close(self.fd)
         os.remove(self.path)
 
-    def test_populate(self):
-        """Test the populate function of the database manager"""
+    def test_populate_metabolite(self):
+        """Test the population of the metabolite table"""
         meta1 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00008").first()
         self.assertEqual("AFENDNXGAFYKQO-UHFFFAOYSA-N", meta1.inchikey)
 
+    def test_populate_biofluid_locations(self):
+        """Test the population of the biofluid and biofluid/metabolite mapping table"""
+        raise NotImplementedError
 
 if __name__ == '__main__':
     unittest.main()
