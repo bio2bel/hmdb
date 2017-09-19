@@ -77,6 +77,6 @@ class Synonyms(Base):
     __tablename__ = "synonyms"
 
     id = Column(Integer, primary_key=True)
-    synonym = Column(String, nullable=False, doc="Synonym for the metabolite")
+    synonym = Column(String, nullable=False, unique=True, doc="Synonym for the metabolite")
     metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
     metabolite = relationship("Metabolite", backref="synonyms")

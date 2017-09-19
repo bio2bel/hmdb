@@ -22,7 +22,7 @@ from .constants import (
     HMDB_SQLITE_PATH,
     HMDB_CONFIG_FILE_PATH,
 )
-from .models import Base, Metabolite, Biofluids, MetaboliteBiofluid  # import database tables
+from .models import Base, Metabolite, Biofluids, MetaboliteBiofluid, Synonyms  # import database tables
 
 log = logging.getLogger(__name__)
 
@@ -118,7 +118,9 @@ class Manager(object):
                     continue
 
                 elif tag == "synonyms":
-                    continue
+                    for synonym_element in element:
+                        new_synonym = Synonyms(metabolite=metabolite_instance, synonym=synonym_element.text)
+                        self.session.add(new_synonym)
 
                 elif tag == "taxonomy":
                     continue

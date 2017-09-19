@@ -10,7 +10,7 @@ import os
 import tempfile
 
 from bio2bel_hmdb.manager import Manager
-from bio2bel_hmdb.models import Metabolite, Biofluids, MetaboliteBiofluid
+from bio2bel_hmdb.models import Metabolite, Biofluids, MetaboliteBiofluid, Synonyms
 from tests.constants import text_xml_path
 
 
@@ -50,6 +50,14 @@ class TestBuildDB(unittest.TestCase):
         metabio2 = self.manager.session.query(Biofluids).count()
         self.assertEqual(8, metabio2)
 
+    def test_populate_synonyms(self):
+        """Test if the synonyms table is getting populated by the manager"""
+
+        syn1 = self.manager.session.query(Synonyms).count()
+        self.assertEqual(9, syn1)
+
+        syn2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
+        self.assertEqual("(1Z)-1-Propene-1,2,3-tricarboxylate", syn2.synonyms[0].synonym)
 
 if __name__ == '__main__':
     unittest.main()
