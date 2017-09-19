@@ -2,14 +2,14 @@
 
 """
 Work in progress
-- import database model
-- change get_data() to work with xml parser
+- import database models
 - write populate function
 """
 
 import configparser
 import logging
 import zipfile
+import xml.etree.ElementTree as ET
 
 import os
 import requests
@@ -22,7 +22,7 @@ from .constants import (
     HMDB_SQLITE_PATH,
     HMDB_CONFIG_FILE_PATH,
 )
-from .models import Base  # import database tables
+from .models import Base, Metabolite  # import database tables
 
 log = logging.getLogger(__name__)
 
@@ -30,12 +30,18 @@ log = logging.getLogger(__name__)
 def get_data(source=None):
     """Download HMDB data"""
 
-    req = requests.get(DATA_URL)
-    hmdb_zip = zipfile.ZipFile(BytesIO(req.content))
-    hmdb_text = hmdb_zip.open("hmdb_metabolites.xml").read()
-    hmdb_text = hmdb_text.decode('UTF-8')
+    if not source:
+        req = requests.get('http://www.hmdb.ca/system/downloads/current/hmdb_metabolites.zip')
+        hmdb_zip = zipfile.ZipFile(BytesIO(req.content))
+        hmdb_zip.extract("hmdb_metabolites.xml")
+        source = "hmdb_metabolites.xml"
+        tree = ET.parse(source)
+        #clean up
+        os.remove(source)
+    else:
+        tree = ET.parse(source)
 
-    return hmdb_text
+    return tree
 
 
 class Manager(object):
@@ -82,9 +88,60 @@ class Manager(object):
     def populate(self, source=None):
         """Populate database with HMDB data"""
 
-        if not source:
-            text = get_data()
-        else:
-            pass
+        def get_tag(element_tag):
+            """Function to delete the xml namespace prefix when calling element.tag"""
+            return element_tag.split("}")[1]
 
-        raise NotImplementedError
+        #construct xml tree
+        tree = get_data(source)
+        root = tree.getroot()
+
+        for metabolite in root:
+            #create metabolite dict used to feed in main metabolite table
+            metabolite_dict = {}
+
+            for element in metabolite:
+                #delete namespace prefix
+                tag = get_tag(element.tag)
+                #handle wikipedia typo in xml tags
+                if tag == "wikipidia":
+                    tag = "wikipedia"
+
+                #handle seperate tables and nested iterations (Work In Progress)
+                if tag == "secondary_accessions":
+                    continue
+                elif tag == "synonyms":
+                    continue
+                elif tag == "taxonomy":
+                    continue
+                elif tag == "ontology":
+                    continue
+                elif tag == "experimental_properties":
+                    continue
+                elif tag == "predicted_properties":
+                    continue
+                elif tag == "spectra":
+                    continue
+                elif tag == "biofluid_locations":
+                    continue
+                elif tag == "tissue_locations":
+                    continue
+                elif tag == "pathways":
+                    continue
+                elif tag == "normal_concentrations":
+                    continue
+                elif tag == "abnormal_concentrations":
+                    continue
+                elif tag == "diseases":
+                    continue
+                elif tag == "general_references":
+                    continue
+                elif tag == "protein_associations":
+                    continue
+                else: #feed in main metabolite table
+                    metabolite_dict[tag] = element.text
+
+            new_metabolite = Metabolite(**metabolite_dict)
+            self.session.add(new_metabolite)
+
+        self.session.commit()

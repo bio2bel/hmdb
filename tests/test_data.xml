@@ -128,6 +128,37 @@
         </reference>
       </references>
     </concentration>
+  </normal_concentrations>
+    <abnormal_concentrations>
+    <concentration>
+      <biofluid>Urine</biofluid>
+      <concentration_value>1540</concentration_value>
+      <concentration_units>umol/mmol creatinine</concentration_units>
+      <patient_age>Adult (&gt;18 years old)</patient_age>
+      <patient_sex>Female</patient_sex>
+      <patient_information>Rhabdomyolysis</patient_information>
+      <references>
+        <reference>
+          <reference_text>Bairaktari E, Seferiadis K, Liamis G, Psihogios N, Tsolas O, Elisaf M: Rhabdomyolysis-related renal tubular damage studied by proton nuclear magnetic resonance spectroscopy of urine. Clin Chem. 2002 Jul;48(7):1106-9.</reference_text>
+          <pubmed_id>12089184</pubmed_id>
+        </reference>
+      </references>
+    </concentration>
+    <concentration>
+      <biofluid>Urine</biofluid>
+      <concentration_value>233.588 +/- 539.846</concentration_value>
+      <concentration_units>umol/mmol creatinine</concentration_units>
+      <patient_age>Children (1 - 13 years old)</patient_age>
+      <patient_sex>Not Specified</patient_sex>
+      <patient_information>Eosinophilic esophagitis</patient_information>
+      <comment>By NMR</comment>
+      <references>
+        <reference>
+          <reference_text>Mordechai, Hien, and David S. Wishart</reference_text>
+          <pubmed_id/>
+        </reference>
+      </references>
+    </concentration>
   </abnormal_concentrations>
   <diseases>
     <disease>
@@ -137,26 +168,6 @@
         <reference>
           <reference_text>Harnryd C, Bjerkenstedt L, Grimm VE, Sedvall G: Reduction of MOPEG levels in cerebrospinal fluid of psychotic women after electroconvulsive treatment. Psychopharmacology (Berl). 1979 Aug 8;64(2):131-4.</reference_text>
           <pubmed_id>115032</pubmed_id>
-        </reference>
-        <reference>
-          <reference_text>Prell GD, Green JP, Kaufmann CA, Khandelwal JK, Morrishow AM, Kirch DG, Linnoila M, Wyatt RJ: Histamine metabolites in cerebrospinal fluid of patients with chronic schizophrenia: their relationships to levels of other aminergic transmitters and ratings of symptoms. Schizophr Res. 1995 Jan;14(2):93-104.</reference_text>
-          <pubmed_id>7711000</pubmed_id>
-        </reference>
-        <reference>
-          <reference_text>Alfredsson G, Wiesel FA: Monoamine metabolites and amino acids in serum from schizophrenic patients before and during sulpiride treatment. Psychopharmacology (Berl). 1989;99(3):322-7.</reference_text>
-          <pubmed_id>2480613</pubmed_id>
-        </reference>
-        <reference>
-          <reference_text>Do KQ, Lauer CJ, Schreiber W, Zollinger M, Gutteck-Amsler U, Cuenod M, Holsboer F: gamma-Glutamylglutamine and taurine concentrations are decreased in the cerebrospinal fluid of drug-naive patients with schizophrenic disorders. J Neurochem. 1995 Dec;65(6):2652-62.</reference_text>
-          <pubmed_id>7595563</pubmed_id>
-        </reference>
-        <reference>
-          <reference_text>Kobayashi K, Koide Y, Yoshino K, Shohmori T: [P-hydroxyphenylacetic acid concentrations in cerebrospinal fluid]. No To Shinkei. 1982 Aug;34(8):769-74.</reference_text>
-          <pubmed_id>7126379</pubmed_id>
-        </reference>
-        <reference>
-          <reference_text>Walker EF, Bonsall R, Walder DJ: Plasma hormones and catecholamine metabolites in monozygotic twins discordant for psychosis. Neuropsychiatry Neuropsychol Behav Neurol. 2002 Mar;15(1):10-7.</reference_text>
-          <pubmed_id>11877547</pubmed_id>
         </reference>
       </references>
     </disease>
@@ -533,3 +544,241 @@
     </protein>
   </protein_associations>
 </metabolite>
+<metabolite>
+  <version>3.6</version>
+  <creation_date>2005-11-16 15:48:42 UTC</creation_date>
+  <update_date>2017-05-01 22:50:56 UTC</update_date>
+  <accession>HMDB00072</accession>
+  <secondary_accessions>
+    <accession>HMDB00461</accession>
+  </secondary_accessions>
+  <name>cis-Aconitic acid</name>
+  <description>cis-Aconitic acid is an intermediate in the tricarboxylic acid cycle produced by the dehydration of citric acid. The enzyme aconitase (aconitate hydratase; EC 4.2.1.3) catalyses the stereo-specific isomerization of citrate to isocitrate via cis-aconitate in the tricarboxylic acid cycle.</description>
+  <synonyms>
+    <synonym>(1Z)-1-Propene-1,2,3-tricarboxylate</synonym>
+    <synonym>(1Z)-1-Propene-1,2,3-tricarboxylic acid</synonym>
+  </synonyms>
+  <chemical_formula>C6H6O6</chemical_formula>
+  <average_molecular_weight>174.1082</average_molecular_weight>
+  <monisotopic_molecular_weight>174.016437924</monisotopic_molecular_weight>
+  <iupac_name>(1Z)-prop-1-ene-1,2,3-tricarboxylic acid</iupac_name>
+  <traditional_iupac>cis-aconitic acid</traditional_iupac>
+  <cas_registry_number>585-84-2</cas_registry_number>
+  <smiles>OC(=O)C\C(=C\C(O)=O)C(O)=O</smiles>
+  <inchi>InChI=1S/C6H6O6/c7-4(8)1-3(6(11)12)2-5(9)10/h1H,2H2,(H,7,8)(H,9,10)(H,11,12)/b3-1-</inchi>
+  <inchikey>GTZCVFVGUGFEME-IWQZZHSRSA-N</inchikey>
+  <taxonomy>
+    <description>This compound belongs to the class of chemical entities known as tricarboxylic acids and derivatives. These are carboxylic acids containing exactly three carboxyl groups.</description>
+    <direct_parent>Tricarboxylic acids and derivatives</direct_parent>
+    <kingdom>Chemical entities</kingdom>
+    <super_class>Organic compounds</super_class>
+    <class>Organic acids and derivatives</class>
+    <sub_class>Carboxylic acids and derivatives</sub_class>
+    <molecular_framework>Aliphatic acyclic compounds</molecular_framework>
+    <alternative_parents>
+      <alternative_parent>Carbonyl compounds</alternative_parent>
+    </alternative_parents>
+    <substituents>
+      <substituent>Aliphatic acyclic compound</substituent>
+      <substituent>Carbonyl group</substituent>
+      <substituent>Carboxylic acid</substituent>
+    </substituents>
+  </taxonomy>
+  <ontology>
+    <status>quantified</status>
+    <origins>
+      <origin>Endogenous</origin>
+    </origins>
+    <biofunctions>
+      <biofunction>Component of Glyoxylate and dicarboxylate metabolism</biofunction>
+    </biofunctions>
+    <applications>
+    </applications>
+    <cellular_locations>
+      <cellular_location>Cytoplasm</cellular_location>
+    </cellular_locations>
+  </ontology>
+  <state>Solid</state>
+  <experimental_properties>
+    <property>
+      <kind>water_solubility</kind>
+      <value>400.0 mg/mL</value>
+      <source/>
+    </property>
+    <property>
+      <kind>melting_point</kind>
+      <value>125 °C</value>
+      <source/>
+    </property>
+  </experimental_properties>
+  <predicted_properties>
+    <property>
+      <kind>logp</kind>
+      <value>-0.41</value>
+      <source>ALOGPS</source>
+    </property>
+    <property>
+      <kind>logs</kind>
+      <value>-1.41</value>
+      <source>ALOGPS</source>
+    </property>
+  </predicted_properties>
+  <spectra>
+    <spectrum>
+      <type>Specdb::CMs</type>
+      <spectrum_id>311</spectrum_id>
+    </spectrum>
+    <spectrum>
+      <type>Specdb::CMs</type>
+      <spectrum_id>312</spectrum_id>
+    </spectrum>
+  </spectra>
+  <biofluid_locations>
+    <biofluid>Breast Milk</biofluid>
+    <biofluid>Cerebrospinal Fluid (CSF)</biofluid>
+    <biofluid>Saliva</biofluid>
+    <biofluid>Sweat</biofluid>
+    <biofluid>Urine</biofluid>
+  </biofluid_locations>
+  <tissue_locations>
+    <tissue>Prostate</tissue>
+  </tissue_locations>
+  <pathways>
+    <pathway>
+      <name>Glutaminolysis and Cancer</name>
+      <smpdb_id>SMP02298</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>Mitochondrial complex II deficiency</name>
+      <smpdb_id>SMP00548</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+  </pathways>
+  <normal_concentrations>
+    <concentration>
+      <biofluid>Saliva</biofluid>
+      <concentration_value/>
+      <concentration_units/>
+      <subject_age>Adult (&gt;18 years old)</subject_age>
+      <subject_sex>Male</subject_sex>
+      <subject_condition>Normal</subject_condition>
+      <comment>Saliva samples were collected after 17 hours of wakefulness</comment>
+      <references>
+        <reference>
+          <reference_text>Dallmann R, Viola AU, Tarokh L, Cajochen C, Brown SA: The human circadian metabolome. Proc Natl Acad Sci U S A. 2012 Feb 14;109(7):2625-9. doi: 10.1073/pnas.1114410109. Epub 2012 Jan 31.</reference_text>
+          <pubmed_id>22308371</pubmed_id>
+        </reference>
+      </references>
+    </concentration>
+    <concentration>
+      <biofluid>Urine</biofluid>
+      <concentration_value/>
+      <concentration_units/>
+      <subject_age>Adult (&gt;18 years old)</subject_age>
+      <subject_sex>Male</subject_sex>
+      <subject_condition>Normal</subject_condition>
+      <references>
+        <reference>
+          <reference_text>Jacobs DM, Spiesser L, Garnier M, de Roo N, van Dorsten F, Hollebrands B, van Velzen E, Draijer R, van Duynhoven J: SPE-NMR metabolite sub-profiling of urine. Anal Bioanal Chem. 2012 Nov;404(8):2349-61. doi: 10.1007/s00216-012-6339-2. Epub  2012 Aug 31.</reference_text>
+          <pubmed_id>22932811</pubmed_id>
+        </reference>
+      </references>
+    </concentration>
+  </normal_concentrations>
+  <abnormal_concentrations>
+    <concentration>
+      <biofluid>Saliva</biofluid>
+      <concentration_value>2.80 +/- 2.11</concentration_value>
+      <concentration_units>uM</concentration_units>
+      <patient_age>Adult (&gt;18 years old)</patient_age>
+      <patient_sex>Male</patient_sex>
+      <patient_information>Alzheimer's disease</patient_information>
+      <references>
+        <reference>
+          <reference_text>Tsuruoka M, Hara J, Hirayama A, Sugimoto M, Soga T, Shankle WR, Tomita M: Capillary electrophoresis-mass spectrometry-based metabolome analysis of serum and saliva from neurodegenerative dementia patients. Electrophoresis. 2013 Oct;34(19):2865-72. doi: 10.1002/elps.201300019. Epub 2013  Sep 6.</reference_text>
+          <pubmed_id>23857558</pubmed_id>
+        </reference>
+      </references>
+    </concentration>
+  </abnormal_concentrations>
+  <diseases>
+    <disease>
+      <name>Schizophrenia</name>
+      <omim_id>181500</omim_id>
+      <references>
+        <reference>
+          <reference_text>Ballesteros A, Summerfelt A, Du X, Jiang P, Chiappelli J, Tagamets M, O'Donnell P, Kochunov P, Hong LE: Electrophysiological intermediate biomarkers for oxidative stress in schizophrenia. Clin Neurophysiol. 2013 Nov;124(11):2209-15. doi: 10.1016/j.clinph.2013.05.021. Epub 2013 Jun 30.</reference_text>
+          <pubmed_id>23823132</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Bjerkenstedt L, Edman G, Hagenfeldt L, Sedvall G, Wiesel FA: Plasma amino acids in relation to cerebrospinal fluid monoamine metabolites in schizophrenic patients and healthy controls. Br J Psychiatry. 1985 Sep;147:276-82.</reference_text>
+          <pubmed_id>2415198</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Pickar D, Breier A, Hsiao JK, Doran AR, Wolkowitz OM, Pato CN, Konicki PE, Potter WZ: Cerebrospinal fluid and plasma monoamine metabolites and their relation to psychosis. Implications for regional brain dysfunction in schizophrenia. Arch Gen Psychiatry. 1990 Jul;47(7):641-8.</reference_text>
+          <pubmed_id>1694425</pubmed_id>
+        </reference>
+      </references>
+    </disease>
+    <disease>
+      <name>Lung Cancer</name>
+      <omim_id>211980</omim_id>
+      <references>
+        <reference>
+          <reference_text>Wishart DS, Knox C, Guo AC, Eisner R, Young N, Gautam B, Hau DD, Psychogios N, Dong E, Bouatra S, Mandal R, Sinelnikov I, Xia J, Jia L, Cruz JA, Lim E, Sobsey CA, Shrivastava S, Huang P, Liu P, Fang L, Peng J, Fradette R, Cheng D, Tzur D, Clements M, Lewis A, De Souza A, Zuniga A, Dawe M, Xiong Y, Clive D, Greiner R, Nazyrova A, Shaykhutdinov R, Li L, Vogel HJ, Forsythe I: HMDB: a knowledgebase for the human metabolome. Nucleic Acids Res. 2009 Jan;37(Database issue):D603-10. doi: 10.1093/nar/gkn810.  Epub 2008 Oct 25.</reference_text>
+          <pubmed_id>18953024</pubmed_id>
+        </reference>
+        <reference>
+          <reference_text>Stretch C, Eastman T, Mandal R, Eisner R, Wishart DS, Mourtzakis M, Prado CM, Damaraju S, Ball RO, Greiner R, Baracos VE: Prediction of skeletal muscle and fat mass in patients with advanced cancer using a metabolomic approach. J Nutr. 2012 Jan;142(1):14-21. doi: 10.3945/jn.111.147751. Epub 2011 Dec 7.</reference_text>
+          <pubmed_id>22157537</pubmed_id>
+        </reference>
+      </references>
+    </disease>
+  </diseases>
+  <drugbank_id/>
+  <drugbank_metabolite_id/>
+  <phenol_explorer_compound_id/>
+  <phenol_explorer_metabolite_id/>
+  <foodb_id>FDB008306</foodb_id>
+  <knapsack_id>C00001177</knapsack_id>
+  <chemspider_id>558863</chemspider_id>
+  <kegg_id>C00417</kegg_id>
+  <biocyc_id>CIS-ACONITATE</biocyc_id>
+  <bigg_id/>
+  <wikipidia/>
+  <nugowiki>53</nugowiki>
+  <metagene/>
+  <metlin_id>5130</metlin_id>
+  <pubchem_compound_id>643757</pubchem_compound_id>
+  <het_id/>
+  <chebi_id>32805</chebi_id>
+  <synthesis_reference>Gutierrez, Eddie N.; Lamberti, Vincent.  cis and trans Aconitic acids and their salts. U.S.  (1978), 16 pp. </synthesis_reference>
+  <general_references>
+    <reference>
+      <reference_text>Sreekumar A, Poisson LM, Rajendiran TM, Khan AP, Cao Q, Yu J, Laxman B, Mehra R, Lonigro RJ, Li Y, Nyati MK, Ahsan A, Kalyana-Sundaram S, Han B, Cao X, Byun J, Omenn GS, Ghosh D, Pennathur S, Alexander DC, Berger A, Shuster JR, Wei JT, Varambally S, Beecher C, Chinnaiyan AM: Metabolomic profiles delineate potential role for sarcosine in prostate cancer progression. Nature. 2009 Feb 12;457(7231):910-4. doi: 10.1038/nature07762.</reference_text>
+      <pubmed_id>19212411</pubmed_id>
+    </reference>
+    <reference>
+      <reference_text>Matsuishi T, Urabe F, Percy AK, Komori H, Yamashita Y, Schultz RS, Ohtani Y, Kuriya N, Kato H: Abnormal carbohydrate metabolism in cerebrospinal fluid in Rett syndrome. J Child Neurol. 1994 Jan;9(1):26-30.</reference_text>
+      <pubmed_id>8151077</pubmed_id>
+    </reference>
+  </general_references>
+  <protein_associations>
+    <protein>
+      <protein_accession>HMDBP00725</protein_accession>
+      <name>Aconitate hydratase, mitochondrial</name>
+      <uniprot_id>Q99798</uniprot_id>
+      <gene_name>ACO2</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
+    <protein>
+      <protein_accession>HMDBP00726</protein_accession>
+      <name>Cytoplasmic aconitate hydratase</name>
+      <uniprot_id>P21399</uniprot_id>
+      <gene_name>ACO1</gene_name>
+      <protein_type>Unknown</protein_type>
+    </protein>
+  </protein_associations>
+</metabolite>
+</hmdb>

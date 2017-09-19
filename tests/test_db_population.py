@@ -11,6 +11,7 @@ import os
 import tempfile
 
 from bio2bel_hmdb.manager import Manager
+from bio2bel_hmdb.models import Metabolite
 from tests.constants import text_xml_path
 
 
@@ -34,7 +35,8 @@ class TestBuildDB(unittest.TestCase):
 
     def test_populate(self):
         """Test the populate function of the database manager"""
-        pass
+        meta1 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00008").first()
+        self.assertEqual("AFENDNXGAFYKQO-UHFFFAOYSA-N", meta1.inchikey)
 
 
 if __name__ == '__main__':

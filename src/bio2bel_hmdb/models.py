@@ -18,46 +18,38 @@ class Metabolite(Base):
     __tablename__ = "metabolite"
 
     id = Column(Integer, primary_key=True)
+    version = Column(String, nullable=False)
+    creation_date = Column(String, nullable=False)
+    update_date = Column(String, nullable=False)
     accession = Column(String, nullable=False)
-    formula = Column(String, nullable=False)
-    mol_weight = Column(Float, nullable=True)
-    iupac = Column(String, nullable=False)
+    name = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    chemical_formula = Column(String, nullable=False)
+    average_molecular_weight = Column(Float, nullable=True)
+    monisotopic_molecular_weight = Column(Float, nullable=True)
+    iupac_name = Column(String, nullable=False)
+    traditional_iupac = Column(String, nullable=True)
     trivial = Column(String, nullable=True)
-    cas_id = Column(String, nullable=True)
+    cas_registry_number = Column(String, nullable=True)
     smiles = Column(String, nullable=True)
     inchi = Column(String, nullable=True)
-    inchi_key = Column(String, nullable=True)
-
-    biofluids = relationship('')
-
-
-class Biofluid_loc(Base):
-    """possible biofluids"""
-    __tablename__ = "biofluid location"
-
-    id = Column(Integer, primary_key=True)
-    biofluid = Column(String, nullable=False)
-
-
-class Substituents(Base):
-    """Stores the different substituents"""
-    __tablename__ = "substituents"
-
-    id = Column(Integer, primary_key=True)
-    substituent = Column(String, nullable=False)
-
-
-class Cellular_loc(Base):
-    """Stores the possible cellular locations"""
-    __tablename__ = "cellular location"
-
-    id = Column(Integer, primary_key=True)
-    cellular_loc = Column(String, nullable=False)
-
-
-class Tissues(Base):
-    """Stores the possible tissues"""
-    __tablename__ = "tissues"
-
-    id = Column(Integer, primary_key=True)
-    tissue = Column(String, nullable=False)
+    inchikey = Column(String, nullable=True)
+    state = Column(String, nullable=True)
+    drugbank_id = Column(String, nullable=True)
+    drugbank_metabolite_id = Column(String, nullable=True)
+    phenol_explorer_compound_id = Column(String, nullable=True)
+    phenol_explorer_metabolite_id = Column(String, nullable=True)
+    foodb_id = Column(String, nullable=True)
+    knapsack_id = Column(String, nullable=True)
+    chemspider_id = Column(String, nullable=True)
+    kegg_id = Column(String, nullable=True)
+    biocyc_id = Column(String, nullable=True)
+    bigg_id = Column(String, nullable=True)
+    wikipedia = Column(String, nullable=True)
+    nugowiki = Column(String, nullable=True)
+    metagene = Column(String, nullable=True)
+    metlin_id = Column(String, nullable=True)
+    pubchem_compound_id = Column(String, nullable=True)
+    het_id = Column(String, nullable=True)
+    chebi_id = Column(String, nullable=True)
+    synthesis_reference = Column(String, nullable=True)
