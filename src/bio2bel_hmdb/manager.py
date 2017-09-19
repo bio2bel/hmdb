@@ -96,16 +96,22 @@ class Manager(object):
         tree = get_data(source)
         root = tree.getroot()
 
+        #dicts to check unique constraints for specific tables
+        biofluids_dict = {}
+
         for metabolite in root:
             #create metabolite dict used to feed in main metabolite table
-            metabolite_dict = {}
+            metabolite_instance = Metabolite()
 
             for element in metabolite:
                 #delete namespace prefix
                 tag = get_tag(element.tag)
+
                 #handle wikipedia typo in xml tags
                 if tag == "wikipidia":
                     tag = "wikipedia"
+                elif tag == "wikipedia":
+                    log.warning("HMDB fixed the 'wikipidia' tag to 'wikipedia'. Change code.")
 
                 #handle seperate tables and nested iterations (Work In Progress)
                 if tag == "secondary_accessions":
@@ -123,7 +129,17 @@ class Manager(object):
                 elif tag == "spectra":
                     continue
                 elif tag == "biofluid_locations":
-                    continue
+                    for biofluid_element in element:
+                        biofluid = biofluid_element.text
+                        if biofluid not in biofluids_dict:
+                            biofluids_dict[biofluid] = Biofluids(biofluid=biofluid)
+                            self.session.add(biofluids_dict[biofluid])
+
+                        #create metabolite-biofluid relation object
+                        new_meta_bio = MetaboliteBiofluid(metabolite=metabolite_instance,
+                                                          biofluid=biofluids_dict[biofluid])
+                        self.session.add(new_meta_bio)
+
                 elif tag == "tissue_locations":
                     continue
                 elif tag == "pathways":
@@ -139,9 +155,8 @@ class Manager(object):
                 elif tag == "protein_associations":
                     continue
                 else: #feed in main metabolite table
-                    metabolite_dict[tag] = element.text
+                    setattr(metabolite_instance, tag, element.text)
 
-            new_metabolite = Metabolite(**metabolite_dict)
-            self.session.add(new_metabolite)
+            self.session.add(metabolite_instance)
 
         self.session.commit()

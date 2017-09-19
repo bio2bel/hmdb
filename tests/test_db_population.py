@@ -10,7 +10,7 @@ import os
 import tempfile
 
 from bio2bel_hmdb.manager import Manager
-from bio2bel_hmdb.models import Metabolite
+from bio2bel_hmdb.models import Metabolite, Biofluids, MetaboliteBiofluid
 from tests.constants import text_xml_path
 
 
@@ -37,9 +37,19 @@ class TestBuildDB(unittest.TestCase):
         meta1 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00008").first()
         self.assertEqual("AFENDNXGAFYKQO-UHFFFAOYSA-N", meta1.inchikey)
 
+        meta2 = self.manager.session.query(Metabolite).count()
+        self.assertEqual(3, meta2)
+
     def test_populate_biofluid_locations(self):
         """Test the population of the biofluid and biofluid/metabolite mapping table"""
-        raise NotImplementedError
+        #test if HMDB00064 has 7 associated biofluids
+        metabio1 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00064").first()
+        self.assertEqual(7, len(metabio1.biofluid))
+
+        #test if there are 8 biofluids in total
+        metabio2 = self.manager.session.query(Biofluids).count()
+        self.assertEqual(8, metabio2)
+
 
 if __name__ == '__main__':
     unittest.main()

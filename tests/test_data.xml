@@ -87,6 +87,7 @@
   </spectra>
   <biofluid_locations>
     <biofluid>Blood</biofluid>
+    <biofluid>Colin added</biofluid>
     <biofluid>Cerebrospinal Fluid (CSF)</biofluid>
     <biofluid>Feces</biofluid>
     <biofluid>Saliva</biofluid>
