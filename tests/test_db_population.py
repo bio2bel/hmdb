@@ -44,7 +44,7 @@ class TestBuildDB(unittest.TestCase):
         """Test the population of the biofluid and biofluid/metabolite mapping table"""
         #test if HMDB00064 has 7 associated biofluids
         metabio1 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00064").first()
-        self.assertEqual(7, len(metabio1.biofluid))
+        self.assertEqual(7, len(metabio1.biofluids))
 
         #test if there are 8 biofluids in total
         metabio2 = self.manager.session.query(Biofluids).count()

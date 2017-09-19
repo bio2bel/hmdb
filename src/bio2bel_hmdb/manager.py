@@ -116,18 +116,25 @@ class Manager(object):
                 #handle seperate tables and nested iterations (Work In Progress)
                 if tag == "secondary_accessions":
                     continue
+
                 elif tag == "synonyms":
                     continue
+
                 elif tag == "taxonomy":
                     continue
+
                 elif tag == "ontology":
                     continue
+
                 elif tag == "experimental_properties":
                     continue
+
                 elif tag == "predicted_properties":
                     continue
+
                 elif tag == "spectra":
                     continue
+
                 elif tag == "biofluid_locations":
                     for biofluid_element in element:
                         biofluid = biofluid_element.text

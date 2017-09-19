@@ -68,6 +68,15 @@ class MetaboliteBiofluid(Base):
 
     id = Column(Integer, primary_key=True)
     metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
-    metabolite = relationship("Metabolite", backref="biofluid")
+    metabolite = relationship("Metabolite", backref="biofluids")
     biofluid_id = Column(Integer, ForeignKey("biofluids.id"))
-    biofluid = relationship("Biofluids", backref="metabolite")
+    biofluid = relationship("Biofluids", backref="metabolites")
+
+class Synonyms(Base):
+    """Table storing the synonyms of metabolites."""
+    __tablename__ = "synonyms"
+
+    id = Column(Integer, primary_key=True)
+    synonym = Column(String, nullable=False, doc="Synonym for the metabolite")
+    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+    metabolite = relationship("Metabolite", backref="synonyms")
