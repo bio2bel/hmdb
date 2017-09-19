@@ -115,7 +115,9 @@ class Manager(object):
 
                 #handle seperate tables and nested iterations (Work In Progress)
                 if tag == "secondary_accessions":
-                    continue
+                    for secondary_accession_element in element:
+                        new_secondary_accession = SecondaryAccessions(metabolite=metabolite_instance, secondary_accession=secondary_accession_element.text)
+                        self.session.add(new_secondary_accession)
 
                 elif tag == "synonyms":
                     for synonym_element in element:

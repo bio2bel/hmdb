@@ -62,7 +62,7 @@ class SecondaryAccessions(Base):
     id = Column(Integer, primary_key=True)
     secondary_accession = Column(String, nullable=False, unique=True, doc="Other accession numbers for the metabolite")
     metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
-    metabolite = relationship("Metabolite", backref="secondary_accession")
+    metabolite = relationship("Metabolite", backref="secondary_accessions")
 
 class Biofluids(Base):
     """Table storing the different biofluids"""
