@@ -55,6 +55,7 @@ class Metabolite(Base):
     chebi_id = Column(String, nullable=True, doc="Chebi ID of the metabolite")
     synthesis_reference = Column(String, nullable=True, doc="Synthesis reference citation of the metabolite")
 
+
 class SecondaryAccessions(Base):
     """Table storing the synonyms of metabolites."""
     __tablename__ = "secondary_accessions"
@@ -64,12 +65,14 @@ class SecondaryAccessions(Base):
     metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
     metabolite = relationship("Metabolite", backref="secondary_accessions")
 
+
 class Biofluids(Base):
     """Table storing the different biofluids"""
     __tablename__ = "biofluids"
 
     id = Column(Integer, primary_key=True)
     biofluid = Column(String, nullable=False, unique=True, doc="Biofluid in which metabolites are found")
+
 
 class MetaboliteBiofluid(Base):
     """Table representing the Metabolite and Biofluid relations"""
@@ -81,6 +84,7 @@ class MetaboliteBiofluid(Base):
     biofluid_id = Column(Integer, ForeignKey("biofluids.id"))
     biofluid = relationship("Biofluids", backref="metabolites")
 
+
 class Synonyms(Base):
     """Table storing the synonyms of metabolites."""
     __tablename__ = "synonyms"
@@ -89,6 +93,7 @@ class Synonyms(Base):
     synonym = Column(String, nullable=False, unique=True, doc="Synonym for the metabolite")
     metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
     metabolite = relationship("Metabolite", backref="synonyms")
+
 
 class MetaboliteTissues(Base):
     """Table storing the different relations between tissues and metabolites"""
@@ -100,12 +105,14 @@ class MetaboliteTissues(Base):
     tissue_id = Column(Integer, ForeignKey("tissues.id"))
     tissue = relationship("Tissues", backref="metabolites")
 
+
 class Tissues(Base):
     """Table storing the different tissues"""
     __tablename__ = "tissues"
 
     id = Column(Integer, primary_key=True)
-    tissue = Column(String, nullable=False, doc="Tissue type")
+    tissue = Column(String, nullable=False, unique=True, doc="Tissue type")
+
 
 class MetabolitePathways(Base):
     """Table storing the different relations between pathways and metabolites"""
@@ -117,14 +124,12 @@ class MetabolitePathways(Base):
     pathway_id = Column(Integer, ForeignKey("pathways.id"))
     pathway = relationship("Pathways", backref="metabolites")
 
+
 class Pathways(Base):
     """Table storing the different tissues"""
     __tablename__ = "pathways"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=True, doc="Name of the pathway.")
+    name = Column(String, nullable=True, unique=True, doc="Name of the pathway.")
     smpdb_id = Column(String, nullable=True, unique=True, doc="SMPDB identifier of the pathway.")
     kegg_map_id = Column(String, nullable=True, unique=True, doc="KEGG Map identifier of the pathway.")
-
-
-
