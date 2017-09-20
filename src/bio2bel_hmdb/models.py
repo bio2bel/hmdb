@@ -107,5 +107,24 @@ class Tissues(Base):
     id = Column(Integer, primary_key=True)
     tissue = Column(String, nullable=False, doc="Tissue type")
 
+class MetabolitePathways(Base):
+    """Table storing the different relations between pathways and metabolites"""
+    __tablename__ = "metabolite_pathways"
+
+    id = Column(Integer, primary_key=True)
+    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+    metabolite = relationship("Metabolite", backref="pathways")
+    pathway_id = Column(Integer, ForeignKey("pathways.id"))
+    pathway = relationship("Pathways", backref="metabolites")
+
+class Pathways(Base):
+    """Table storing the different tissues"""
+    __tablename__ = "pathways"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=True, doc="Name of the pathway.")
+    smpdb_id = Column(String, nullable=True, unique=True, doc="SMPDB identifier of the pathway.")
+    kegg_map_id = Column(String, nullable=True, unique=True, doc="KEGG Map identifier of the pathway.")
+
 
 
