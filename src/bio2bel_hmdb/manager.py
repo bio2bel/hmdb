@@ -173,27 +173,27 @@ class Manager(object):
                         self.session.add(new_meta_tissue)
 
                 elif tag == "pathways":
-                    if len(element.getchildren()) < 1:
-                        continue
 
                     for pathway_element in element:
 
                         # build pathway object dict to create pathway object
                         pathway_object_dict = {}
+
                         for pathway_sub_element in pathway_element:
                             cutted_pathway_tag = get_tag(pathway_sub_element.tag)
                             pathway_object_dict[cutted_pathway_tag] = pathway_sub_element.text
 
-                        # break if pathway already present in table
+                        # add MetabolitePathway relation and continue with next pathway if pathway already present in Pathways
                         if pathway_object_dict['name'] in pathways_dict:
+                            new_meta_path = MetabolitePathways(metabolite=metabolite_instance, pathway=pathways_dict[pathway_object_dict['name']])
+                            self.session.add(new_meta_path)
                             continue
 
                         pathways_dict[pathway_object_dict['name']] = Pathways(**pathway_object_dict)
                         self.session.add(pathways_dict[pathway_object_dict['name']])
 
-                    new_meta_path = MetabolitePathways(metabolite=metabolite_instance,
-                                                       pathway=pathways_dict[pathway_object_dict['name']])
-                    self.session.add(new_meta_path)
+                        new_meta_path = MetabolitePathways(metabolite=metabolite_instance, pathway=pathways_dict[pathway_object_dict['name']])
+                        self.session.add(new_meta_path)
 
                 elif tag == "normal_concentrations":
                     continue
@@ -205,6 +205,7 @@ class Manager(object):
                     continue
                 elif tag == "protein_associations":
                     continue
+
                 else:  # feed in main metabolite table
                     setattr(metabolite_instance, tag, element.text)
 

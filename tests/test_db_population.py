@@ -84,6 +84,12 @@ class TestBuildDB(unittest.TestCase):
         pat1 = self.manager.session.query(Pathways).count()
         self.assertEqual(4, pat1)
 
+        pat2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == 'HMDB00072').first()
+        self.assertEqual(3, len(pat2.pathways))
+
+        pat3 = self.manager.session.query(Metabolite).filter(Metabolite.accession == 'HMDB00072').first()
+        self.assertEqual("double test added by colin", pat3.pathways[1].pathway.name)
+
 
 if __name__ == '__main__':
     unittest.main()
