@@ -10,7 +10,8 @@ import os
 import tempfile
 
 from bio2bel_hmdb.manager import Manager
-from bio2bel_hmdb.models import Metabolite, Biofluids, MetaboliteBiofluid, Synonyms, SecondaryAccessions, Tissues
+from bio2bel_hmdb.models import Metabolite, Biofluids, MetaboliteBiofluid, Synonyms, \
+    SecondaryAccessions, Tissues, Pathways, MetabolitePathways
 from tests.constants import text_xml_path
 
 
@@ -32,7 +33,6 @@ class TestBuildDB(unittest.TestCase):
         os.close(self.fd)
         os.remove(self.path)
 
-
     def test_populate_metabolite(self):
         """Test the population of the metabolite table"""
 
@@ -41,7 +41,6 @@ class TestBuildDB(unittest.TestCase):
 
         meta2 = self.manager.session.query(Metabolite).count()
         self.assertEqual(3, meta2)
-
 
     def test_populate_biofluid_locations(self):
         """Test the population of the biofluid and biofluid/metabolite mapping table"""
@@ -54,7 +53,6 @@ class TestBuildDB(unittest.TestCase):
         metabio2 = self.manager.session.query(Biofluids).count()
         self.assertEqual(8, metabio2)
 
-
     def test_populate_synonyms(self):
         """Test if the synonyms table is getting populated by the manager"""
 
@@ -64,7 +62,6 @@ class TestBuildDB(unittest.TestCase):
         syn2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
         self.assertEqual("(1Z)-1-Propene-1,2,3-tricarboxylate", syn2.synonyms[0].synonym)
 
-
     def test_populate_secondary_accessions(self):
         """Test if populate function populates the secondary accession table correctly"""
         seca1 = self.manager.session.query(SecondaryAccessions).count()
@@ -73,15 +70,19 @@ class TestBuildDB(unittest.TestCase):
         seca2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
         self.assertEqual("HMDB00461", seca2.secondary_accessions[0].secondary_accession)
 
-
     def test_populate_tissue_locations(self):
         """Test if the tissues and metabolite tissues table are populated by the manager"""
 
         tis1 = self.manager.session.query(Tissues).count()
         self.assertEqual(3, tis1)
-        #test the tissue of the tissue object connected to the metabolite object via the metabolitetissue object
+        # test the tissue of the tissue object connected to the metabolite object via the metabolitetissue object
         tis2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00064").first()
         self.assertEqual("Adipose Tissue", tis2.tissues[0].tissue.tissue)
+
+    def test_populate_pathways(self):
+        """Test for testing the population of the Pathways and MetabolitePathways tables"""
+        pat1 = self.manager.session.query(Pathways).count()
+        self.assertEqual(4, pat1)
 
 
 if __name__ == '__main__':

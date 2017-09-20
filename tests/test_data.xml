@@ -95,7 +95,6 @@
     <biofluid>Urine</biofluid>
   </biofluid_locations>
   <tissue_locations>
-    <tissue>Prostate</tissue>
   </tissue_locations>
   <pathways>
   </pathways>
@@ -346,7 +345,7 @@
   </tissue_locations>
   <pathways>
     <pathway>
-      <name>3-Phosphoglycerate dehydrogenase deficiency</name>
+      <name>double test added by colin</name>
       <smpdb_id>SMP00721</smpdb_id>
       <kegg_map_id/>
     </pathway>
@@ -635,11 +634,6 @@
     </spectrum>
   </spectra>
   <biofluid_locations>
-    <biofluid>Breast Milk</biofluid>
-    <biofluid>Cerebrospinal Fluid (CSF)</biofluid>
-    <biofluid>Saliva</biofluid>
-    <biofluid>Sweat</biofluid>
-    <biofluid>Urine</biofluid>
   </biofluid_locations>
   <tissue_locations>
     <tissue>Prostate</tissue>
@@ -648,6 +642,11 @@
     <pathway>
       <name>Glutaminolysis and Cancer</name>
       <smpdb_id>SMP02298</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>double test added by colin</name>
+      <smpdb_id>SMP00721</smpdb_id>
       <kegg_map_id/>
     </pathway>
     <pathway>
