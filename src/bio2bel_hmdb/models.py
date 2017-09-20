@@ -89,3 +89,23 @@ class Synonyms(Base):
     synonym = Column(String, nullable=False, unique=True, doc="Synonym for the metabolite")
     metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
     metabolite = relationship("Metabolite", backref="synonyms")
+
+class MetaboliteTissues(Base):
+    """Table storing the different relations between tissues and metabolites"""
+    __tablename__ = "tissues"
+
+    id = Column(Integer, primary_key=True)
+    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+    metabolite = relationship("Metabolite", backref="tissues")
+    tissue_id = Column(Integer, ForeignKey("tissues.id"))
+    tissue = relationship("Tissues", backref="metabolites")
+
+class Tissues(Base):
+    """Table storing the different tissues"""
+    __tablename__ = "tissues"
+
+    id = Column(Integer, primary_key=True)
+    tissue = Column(String, nullable=False, doc="Tissue type")
+
+
+
