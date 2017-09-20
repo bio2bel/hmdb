@@ -173,12 +173,12 @@ class Manager(object):
                         self.session.add(new_meta_tissue)
 
                 elif tag == "pathways":
-
                     for pathway_element in element:
 
                         # build pathway object dict to create pathway object
                         pathway_object_dict = {}
 
+                        # create pathway instance
                         for pathway_sub_element in pathway_element:
                             cutted_pathway_tag = get_tag(pathway_sub_element.tag)
                             pathway_object_dict[cutted_pathway_tag] = pathway_sub_element.text

@@ -133,3 +133,26 @@ class Pathways(Base):
     name = Column(String, nullable=True, unique=True, doc="Name of the pathway.")
     smpdb_id = Column(String, nullable=True, unique=True, doc="SMPDB identifier of the pathway.")
     kegg_map_id = Column(String, nullable=True, unique=True, doc="KEGG Map identifier of the pathway.")
+
+
+class Proteins(Base):
+    """Table to store the protein information"""
+    __tablename__ = "proteins"
+    id = Column(Integer, primary_key=True)
+    protein_accession = Column(String, nullable=False, unique=True, doc="HMDB accession number for the protein")
+    name = Column(String, nullable=False)
+    uniprot_id = Column(String, nullable=True, doc="Uniprot identifier of the protein")
+    gene_name = Column(String, nullable=True, doc="Gene name of the protein coding gene")
+    protein_type = Column(String, nullable=True, doc="Protein type like 'enzyme' etc.")
+
+class MetaboliteProtein(Base):
+    """Table representing the many to many relationship between metabolites and proteins"""
+    __tablename__ = "metabolite_proteins"
+
+    id = Column(Integer, primary_key=True)
+    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+    metabolite = relationship("Metabolite", backref="proteins")
+    protein_id = Column(Integer, ForeignKey("proteins.id"))
+    protein = relationship("Proteins", backref="metabolites")
+
+
