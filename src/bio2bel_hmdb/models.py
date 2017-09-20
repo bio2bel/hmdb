@@ -92,7 +92,7 @@ class Synonyms(Base):
 
 class MetaboliteTissues(Base):
     """Table storing the different relations between tissues and metabolites"""
-    __tablename__ = "tissues"
+    __tablename__ = "metabolite_tissues"
 
     id = Column(Integer, primary_key=True)
     metabolite_id = Column(Integer, ForeignKey("metabolite.id"))

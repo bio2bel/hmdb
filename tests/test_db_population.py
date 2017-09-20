@@ -10,7 +10,7 @@ import os
 import tempfile
 
 from bio2bel_hmdb.manager import Manager
-from bio2bel_hmdb.models import Metabolite, Biofluids, MetaboliteBiofluid, Synonyms, SecondaryAccessions
+from bio2bel_hmdb.models import Metabolite, Biofluids, MetaboliteBiofluid, Synonyms, SecondaryAccessions, Tissues
 from tests.constants import text_xml_path
 
 
@@ -72,6 +72,16 @@ class TestBuildDB(unittest.TestCase):
 
         seca2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
         self.assertEqual("HMDB00461", seca2.secondary_accessions[0].secondary_accession)
+
+
+    def test_populate_tissue_locations(self):
+        """Test if the tissues and metabolite tissues table are populated by the manager"""
+
+        tis1 = self.manager.session.query(Tissues).count()
+        self.assertEqual(3, tis1)
+        #test the tissue of the tissue object connected to the metabolite object via the metabolitetissue object
+        tis2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00064").first()
+        self.assertEqual("Adipose Tissue", tis2.tissues[0].tissue.tissue)
 
 
 if __name__ == '__main__':

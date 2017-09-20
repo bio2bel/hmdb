@@ -22,7 +22,8 @@ from .constants import (
     HMDB_SQLITE_PATH,
     HMDB_CONFIG_FILE_PATH,
 )
-from .models import Base, Metabolite, Biofluids, MetaboliteBiofluid, Synonyms, SecondaryAccessions  # import database tables
+from .models import Base, Metabolite, Biofluids, MetaboliteBiofluid, \
+    Synonyms, SecondaryAccessions, Tissues, MetaboliteTissues
 
 log = logging.getLogger(__name__)
 
@@ -98,6 +99,7 @@ class Manager(object):
 
         #dicts to check unique constraints for specific tables
         biofluids_dict = {}
+        tissues_dict = {}
 
         for metabolite in root:
             #create metabolite dict used to feed in main metabolite table
@@ -152,7 +154,16 @@ class Manager(object):
                         self.session.add(new_meta_bio)
 
                 elif tag == "tissue_locations":
-                    continue
+                    for tissue_element in element:
+                        tissue = tissue_element.text
+                        if tissue not in tissues_dict:
+                            tissues_dict[tissue] = Tissues(tissue=tissue)
+                            self.session.add(tissues_dict[tissue])
+
+                        new_meta_tissue = MetaboliteTissues(metabolite=metabolite_instance,
+                                                            tissue=tissues_dict[tissue])
+                        self.session.add(new_meta_tissue)
+
                 elif tag == "pathways":
                     continue
                 elif tag == "normal_concentrations":
