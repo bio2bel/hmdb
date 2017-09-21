@@ -10,8 +10,8 @@ import os
 import tempfile
 
 from bio2bel_hmdb.manager import Manager
-from bio2bel_hmdb.models import Metabolite, Biofluids, MetaboliteBiofluid, Synonyms, \
-    SecondaryAccessions, Tissues, Pathways, MetabolitePathways
+from bio2bel_hmdb.models import Metabolite, Biofluids, Synonyms, \
+    SecondaryAccessions, Tissues, Pathways, Proteins
 from tests.constants import text_xml_path
 
 
@@ -89,6 +89,17 @@ class TestBuildDB(unittest.TestCase):
 
         pat3 = self.manager.session.query(Metabolite).filter(Metabolite.accession == 'HMDB00072').first()
         self.assertEqual("double test added by colin", pat3.pathways[1].pathway.name)
+
+    def test_populate_proteins(self):
+        """Tests for testing if population of Protein and MetaboliteProtein table is successfull"""
+        pro1 = self.manager.session.query(Proteins).count()
+        self.assertEqual(6, pro1)
+
+        pro2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == 'HMDB00072').first()
+        self.assertEqual(2, len(pro2.proteins))
+
+        pro3 = self.manager.session.query(Metabolite).filter(Metabolite.accession == 'HMDB00072').first()
+        self.assertEqual("HMDBP00725", pro3.proteins[1].protein.protein_accession)
 
 
 if __name__ == '__main__':
