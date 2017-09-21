@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-Work in progress
-- import database models
-- write populate function
-"""
-
 import configparser
 import logging
 import zipfile
@@ -24,7 +18,7 @@ from .constants import (
 )
 from .models import Base, Metabolite, Biofluids, MetaboliteBiofluid, \
     Synonyms, SecondaryAccessions, Tissues, MetaboliteTissues, \
-    Pathways, MetabolitePathways, Proteins, MetaboliteProteins
+    Pathways, MetabolitePathways, Proteins, MetaboliteProteins, References, MetaboliteReferences
 
 log = logging.getLogger(__name__)
 
@@ -178,6 +172,7 @@ class Manager(object):
         tissues_dict = {}
         pathways_dict = {}
         proteins_dict = {}
+        references_dict = {}
 
         for metabolite in root:
             # create metabolite dict used to feed in main metabolite table
@@ -224,7 +219,7 @@ class Manager(object):
                     biofluids_dict = self.populate_with_1_layer_elements(element, metabolite_instance, biofluids_dict,
                                                                          Biofluids, MetaboliteBiofluid)
 
-                elif tag == "tissue_locations": # FIXME
+                elif tag == "tissue_locations":
                     for tissue_element in element:
                         tissue = tissue_element.text
                         if tissue not in tissues_dict:  # check if tissue is already in table
@@ -244,11 +239,14 @@ class Manager(object):
                     continue
                 elif tag == "diseases":
                     continue
+
                 elif tag == "general_references":
                     continue
+                    references_dict = self.populate_with_2_layer_elements(element, metabolite_instance, references_dict,
+                                                                          References, MetaboliteReferences, "pubmed_id")
 
                 elif tag == "protein_associations":
-                    continue  # FIXME
+                    continue
                     proteins_dict = self.populate_with_2_layer_elements(element, metabolite_instance, proteins_dict,
                                                                         Proteins, MetaboliteProteins)
 

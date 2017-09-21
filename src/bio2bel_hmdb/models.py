@@ -1,15 +1,8 @@
 # -*- coding: utf-8 -*-
 
-"""
-Work in progress:
-- add missing tables
-- add foreign keys and back population between tables
-"""
-
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine
 
 Base = declarative_base()
 
@@ -146,6 +139,7 @@ class Proteins(Base):
     gene_name = Column(String, nullable=True, doc="Gene name of the protein coding gene")
     protein_type = Column(String, nullable=True, doc="Protein type like 'enzyme' etc.")
 
+
 class MetaboliteProteins(Base):
     """Table representing the many to many relationship between metabolites and proteins"""
     __tablename__ = "metabolite_proteins"
@@ -156,6 +150,7 @@ class MetaboliteProteins(Base):
     protein_id = Column(Integer, ForeignKey("proteins.id"))
     protein = relationship("Proteins", backref="metabolites")
 
+
 class References(Base):
     """Table storing literature references"""
     __tablename__ = "references"
@@ -164,7 +159,8 @@ class References(Base):
     reference_text = Column(String, nullable=True, unique=True, doc="Citation of the referene article")
     pubmed_id = Column(String, nullable=True, unique=True, doc="PubMed identifier of the article")
 
-class MetaboliteReference(Base):
+
+class MetaboliteReferences(Base):
     """Table representing the many to many relationship between metabolites and references"""
     __tablename__ = "metabolite_references"
 
