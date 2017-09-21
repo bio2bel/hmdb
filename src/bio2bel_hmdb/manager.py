@@ -16,7 +16,6 @@ import requests
 from io import BytesIO
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import IntegrityError
 
 from .constants import (
     DATA_URL,
@@ -25,7 +24,7 @@ from .constants import (
 )
 from .models import Base, Metabolite, Biofluids, MetaboliteBiofluid, \
     Synonyms, SecondaryAccessions, Tissues, MetaboliteTissues, \
-    Pathways, MetabolitePathways
+    Pathways, MetabolitePathways, Proteins, MetaboliteProteins
 
 log = logging.getLogger(__name__)
 
@@ -88,16 +87,85 @@ class Manager(object):
         """Create tables from model.py"""
         Base.metadata.create_all(self.engine, checkfirst=check_first)
 
+    def get_tag(self, element_tag):
+        """Function to delete the xml namespace prefix when calling element.tag
+
+        :param element_tag: tag attribute of an xml element
+        :rtype: str
+        """
+        return element_tag.split("}")[1]
+
+    def populate_with_1_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table):
+        """
+
+        :param element: the current parent XML element. E.g. "pathways" where the children would have the tag "pathway" .
+        :param models.Metabolite metabolite_instance: metabolite object which is associated with the instances (e.g. is
+        involved in that "pathway")
+        :param dict instance_dict: dictionary which tracks if the found instance is already present in the table and can
+        then refer to it
+        :param class table: sqlalchemy class to which the instances belong. E.g. "Pathways"
+        :param class relation_table: sqlalchemy class which stores the many to many relation between the instances and
+        the metabolites
+        :param str instance_dict_key: String which is used as the key for the instance_dict. (to ensure uniqueness in
+        the instance_dict)
+        :rtype: dict
+        """
+        for instance_element in element:
+            instance_dict_key = instance_element.text
+            if instance_dict_key not in instance_dict:  # check if biofluid is already in table
+                instance_dict[instance_dict_key] = table(biofluid=instance_dict_key)
+                self.session.add(instance_dict[instance_dict_key])
+
+            # create metabolite-biofluid relation object
+            new_meta_rel = relation_table(metabolite=metabolite_instance, biofluid=instance_dict[instance_dict_key])
+            self.session.add(new_meta_rel)
+
+    def populate_with_2_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
+                                       instance_dict_key=None):
+        """Function to parse two layered xml elements (parent elements covers at least one child
+        which also consists of one more layer of tags) and populate sqlalchemy tables.
+
+        :param element: the current parent XML element. E.g. "pathways" where the children would have the tag "pathway".
+        :param models.Metabolite metabolite_instance: metabolite object which is associated with the instances (e.g. is
+        involved in that "pathway")
+        :param dict instance_dict: dictionary which tracks if the found instance is already present in the table and can
+        then refer to it
+        :param class table: sqlalchemy class to which the instances belong. E.g. "Pathways"
+        :param class relation_table: sqlalchemy class which stores the many to many relation between the instances and
+        the metabolites
+        :param str instance_dict_key: String which is used as the key for the instance_dict. (to ensure uniqueness in
+        the instance_dict)
+        :rtype: dict
+        """
+        if instance_dict_key is None and len(element) > 0:
+            instance_dict_key = self.get_tag(element[0][0].tag)
+
+        for instance_element in element:
+            # build pathway object dict to create pathway object
+            instance_object_dict = {}
+
+            # create pathway instance
+            for instance_sub_element in instance_element:
+                cutted_pathway_tag = self.get_tag(instance_sub_element.tag)
+                instance_object_dict[cutted_pathway_tag] = instance_sub_element.text
+
+            # add MetabolitePathway relation and continue with next pathway if pathway already present in Pathways
+            if instance_object_dict[instance_dict_key] in instance_dict:
+                new_meta_rel = relation_table(metabolite=metabolite_instance,
+                                              pathway=instance_dict[instance_object_dict[instance_dict_key]])
+                self.session.add(new_meta_rel)
+                continue
+
+            instance_dict[instance_object_dict[instance_dict_key]] = table(**instance_object_dict)
+            self.session.add(instance_dict[instance_object_dict[instance_dict_key]])
+
+            new_meta_rel = relation_table(metabolite=metabolite_instance,
+                                          pathway=instance_dict[instance_object_dict[instance_dict_key]])
+            self.session.add(new_meta_rel)
+        return instance_dict
+
     def populate(self, source=None):
         """Populate database with HMDB data"""
-
-        def get_tag(element_tag):
-            """Function to delete the xml namespace prefix when calling element.tag
-
-            :param element_tag: tag attribute of an xml element
-            :rtype: str
-            """
-            return element_tag.split("}")[1]
 
         # construct xml tree
         tree = get_data(source)
@@ -107,6 +175,7 @@ class Manager(object):
         biofluids_dict = {}
         tissues_dict = {}
         pathways_dict = {}
+        proteins_dict = {}
 
         for metabolite in root:
             # create metabolite dict used to feed in main metabolite table
@@ -114,7 +183,7 @@ class Manager(object):
 
             for element in metabolite:
                 # delete namespace prefix
-                tag = get_tag(element.tag)
+                tag = self.get_tag(element.tag)
 
                 # handle wikipedia typo in xml tags
                 if tag == "wikipidia":
@@ -150,50 +219,22 @@ class Manager(object):
                     continue
 
                 elif tag == "biofluid_locations":
-                    for biofluid_element in element:
-                        biofluid = biofluid_element.text
-                        if biofluid not in biofluids_dict:  # check if biofluid is already in table
-                            biofluids_dict[biofluid] = Biofluids(biofluid=biofluid)
-                            self.session.add(biofluids_dict[biofluid])
+                    biofluids_dict = self.populate_with_1_layer_elements(element, metabolite_instance, biofluids_dict,
+                                                                         Biofluids, MetaboliteBiofluid)
 
-                        # create metabolite-biofluid relation object
-                        new_meta_bio = MetaboliteBiofluid(metabolite=metabolite_instance,
-                                                          biofluid=biofluids_dict[biofluid])
-                        self.session.add(new_meta_bio)
-
-                elif tag == "tissue_locations":
+                elif tag == "tissue_locations": # FIXME
                     for tissue_element in element:
                         tissue = tissue_element.text
                         if tissue not in tissues_dict:  # check if tissue is already in table
                             tissues_dict[tissue] = Tissues(tissue=tissue)
                             self.session.add(tissues_dict[tissue])
 
-                        new_meta_tissue = MetaboliteTissues(metabolite=metabolite_instance,
-                                                            tissue=tissues_dict[tissue])
+                        new_meta_tissue = MetaboliteTissues(metabolite=metabolite_instance, tissue=tissues_dict[tissue])
                         self.session.add(new_meta_tissue)
 
                 elif tag == "pathways":
-                    for pathway_element in element:
-
-                        # build pathway object dict to create pathway object
-                        pathway_object_dict = {}
-
-                        # create pathway instance
-                        for pathway_sub_element in pathway_element:
-                            cutted_pathway_tag = get_tag(pathway_sub_element.tag)
-                            pathway_object_dict[cutted_pathway_tag] = pathway_sub_element.text
-
-                        # add MetabolitePathway relation and continue with next pathway if pathway already present in Pathways
-                        if pathway_object_dict['name'] in pathways_dict:
-                            new_meta_path = MetabolitePathways(metabolite=metabolite_instance, pathway=pathways_dict[pathway_object_dict['name']])
-                            self.session.add(new_meta_path)
-                            continue
-
-                        pathways_dict[pathway_object_dict['name']] = Pathways(**pathway_object_dict)
-                        self.session.add(pathways_dict[pathway_object_dict['name']])
-
-                        new_meta_path = MetabolitePathways(metabolite=metabolite_instance, pathway=pathways_dict[pathway_object_dict['name']])
-                        self.session.add(new_meta_path)
+                    pathways_dict = self.populate_with_2_layer_elements(element, metabolite_instance, pathways_dict,
+                                                                        Pathways, MetabolitePathways)
 
                 elif tag == "normal_concentrations":
                     continue
@@ -203,8 +244,11 @@ class Manager(object):
                     continue
                 elif tag == "general_references":
                     continue
+
                 elif tag == "protein_associations":
-                    continue
+                    continue  # FIXME
+                    proteins_dict = self.populate_with_2_layer_elements(element, metabolite_instance, proteins_dict,
+                                                                        Proteins, MetaboliteProteins)
 
                 else:  # feed in main metabolite table
                     setattr(metabolite_instance, tag, element.text)

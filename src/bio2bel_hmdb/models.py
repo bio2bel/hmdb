@@ -145,7 +145,7 @@ class Proteins(Base):
     gene_name = Column(String, nullable=True, doc="Gene name of the protein coding gene")
     protein_type = Column(String, nullable=True, doc="Protein type like 'enzyme' etc.")
 
-class MetaboliteProtein(Base):
+class MetaboliteProteins(Base):
     """Table representing the many to many relationship between metabolites and proteins"""
     __tablename__ = "metabolite_proteins"
 
@@ -154,5 +154,6 @@ class MetaboliteProtein(Base):
     metabolite = relationship("Metabolite", backref="proteins")
     protein_id = Column(Integer, ForeignKey("proteins.id"))
     protein = relationship("Proteins", backref="metabolites")
+
 
 

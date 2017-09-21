@@ -214,6 +214,13 @@
       <gene_name>DLD</gene_name>
       <protein_type>Unknown</protein_type>
     </protein>
+        <protein>
+      <protein_accession>double test added by colin</protein_accession>
+      <name>Glycine amidinotransferase, mitochondrial</name>
+      <uniprot_id>P50440</uniprot_id>
+      <gene_name>GATM</gene_name>
+      <protein_type>Enzyme</protein_type>
+    </protein>
     <protein>
       <protein_accession>HMDBP00893</protein_accession>
       <name>L-lactate dehydrogenase A-like 6A</name>
@@ -536,7 +543,7 @@
       <protein_type>Unknown</protein_type>
     </protein>
     <protein>
-      <protein_accession>HMDBP00463</protein_accession>
+      <protein_accession>double test added by colin</protein_accession>
       <name>Glycine amidinotransferase, mitochondrial</name>
       <uniprot_id>P50440</uniprot_id>
       <gene_name>GATM</gene_name>
