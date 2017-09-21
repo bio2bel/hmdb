@@ -112,6 +112,7 @@ class Manager(object):
         """
         for instance_element in element:
             instance_dict_key = instance_element.text
+
             if instance_dict_key not in instance_dict:  # check if biofluid is already in table
                 instance_dict[instance_dict_key] = table(biofluid=instance_dict_key)
                 self.session.add(instance_dict[instance_dict_key])
@@ -119,6 +120,7 @@ class Manager(object):
             # create metabolite-biofluid relation object
             new_meta_rel = relation_table(metabolite=metabolite_instance, biofluid=instance_dict[instance_dict_key])
             self.session.add(new_meta_rel)
+        return instance_dict
 
     def populate_with_2_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
                                        instance_dict_key=None):

@@ -138,6 +138,7 @@ class Pathways(Base):
 class Proteins(Base):
     """Table to store the protein information"""
     __tablename__ = "proteins"
+
     id = Column(Integer, primary_key=True)
     protein_accession = Column(String, nullable=False, unique=True, doc="HMDB accession number for the protein")
     name = Column(String, nullable=False)
@@ -155,5 +156,20 @@ class MetaboliteProteins(Base):
     protein_id = Column(Integer, ForeignKey("proteins.id"))
     protein = relationship("Proteins", backref="metabolites")
 
+class References(Base):
+    """Table storing literature references"""
+    __tablename__ = "references"
 
+    id = Column(Integer, primary_key=True)
+    reference_text = Column(String, nullable=True, unique=True, doc="Citation of the referene article")
+    pubmed_id = Column(String, nullable=True, unique=True, doc="PubMed identifier of the article")
 
+class MetaboliteReference(Base):
+    """Table representing the many to many relationship between metabolites and references"""
+    __tablename__ = "metabolite_references"
+
+    id = Column(Integer, primary_key=True)
+    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+    metabolite = relationship("Metabolite", backref="references")
+    reference_id = Column(Integer, ForeignKey("references.id"))
+    reference = relationship("References", backref="metabolites")
