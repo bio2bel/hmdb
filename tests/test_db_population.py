@@ -11,7 +11,7 @@ import tempfile
 
 from bio2bel_hmdb.manager import Manager
 from bio2bel_hmdb.models import Metabolite, Biofluids, Synonyms, \
-    SecondaryAccessions, Tissues, Pathways, Proteins, References, Diseases, MetaboliteDiseasesReferences
+    SecondaryAccessions, Tissues, Pathways, Proteins, References, Diseases
 from tests.constants import text_xml_path
 
 
