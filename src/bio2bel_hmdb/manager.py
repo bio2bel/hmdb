@@ -136,6 +136,8 @@ class Manager(object):
         :param str column: column name of the relation table which is not the metabolite
         :param str instance_dict_key: String which is used as the key for the instance_dict. (to ensure uniqueness in
         the instance_dict)
+        :param str metabolite_column: column of the relation table which represents the foreignkey to the main table.
+        In our database model the Metabolite table.
         :rtype: dict
         """
         if instance_dict_key is None and len(element) > 0:
@@ -255,7 +257,7 @@ class Manager(object):
                             if dtag != "references":
                                 setattr(disease_instance, dtag, disease_sub_element.text)
                             else:
-                                if disease_instance.name not in diseases_dict: #add disease instance if not already in table
+                                if disease_instance.name not in diseases_dict:  # add disease instance if not already in table
                                     diseases_dict[disease_instance.name] = disease_instance
                                     self.session.add(disease_instance)
 
@@ -266,13 +268,18 @@ class Manager(object):
                                         reference_tag = self.get_tag(reference_sub_element.tag)
                                         new_reference_object_dict[reference_tag] = reference_sub_element.text
 
-                                    if new_reference_object_dict['pubmed_id'] not in references_dict: # add if not already in reference table
-                                        references_dict[new_reference_object_dict['pubmed_id']] = References(**new_reference_object_dict)
+                                    if new_reference_object_dict[
+                                        'pubmed_id'] not in references_dict:  # add if not already in reference table
+                                        references_dict[new_reference_object_dict['pubmed_id']] = References(
+                                            **new_reference_object_dict)
                                         self.session.add(references_dict[new_reference_object_dict['pubmed_id']])
 
                                     rel_meta_dis_ref = MetaboliteDiseasesReferences(metabolite=metabolite_instance,
-                                                                                    disease=diseases_dict[disease_instance.name],
-                                                                                    reference=references_dict[new_reference_object_dict['pubmed_id']])
+                                                                                    disease=diseases_dict[
+                                                                                        disease_instance.name],
+                                                                                    reference=references_dict[
+                                                                                        new_reference_object_dict[
+                                                                                            'pubmed_id']])
                                     self.session.add(rel_meta_dis_ref)
 
                 elif tag == "general_references":
