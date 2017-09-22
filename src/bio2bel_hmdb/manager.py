@@ -89,7 +89,8 @@ class Manager(object):
         """
         return element_tag.split("}")[1]
 
-    def populate_with_1_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table):
+    def populate_with_1_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
+                                       column_name):
         """
 
         :param element: the current parent XML element. E.g. "pathways" where the children would have the tag "pathway" .
@@ -108,11 +109,13 @@ class Manager(object):
             instance_dict_key = instance_element.text
 
             if instance_dict_key not in instance_dict:  # check if biofluid is already in table
-                instance_dict[instance_dict_key] = table(biofluid=instance_dict_key)
+                new_instance_dict = {column_name:instance_dict_key}
+                instance_dict[instance_dict_key] = table(**new_instance_dict)
                 self.session.add(instance_dict[instance_dict_key])
 
             # create metabolite-biofluid relation object
-            new_meta_rel = relation_table(metabolite=metabolite_instance, biofluid=instance_dict[instance_dict_key])
+            new_meta_rel_dict = {"metabolite": metabolite_instance, column_name: instance_dict[instance_dict_key]}
+            new_meta_rel = relation_table(**new_meta_rel_dict)
             self.session.add(new_meta_rel)
         return instance_dict
 
@@ -149,9 +152,9 @@ class Manager(object):
             # add MetabolitePathway relation and continue with next pathway if pathway already present in Pathways
             if instance_object_dict[instance_dict_key] in instance_dict:
                 new_meta_rel_dict = {
-                    'metabolite':metabolite_instance,
-                    column:instance_dict[instance_object_dict[instance_dict_key]]
-                                     }
+                    'metabolite': metabolite_instance,
+                    column: instance_dict[instance_object_dict[instance_dict_key]]
+                }
                 new_meta_rel = relation_table(**new_meta_rel_dict)
                 self.session.add(new_meta_rel)
                 continue
@@ -224,17 +227,11 @@ class Manager(object):
 
                 elif tag == "biofluid_locations":
                     biofluids_dict = self.populate_with_1_layer_elements(element, metabolite_instance, biofluids_dict,
-                                                                         Biofluids, MetaboliteBiofluid)
+                                                                         Biofluids, MetaboliteBiofluid, 'biofluid')
 
                 elif tag == "tissue_locations":
-                    for tissue_element in element:
-                        tissue = tissue_element.text
-                        if tissue not in tissues_dict:  # check if tissue is already in table
-                            tissues_dict[tissue] = Tissues(tissue=tissue)
-                            self.session.add(tissues_dict[tissue])
-
-                        new_meta_tissue = MetaboliteTissues(metabolite=metabolite_instance, tissue=tissues_dict[tissue])
-                        self.session.add(new_meta_tissue)
+                    tissues_dict = self.populate_with_1_layer_elements(element, metabolite_instance, tissues_dict,
+                                                                       Tissues, MetaboliteTissues, 'tissue')
 
                 elif tag == "pathways":
                     pathways_dict = self.populate_with_2_layer_elements(element, metabolite_instance, pathways_dict,
@@ -248,9 +245,9 @@ class Manager(object):
                     continue
 
                 elif tag == "general_references":
-                    continue
                     references_dict = self.populate_with_2_layer_elements(element, metabolite_instance, references_dict,
-                                                                          References, MetaboliteReferences, "pubmed_id")
+                                                                          References, MetaboliteReferences, 'reference',
+                                                                          "pubmed_id")
 
                 elif tag == "protein_associations":
                     proteins_dict = self.populate_with_2_layer_elements(element, metabolite_instance, proteins_dict,
