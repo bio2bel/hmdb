@@ -104,10 +104,19 @@ class TestBuildDB(unittest.TestCase):
     def test_populate_references(self):
         """Tests for testing if population of Protein and MetaboliteProtein table is successfull"""
         ref1 = self.manager.session.query(References).count()
-        self.assertEqual(13, ref1)
+        self.assertEqual(11, ref1)
 
         ref2 = self.manager.session.query(References).filter(References.pubmed_id == "7126379")
         self.assertEqual("Kobayash74.", ref2[0].reference_text)
+
+    def test_populate_diseases(self):
+        """Tests for testing if population of Protein and MetaboliteProtein table is successfull"""
+        dis1 = self.manager.session.query(Diseases).count()
+        self.assertEqual(3, dis1)
+
+        dis2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
+        self.assertEqual("Schizophrenia", dis2.diseases[1].disease.name)
+        self.assertEqual("2415198", dis2.diseases[1].reference.pubmed_id)
 
 
 if __name__ == '__main__':

@@ -161,26 +161,6 @@
     </concentration>
   </abnormal_concentrations>
   <diseases>
-    <disease>
-      <name>Schizophrenia</name>
-      <omim_id>181500</omim_id>
-      <references>
-        <reference>
-          <reference_text>Harnryd C, Bjerkenstedt L, Grimm VE, Sedvall G: Reduction of MOPEG levels in cerebrospinal fluid of psychotic women after electroconvulsive treatment. Psychopharmacology (Berl). 1979 Aug 8;64(2):131-4.</reference_text>
-          <pubmed_id>115032</pubmed_id>
-        </reference>
-      </references>
-    </disease>
-    <disease>
-      <name>Pyruvate dehydrogenase deficiency</name>
-      <omim_id>312170</omim_id>
-      <references>
-        <reference>
-          <reference_text>OMIM 238331</reference_text>
-          <pubmed_id/>
-        </reference>
-      </references>
-    </disease>
   </diseases>
   <drugbank_id></drugbank_id>
   <drugbank_metabolite_id/>
