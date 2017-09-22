@@ -170,6 +170,34 @@ class MetaboliteReferences(Base):
     reference_id = Column(Integer, ForeignKey("references.id"))
     reference = relationship("References", backref="metabolites")
 
+class Diseases(Base):
+    """Table storing the diseases and their ids"""
+    __tablename__ = "diseases"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False, unique=True, doc="Name of the disease")
+    omim_id = Column(String, nullable=True, unique=True, doc="OMIM identifier associated with the disease")
+
+class MetaboliteDiseases(Base):
+    """Table storing the relations between disease and metabolite"""
+    __tablename__ = "metabolite_disease"
+
+    id = Column(Integer, primary_key=True)
+    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+    metabolite = relationship("Metabolite", backref="diseases")
+    disease_id = Column(Integer, ForeignKey("diseases.id"))
+    disease = relationship("Diseases", backref="metabolites")
+
+class DiseaseReferences(Base):
+    """Table storing the relations between diseases and there reference articles"""
+    __tablename__ = "disease_references"
+
+    id = Column(Integer, primary_key=True)
+    disease_id = Column(Integer, ForeignKey("diseases.id"))
+    disease = relationship("Diseases", backref="references")
+    reference_id = Column(Integer, ForeignKey("references.id"))
+    reference = relationship("References", backref="diseases")
+
 class PropertyValues(Base):
     """Table storing the values of chemical properties"""
     __tablename__ = "property_values"
