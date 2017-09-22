@@ -365,20 +365,6 @@
   <normal_concentrations>
     <concentration>
       <biofluid>Blood</biofluid>
-      <concentration_value>54.8 +/-  21.0</concentration_value>
-      <concentration_units>uM</concentration_units>
-      <subject_age>Adult (&gt;18 years old)</subject_age>
-      <subject_sex>Female</subject_sex>
-      <subject_condition>Normal</subject_condition>
-      <references>
-        <reference>
-          <reference_text>Marescau B, De Deyn PP, Holvoet J, Possemiers I, Nagels G, Saxena V, Mahler C: Guanidino compounds in serum and urine of cirrhotic patients. Metabolism. 1995 May;44(5):584-8.</reference_text>
-          <pubmed_id>7752905</pubmed_id>
-        </reference>
-      </references>
-    </concentration>
-    <concentration>
-      <biofluid>Blood</biofluid>
       <concentration_value>30.1 +/- 12.3</concentration_value>
       <concentration_units>uM</concentration_units>
       <subject_age>Adult (&gt;18 years old)</subject_age>
@@ -445,18 +431,6 @@
           <reference_text>Cynober LA: Plasma amino acid levels with a note on membrane transport: characteristics, regulation, and metabolic significance. Nutrition. 2002 Sep;18(9):761-6.</reference_text>
           <pubmed_id>12297216</pubmed_id>
         </reference>
-        <reference>
-          <reference_text>Pinna G, Meinhold H, Hiedra L, Thoma R, Hoell T, Graf KJ, Stoltenburg-Didinger G, Eravci M, Prengel H, Brodel O, Finke R, Baumgartner A: Elevated 3,5-diiodothyronine concentrations in the sera of patients with nonthyroidal illnesses and brain tumors. J Clin Endocrinol Metab. 1997 May;82(5):1535-42.</reference_text>
-          <pubmed_id>9141546</pubmed_id>
-        </reference>
-        <reference>
-          <reference_text>Halperin G, Elisaf M, Leitersdorf E, Harats D: A new method for determination of serum cholestanol by high-performance liquid chromatography with ultraviolet detection. J Chromatogr B Biomed Sci Appl. 2000 Jun 9;742(2):345-52.</reference_text>
-          <pubmed_id>10901139</pubmed_id>
-        </reference>
-        <reference>
-          <reference_text>Yoshida Y: [Analysis of methionine metabolism studied by the gas chromatographic determination of 3-methylthiopropionate in urine and its clinical application]. Hokkaido Igaku Zasshi. 1985 Mar;60(2):183-94.</reference_text>
-          <pubmed_id>3997054</pubmed_id>
-        </reference>
       </references>
     </disease>
     <disease>
@@ -464,23 +438,11 @@
       <omim_id>181500</omim_id>
       <references>
         <reference>
-          <reference_text>Harnryd C, Bjerkenstedt L, Grimm VE, Sedvall G: Reduction of MOPEG levels in cerebrospinal fluid of psychotic women after electroconvulsive treatment. Psychopharmacology (Berl). 1979 Aug 8;64(2):131-4.</reference_text>
-          <pubmed_id>115032</pubmed_id>
-        </reference>
-        <reference>
-          <reference_text>Prell GD, Green JP, Kaufmann CA, Khandelwal JK, Morrishow AM, Kirch DG, Linnoila M, Wyatt RJ: Histamine metabolites in cerebrospinal fluid of patients with chronic schizophrenia: their relationships to levels of other aminergic transmitters and ratings of symptoms. Schizophr Res. 1995 Jan;14(2):93-104.</reference_text>
-          <pubmed_id>7711000</pubmed_id>
-        </reference>
-        <reference>
-          <reference_text>Alfredsson G, Wiesel FA: Monoamine metabolites and amino acids in serum from schizophrenic patients before and during sulpiride treatment. Psychopharmacology (Berl). 1989;99(3):322-7.</reference_text>
-          <pubmed_id>2480613</pubmed_id>
-        </reference>
-        <reference>
           <reference_text>Do KQ, Lauer CJ, Schreiber W, Zollinger M, Gutteck-Amsler U, Cuenod M, Holsboer F: gamma-Glutamylglutamine and taurine concentrations are decreased in the cerebrospinal fluid of drug-naive patients with schizophrenic disorders. J Neurochem. 1995 Dec;65(6):2652-62.</reference_text>
           <pubmed_id>7595563</pubmed_id>
         </reference>
         <reference>
-          <reference_text>Kobayashi K, Koide Y, Yoshino K, Shohmori T: [P-hydroxyphenylacetic acid concentrations in cerebrospinal fluid]. No To Shinkei. 1982 Aug;34(8):769-74.</reference_text>
+          <reference_text>Kobayash74.</reference_text>
           <pubmed_id>7126379</pubmed_id>
         </reference>
       </references>
@@ -490,22 +452,12 @@
       <omim_id>211980</omim_id>
       <references>
         <reference>
-          <reference_text>Wishart DS, Knox C, Guo AC, Eisner R, Young N, Gautam B, Hau DD, Psychogios N, Dong E, Bouatra S, Mandal R, Sinelnikov I, Xia J, Jia L, Cruz JA, Lim E, Sobsey CA, Shrivastava S, Huang P, Liu P, Fang L, Peng J, Fradette R, Cheng D, Tzur D, Clements M, Lewis A, De Souza A, Zuniga A, Dawe M, Xiong Y, Clive D, Greiner R, Nazyrova A, Shaykhutdinov R, Li L, Vogel HJ, Forsythe I: HMDB: a knowledgebase for the human metabolome. Nucleic Acids Res. 2009 Jan;37(Database issue):D603-10. doi: 10.1093/nar/gkn810.  Epub 2008 Oct 25.</reference_text>
-          <pubmed_id>18953024</pubmed_id>
+          <reference_text>LOLO, Knox C, Guo AC, Eisner R, Young N, Gautam B, Hau DD, Psychogios N, Dong E, Bouatra S, Mandal R, Sinelnikov I, Xia J, Jia L, Cruz JA, Lim E, Sobsey CA, Shrivastava S, Huang P, Liu P, Fang L, Peng J, Fradette R, Cheng D, Tzur D, Clements M, Lewis A, De Souza A, Zuniga A, Dawe M, Xiong Y, Clive D, Greiner R, Nazyrova A, Shaykhutdinov R, Li L, Vogel HJ, Forsythe I: HMDB: a knowledgebase for the human metabolome. Nucleic Acids Res. 2009 Jan;37(Database issue):D603-10. doi: 10.1093/nar/gkn810.  Epub 2008 Oct 25.</reference_text>
+          <pubmed_id>lung_different2</pubmed_id>
         </reference>
         <reference>
           <reference_text>Stretch C, Eastman T, Mandal R, Eisner R, Wishart DS, Mourtzakis M, Prado CM, Damaraju S, Ball RO, Greiner R, Baracos VE: Prediction of skeletal muscle and fat mass in patients with advanced cancer using a metabolomic approach. J Nutr. 2012 Jan;142(1):14-21. doi: 10.3945/jn.111.147751. Epub 2011 Dec 7.</reference_text>
-          <pubmed_id>22157537</pubmed_id>
-        </reference>
-      </references>
-    </disease>
-    <disease>
-      <name>Rhabdomyolysis</name>
-      <omim_id/>
-      <references>
-        <reference>
-          <reference_text>Bairaktari E, Seferiadis K, Liamis G, Psihogios N, Tsolas O, Elisaf M: Rhabdomyolysis-related renal tubular damage studied by proton nuclear magnetic resonance spectroscopy of urine. Clin Chem. 2002 Jul;48(7):1106-9.</reference_text>
-          <pubmed_id>12089184</pubmed_id>
+          <pubmed_id>duplicate</pubmed_id>
         </reference>
       </references>
     </disease>
@@ -529,10 +481,6 @@
   <chebi_id>16919</chebi_id>
   <synthesis_reference>Thalhammer, Franz; Gastner, Thomas.  Preparation of creatine, creatine monohydrate and guanidinoacetic acid.    Ger. Offen.  (2007),     5pp. </synthesis_reference>
   <general_references>
-    <reference>
-      <reference_text>Subramanian A, Gupta A, Saxena S, Gupta A, Kumar R, Nigam A, Kumar R, Mandal SK, Roy R: Proton MR CSF analysis and a new software as predictors for the differentiation of meningitis in children. NMR Biomed. 2005 Jun;18(4):213-25.</reference_text>
-      <pubmed_id>15627241</pubmed_id>
-    </reference>
   </general_references>
   <protein_associations>
     <protein>
@@ -678,20 +626,6 @@
         </reference>
       </references>
     </concentration>
-    <concentration>
-      <biofluid>Urine</biofluid>
-      <concentration_value/>
-      <concentration_units/>
-      <subject_age>Adult (&gt;18 years old)</subject_age>
-      <subject_sex>Male</subject_sex>
-      <subject_condition>Normal</subject_condition>
-      <references>
-        <reference>
-          <reference_text>Jacobs DM, Spiesser L, Garnier M, de Roo N, van Dorsten F, Hollebrands B, van Velzen E, Draijer R, van Duynhoven J: SPE-NMR metabolite sub-profiling of urine. Anal Bioanal Chem. 2012 Nov;404(8):2349-61. doi: 10.1007/s00216-012-6339-2. Epub  2012 Aug 31.</reference_text>
-          <pubmed_id>22932811</pubmed_id>
-        </reference>
-      </references>
-    </concentration>
   </normal_concentrations>
   <abnormal_concentrations>
     <concentration>
@@ -722,10 +656,6 @@
           <reference_text>Bjerkenstedt L, Edman G, Hagenfeldt L, Sedvall G, Wiesel FA: Plasma amino acids in relation to cerebrospinal fluid monoamine metabolites in schizophrenic patients and healthy controls. Br J Psychiatry. 1985 Sep;147:276-82.</reference_text>
           <pubmed_id>2415198</pubmed_id>
         </reference>
-        <reference>
-          <reference_text>Pickar D, Breier A, Hsiao JK, Doran AR, Wolkowitz OM, Pato CN, Konicki PE, Potter WZ: Cerebrospinal fluid and plasma monoamine metabolites and their relation to psychosis. Implications for regional brain dysfunction in schizophrenia. Arch Gen Psychiatry. 1990 Jul;47(7):641-8.</reference_text>
-          <pubmed_id>1694425</pubmed_id>
-        </reference>
       </references>
     </disease>
     <disease>
@@ -734,11 +664,11 @@
       <references>
         <reference>
           <reference_text>Wishart DS, Knox C, Guo AC, Eisner R, Young N, Gautam B, Hau DD, Psychogios N, Dong E, Bouatra S, Mandal R, Sinelnikov I, Xia J, Jia L, Cruz JA, Lim E, Sobsey CA, Shrivastava S, Huang P, Liu P, Fang L, Peng J, Fradette R, Cheng D, Tzur D, Clements M, Lewis A, De Souza A, Zuniga A, Dawe M, Xiong Y, Clive D, Greiner R, Nazyrova A, Shaykhutdinov R, Li L, Vogel HJ, Forsythe I: HMDB: a knowledgebase for the human metabolome. Nucleic Acids Res. 2009 Jan;37(Database issue):D603-10. doi: 10.1093/nar/gkn810.  Epub 2008 Oct 25.</reference_text>
-          <pubmed_id>18953024</pubmed_id>
+          <pubmed_id>lung_different</pubmed_id>
         </reference>
         <reference>
           <reference_text>Stretch C, Eastman T, Mandal R, Eisner R, Wishart DS, Mourtzakis M, Prado CM, Damaraju S, Ball RO, Greiner R, Baracos VE: Prediction of skeletal muscle and fat mass in patients with advanced cancer using a metabolomic approach. J Nutr. 2012 Jan;142(1):14-21. doi: 10.3945/jn.111.147751. Epub 2011 Dec 7.</reference_text>
-          <pubmed_id>22157537</pubmed_id>
+          <pubmed_id>duplicate</pubmed_id>
         </reference>
       </references>
     </disease>

@@ -170,6 +170,7 @@ class MetaboliteReferences(Base):
     reference_id = Column(Integer, ForeignKey("references.id"))
     reference = relationship("References", backref="metabolites")
 
+
 class Diseases(Base):
     """Table storing the diseases and their ids"""
     __tablename__ = "diseases"
@@ -178,7 +179,8 @@ class Diseases(Base):
     name = Column(String, nullable=False, unique=True, doc="Name of the disease")
     omim_id = Column(String, nullable=True, unique=True, doc="OMIM identifier associated with the disease")
 
-class MetaboliteDiseases(Base):
+
+class MetaboliteDiseasesReferences(Base):
     """Table storing the relations between disease and metabolite"""
     __tablename__ = "metabolite_disease"
 
@@ -187,30 +189,27 @@ class MetaboliteDiseases(Base):
     metabolite = relationship("Metabolite", backref="diseases")
     disease_id = Column(Integer, ForeignKey("diseases.id"))
     disease = relationship("Diseases", backref="metabolites")
-
-class DiseaseReferences(Base):
-    """Table storing the relations between diseases and there reference articles"""
-    __tablename__ = "disease_references"
-
-    id = Column(Integer, primary_key=True)
-    disease_id = Column(Integer, ForeignKey("diseases.id"))
-    disease = relationship("Diseases", backref="references")
     reference_id = Column(Integer, ForeignKey("references.id"))
     reference = relationship("References", backref="diseases")
+
 
 class PropertyValues(Base):
     """Table storing the values of chemical properties"""
     __tablename__ = "property_values"
 
     id = Column(Integer, primary_key=True)
-    value = Column(String, nullable=False, unique=True, doc="value of a chemical property (e.g. logp) that will be linked to the properts and metabolites")
+    value = Column(String, nullable=False, unique=True,
+                   doc="value of a chemical property (e.g. logp) that will be linked to the properts and metabolites")
+
 
 class PropertyKinds(Base):
     """Table storing the 'kind' of chemical properties e.g. logP"""
     __tablename__ = "property_kinds"
 
     id = Column(Integer, primary_key=True)
-    kind = Column(String, nullable=False, unique=True, doc="the 'kind' of chemical properties e.g. logP, melting point etc")
+    kind = Column(String, nullable=False, unique=True,
+                  doc="the 'kind' of chemical properties e.g. logP, melting point etc")
+
 
 class PropertySource(Base):
     """Table storing the sources of properties e.g. software like 'ALOGPS'"""

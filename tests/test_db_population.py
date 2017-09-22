@@ -11,7 +11,7 @@ import tempfile
 
 from bio2bel_hmdb.manager import Manager
 from bio2bel_hmdb.models import Metabolite, Biofluids, Synonyms, \
-    SecondaryAccessions, Tissues, Pathways, Proteins
+    SecondaryAccessions, Tissues, Pathways, Proteins, References, Diseases, MetaboliteDiseasesReferences
 from tests.constants import text_xml_path
 
 
@@ -100,6 +100,14 @@ class TestBuildDB(unittest.TestCase):
 
         pro3 = self.manager.session.query(Metabolite).filter(Metabolite.accession == 'HMDB00072').first()
         self.assertEqual("HMDBP00725", pro3.proteins[0].protein.protein_accession)
+
+    def test_populate_references(self):
+        """Tests for testing if population of Protein and MetaboliteProtein table is successfull"""
+        ref1 = self.manager.session.query(References).count()
+        self.assertEqual(13, ref1)
+
+        ref2 = self.manager.session.query(References).filter(References.pubmed_id == "7126379")
+        self.assertEqual("Kobayash74.", ref2[0].reference_text)
 
 
 if __name__ == '__main__':
