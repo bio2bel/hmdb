@@ -169,3 +169,24 @@ class MetaboliteReferences(Base):
     metabolite = relationship("Metabolite", backref="references")
     reference_id = Column(Integer, ForeignKey("references.id"))
     reference = relationship("References", backref="metabolites")
+
+class PropertyValues(Base):
+    """Table storing the values of chemical properties"""
+    __tablename__ = "property_values"
+
+    id = Column(Integer, primary_key=True)
+    value = Column(String, nullable=False, unique=True, doc="value of a chemical property (e.g. logp) that will be linked to the properts and metabolites")
+
+class PropertyKinds(Base):
+    """Table storing the 'kind' of chemical properties e.g. logP"""
+    __tablename__ = "property_kinds"
+
+    id = Column(Integer, primary_key=True)
+    kind = Column(String, nullable=False, unique=True, doc="the 'kind' of chemical properties e.g. logP, melting point etc")
+
+class PropertySource(Base):
+    """Table storing the sources of properties e.g. software like 'ALOGPS'"""
+    __tablename__ = "property_source"
+
+    id = Column(Integer, primary_key=True)
+    source = Column(String, nullable=False, unique=True, doc="The source of which the knowledge of g")

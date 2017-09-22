@@ -116,7 +116,7 @@ class Manager(object):
             self.session.add(new_meta_rel)
         return instance_dict
 
-    def populate_with_2_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
+    def populate_with_2_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table, column,
                                        instance_dict_key=None):
         """Function to parse two layered xml elements (parent elements covers at least one child
         which also consists of one more layer of tags) and populate sqlalchemy tables.
@@ -126,9 +126,10 @@ class Manager(object):
         involved in that "pathway")
         :param dict instance_dict: dictionary which tracks if the found instance is already present in the table and can
         then refer to it
-        :param class table: sqlalchemy class to which the instances belong. E.g. "Pathways"
-        :param class relation_table: sqlalchemy class which stores the many to many relation between the instances and
+        :param type table: sqlalchemy class to which the instances belong. E.g. "Pathways"
+        :param type relation_table: sqlalchemy class which stores the many to many relation between the instances and
         the metabolites
+        :param str column: column name of the relation table which is not the metabolite
         :param str instance_dict_key: String which is used as the key for the instance_dict. (to ensure uniqueness in
         the instance_dict)
         :rtype: dict
@@ -147,17 +148,24 @@ class Manager(object):
 
             # add MetabolitePathway relation and continue with next pathway if pathway already present in Pathways
             if instance_object_dict[instance_dict_key] in instance_dict:
-                new_meta_rel = relation_table(metabolite=metabolite_instance,
-                                              pathway=instance_dict[instance_object_dict[instance_dict_key]])
+                new_meta_rel_dict = {
+                    'metabolite':metabolite_instance,
+                    column:instance_dict[instance_object_dict[instance_dict_key]]
+                                     }
+                new_meta_rel = relation_table(**new_meta_rel_dict)
                 self.session.add(new_meta_rel)
                 continue
 
             instance_dict[instance_object_dict[instance_dict_key]] = table(**instance_object_dict)
             self.session.add(instance_dict[instance_object_dict[instance_dict_key]])
 
-            new_meta_rel = relation_table(metabolite=metabolite_instance,
-                                          pathway=instance_dict[instance_object_dict[instance_dict_key]])
+            new_meta_rel_dict = {
+                'metabolite': metabolite_instance,
+                column: instance_dict[instance_object_dict[instance_dict_key]]
+            }
+            new_meta_rel = relation_table(**new_meta_rel_dict)
             self.session.add(new_meta_rel)
+
         return instance_dict
 
     def populate(self, source=None):
@@ -188,7 +196,6 @@ class Manager(object):
                 elif tag == "wikipedia":
                     log.warning("HMDB fixed the 'wikipidia' tag to 'wikipedia'. Change code.")
 
-                # handle seperate tables and nested iterations (Work In Progress)
                 if tag == "secondary_accessions":
                     for secondary_accession_element in element:
                         new_secondary_accession = SecondaryAccessions(metabolite=metabolite_instance,
@@ -231,7 +238,7 @@ class Manager(object):
 
                 elif tag == "pathways":
                     pathways_dict = self.populate_with_2_layer_elements(element, metabolite_instance, pathways_dict,
-                                                                        Pathways, MetabolitePathways)
+                                                                        Pathways, MetabolitePathways, 'pathway')
 
                 elif tag == "normal_concentrations":
                     continue
@@ -246,9 +253,8 @@ class Manager(object):
                                                                           References, MetaboliteReferences, "pubmed_id")
 
                 elif tag == "protein_associations":
-                    continue
                     proteins_dict = self.populate_with_2_layer_elements(element, metabolite_instance, proteins_dict,
-                                                                        Proteins, MetaboliteProteins)
+                                                                        Proteins, MetaboliteProteins, 'protein')
 
                 else:  # feed in main metabolite table
                     setattr(metabolite_instance, tag, element.text)

@@ -99,7 +99,7 @@ class TestBuildDB(unittest.TestCase):
         self.assertEqual(2, len(pro2.proteins))
 
         pro3 = self.manager.session.query(Metabolite).filter(Metabolite.accession == 'HMDB00072').first()
-        self.assertEqual("HMDBP00725", pro3.proteins[1].protein.protein_accession)
+        self.assertEqual("HMDBP00725", pro3.proteins[0].protein.protein_accession)
 
 
 if __name__ == '__main__':
