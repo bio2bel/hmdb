@@ -39,7 +39,7 @@ class Metabolite(Base):
     kegg_id = Column(String, nullable=True, doc="KEGG ID of the metabolite")
     biocyc_id = Column(String, nullable=True, doc="BioCyc ID of the metabolite")
     bigg_id = Column(String, nullable=True, doc="Bigg ID of the metabolite")
-    wikipedia = Column(String, nullable=True, doc="Wikipedia ID of the metabolite")
+    wikipedia = Column(String, nullable=True, doc="Wikipedia name of the metabolite")
     nugowiki = Column(String, nullable=True, doc="NukoWiki ID of the metabolite")
     metagene = Column(String, nullable=True, doc="Metagene ID of the metabolite")
     metlin_id = Column(String, nullable=True, doc="Metlin ID of the metabolite")
@@ -231,7 +231,7 @@ class CellularLocations(Base):
 
 
 class Biofunctions(Base):
-    """Table for storing the 'biofunctions' (I think they ment  GO annotations"""
+    """Table for storing the 'biofunctions' annotations"""
     __tablename__ = "biofunctions"
 
     id = Column(Integer, primary_key=True)

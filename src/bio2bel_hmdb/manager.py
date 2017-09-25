@@ -11,12 +11,12 @@ from io import BytesIO
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from .constants import (
+from bio2bel_hmdb.constants import (
     DATA_URL,
     HMDB_SQLITE_PATH,
     HMDB_CONFIG_FILE_PATH,
 )
-from .models import Base, Metabolite, Biofluids, MetaboliteBiofluid, \
+from bio2bel_hmdb.models import Base, Metabolite, Biofluids, MetaboliteBiofluid, \
     Synonyms, SecondaryAccessions, Tissues, MetaboliteTissues, \
     Pathways, MetabolitePathways, Proteins, MetaboliteProteins, References, MetaboliteReferences, Diseases, \
     MetaboliteDiseasesReferences, Biofunctions, MetaboliteBiofunctions, CellularLocations, MetaboliteCellularLocations
@@ -77,6 +77,17 @@ class Manager(object):
             log.info('create configuration file {}'.format(cfp))
 
         return HMDB_SQLITE_PATH
+
+    @staticmethod
+    def ensure(connection=None):
+        """Checks and allows for a Manager to be passed to the function. """
+        if connection is None or isinstance(connection, str):
+            return Manager(connection=connection)
+
+        if isinstance(connection, Manager):
+            return connection
+
+        raise TypeError
 
     def make_tables(self, check_first=True):
         """Create tables from model.py"""

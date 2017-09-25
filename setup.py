@@ -10,6 +10,7 @@ PACKAGES = setuptools.find_packages(where='src')
 META_PATH = os.path.join('src', 'bio2bel_hmdb', '__init__.py')
 INSTALL_REQUIRES = [
     'sqlalchemy',
+    'pybel==0.9.0',
     'pybel_tools',
     'requests'
 ]

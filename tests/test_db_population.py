@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""Work in progress.
-- Import database models
-- Write test_populate
-"""
-
 import unittest
 import os
 import tempfile
