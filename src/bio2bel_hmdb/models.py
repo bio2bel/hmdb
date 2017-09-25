@@ -194,7 +194,8 @@ class MetaboliteDiseasesReferences(Base):
 
 
 class PropertyValues(Base):
-    """Table storing the values of chemical properties"""
+    """Table storing the values of chemical properties
+    Not used for BEL enrichment"""
     __tablename__ = "property_values"
 
     id = Column(Integer, primary_key=True)
@@ -203,7 +204,8 @@ class PropertyValues(Base):
 
 
 class PropertyKinds(Base):
-    """Table storing the 'kind' of chemical properties e.g. logP"""
+    """Table storing the 'kind' of chemical properties e.g. logP
+    Not used for BEL enrichment"""
     __tablename__ = "property_kinds"
 
     id = Column(Integer, primary_key=True)
@@ -212,8 +214,45 @@ class PropertyKinds(Base):
 
 
 class PropertySource(Base):
-    """Table storing the sources of properties e.g. software like 'ALOGPS'"""
+    """Table storing the sources of properties e.g. software like 'ALOGPS'
+    Not used for BEL enrichment"""
     __tablename__ = "property_source"
 
     id = Column(Integer, primary_key=True)
-    source = Column(String, nullable=False, unique=True, doc="The source of which the knowledge of g")
+    source = Column(String, nullable=False, unique=True)
+
+
+class CellularLocations(Base):
+    """Table for storing the cellular location GO annotations"""
+    __tablename__ = "cellular_locations"
+
+    id = Column(Integer, primary_key=True)
+    cellular_location = Column(String, nullable=False, unique=True)
+
+
+class Biofunctions(Base):
+    """Table for storing the 'biofunctions' (I think they ment  GO annotations"""
+    __tablename__ = "biofunctions"
+
+    id = Column(Integer, primary_key=True)
+    cellular_location = Column(String, nullable=False, unique=True)
+
+class MetaboliteCellularLocation(Base):
+    """Table storing the many to many relations between metabolites and cellular location GO annotations"""
+    __tablename__ = "metabolite_cellular_locations"
+
+    id = Column(Integer, primary_key=True)
+    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+    metabolite = relationship("Metabolite", backref="cellular_locations")
+    cellular_location_id = Column(Integer, ForeignKey("cellular_locations.id"))
+    cellular_location = relationship("CellularLocations", backref="metabolites")
+
+class MetaboliteBiofunctions(Base):
+    """Table storing the many to many relations between metabolites and cellular location GO annotations"""
+    __tablename__ = "metabolite_biofunctions"
+
+    id = Column(Integer, primary_key=True)
+    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+    metabolite = relationship("Metabolite", backref="biofuntions")
+    biofunctions_id = Column(Integer, ForeignKey("biofunctions.id"))
+    biofunction = relationship("Biofunctions", backref="metabolites")

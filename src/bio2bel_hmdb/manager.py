@@ -268,8 +268,8 @@ class Manager(object):
                                         reference_tag = self.get_tag(reference_sub_element.tag)
                                         new_reference_object_dict[reference_tag] = reference_sub_element.text
 
-                                    if new_reference_object_dict[
-                                        'pubmed_id'] not in references_dict:  # add if not already in reference table
+                                    # add if not already in reference table
+                                    if new_reference_object_dict['pubmed_id'] not in references_dict:
                                         references_dict[new_reference_object_dict['pubmed_id']] = References(
                                             **new_reference_object_dict)
                                         self.session.add(references_dict[new_reference_object_dict['pubmed_id']])
