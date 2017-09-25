@@ -133,7 +133,9 @@ class TestBuildDB(unittest.TestCase):
         self.assertEqual(3, biof1)
 
         biof2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00064")
-        self.assertEqual("Component of Arginine and proline metabolism", biof2[0].biofunctions[0].biofunction.biofunction)
+        self.assertEqual("Component of Arginine and proline metabolism",
+                         biof2[0].biofunctions[0].biofunction.biofunction)
+
 
 if __name__ == '__main__':
     unittest.main()

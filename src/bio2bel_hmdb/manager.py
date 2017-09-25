@@ -224,11 +224,18 @@ class Manager(object):
                         ontology_tag = self.get_tag(ontology_element.tag)
 
                         if ontology_tag == "biofunctions":
-                            biofunctions_dict = self.populate_with_1_layer_elements(ontology_element, metabolite_instance, biofunctions_dict, Biofunctions,
-                                                           MetaboliteBiofunctions, "biofunction")
+                            biofunctions_dict = self.populate_with_1_layer_elements(ontology_element,
+                                                                                    metabolite_instance,
+                                                                                    biofunctions_dict, Biofunctions,
+                                                                                    MetaboliteBiofunctions,
+                                                                                    "biofunction")
                         if ontology_tag == "cellular_locations":
-                            cellular_locations_dict = self.populate_with_1_layer_elements(ontology_element, metabolite_instance, cellular_locations_dict, CellularLocations,
-                                                           MetaboliteCellularLocations, "cellular_location")
+                            cellular_locations_dict = self.populate_with_1_layer_elements(ontology_element,
+                                                                                          metabolite_instance,
+                                                                                          cellular_locations_dict,
+                                                                                          CellularLocations,
+                                                                                          MetaboliteCellularLocations,
+                                                                                          "cellular_location")
 
                 elif tag == "experimental_properties":  # will be delayed to later versions since not important for BEL
                     continue
