@@ -11,7 +11,8 @@ import tempfile
 
 from bio2bel_hmdb.manager import Manager
 from bio2bel_hmdb.models import Metabolite, Biofluids, Synonyms, \
-    SecondaryAccessions, Tissues, Pathways, Proteins, References, Diseases
+    SecondaryAccessions, Tissues, Pathways, Proteins, References, Diseases, \
+    CellularLocations, Biofunctions
 from tests.constants import text_xml_path
 
 
@@ -102,7 +103,7 @@ class TestBuildDB(unittest.TestCase):
         self.assertEqual("HMDBP00725", pro3.proteins[0].protein.protein_accession)
 
     def test_populate_references(self):
-        """Tests for testing if population of Protein and MetaboliteProtein table is successfull"""
+        """Tests for testing if population of References and MetaboliteReferences table is successfull"""
         ref1 = self.manager.session.query(References).count()
         self.assertEqual(11, ref1)
 
@@ -110,7 +111,7 @@ class TestBuildDB(unittest.TestCase):
         self.assertEqual("Kobayash74.", ref2[0].reference_text)
 
     def test_populate_diseases(self):
-        """Tests for testing if population of Protein and MetaboliteProtein table is successfull"""
+        """Tests for testing if population of Diseases and MetaboliteDiseases table is successfull"""
         dis1 = self.manager.session.query(Diseases).count()
         self.assertEqual(3, dis1)
 
@@ -118,6 +119,21 @@ class TestBuildDB(unittest.TestCase):
         self.assertEqual("Schizophrenia", dis2.diseases[1].disease.name)
         self.assertEqual("2415198", dis2.diseases[1].reference.pubmed_id)
 
+    def test_populate_cellular_locations(self):
+        """Tests for testing if population of CellularLocation and MetaboliteCelularLocations table is successfull"""
+        cel1 = self.manager.session.query(CellularLocations).count()
+        self.assertEqual(3, cel1)
+
+        cel2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00064")
+        self.assertEqual("Mitochondria", cel2[0].cellular_locations[2].cellular_location.cellular_location)
+
+    def test_populate_biofunctions(self):
+        """Tests for testing if population of Biofunctions and MetaboliteBiofunctions table is successfull"""
+        biof1 = self.manager.session.query(Biofunctions).count()
+        self.assertEqual(3, biof1)
+
+        biof2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00064")
+        self.assertEqual("Component of Arginine and proline metabolism", biof2[0].biofunctions[0].biofunction.biofunction)
 
 if __name__ == '__main__':
     unittest.main()

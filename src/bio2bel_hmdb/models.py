@@ -235,9 +235,9 @@ class Biofunctions(Base):
     __tablename__ = "biofunctions"
 
     id = Column(Integer, primary_key=True)
-    cellular_location = Column(String, nullable=False, unique=True)
+    biofunction = Column(String, nullable=False, unique=True)
 
-class MetaboliteCellularLocation(Base):
+class MetaboliteCellularLocations(Base):
     """Table storing the many to many relations between metabolites and cellular location GO annotations"""
     __tablename__ = "metabolite_cellular_locations"
 
@@ -253,6 +253,6 @@ class MetaboliteBiofunctions(Base):
 
     id = Column(Integer, primary_key=True)
     metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
-    metabolite = relationship("Metabolite", backref="biofuntions")
+    metabolite = relationship("Metabolite", backref="biofunctions")
     biofunctions_id = Column(Integer, ForeignKey("biofunctions.id"))
     biofunction = relationship("Biofunctions", backref="metabolites")
