@@ -11,19 +11,19 @@ from tests.constants import text_xml_path
 def get_hmdb_accession():
     """ """
     m = Manager(HMDB_SQLITE_PATH)
-    m.make_tables()
-    m.populate(text_xml_path)
 
     accessions = m.session.query(Metabolite.accession).all()
-    return [a[0] for a in accessions] # if anybody knows a better way of querying for a flat list. Please change.
+    return [a[0] for a in accessions]  # if anybody knows a better way of querying for a flat list. Please change.
 
-def write_belns(file, values=None):
-    values = get_hmdb_accession() if values is None else values
+
+def write_belns(file=None, values=None):
+    if values is None:
+        values = get_hmdb_accession()
 
     write_namespace(
         namespace_name='Human Metabolome Database',
         namespace_keyword='HMDB',
-        namespace_domain= NAMESPACE_DOMAIN_CHEMICAL,
+        namespace_domain=NAMESPACE_DOMAIN_CHEMICAL,
         author_name='Colin Birkenbihl, Charles Tapley Hoyt',
         author_contact='charles.hoyt@scai.fraunhofer.de',
         author_copyright='Creative Commons by 4.0',
@@ -32,3 +32,7 @@ def write_belns(file, values=None):
         functions='A',
         file=file
     )
+
+
+if __name__ == '__main__':
+    get_hmdb_accession()

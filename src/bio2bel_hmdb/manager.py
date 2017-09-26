@@ -325,3 +325,12 @@ class Manager(object):
             self.session.add(metabolite_instance)
 
         self.session.commit()
+
+    def query_associated_proteins(self, hmdb_metabolite_id):
+        """Function to query the constructed HMDB database to get the metabolite associated proteins for BEL enrichment
+
+        :param str hmdb_metabolite_id:
+        :rtype: list
+        """
+
+        return self.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first().proteins
