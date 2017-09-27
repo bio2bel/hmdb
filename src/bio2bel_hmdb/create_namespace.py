@@ -2,7 +2,7 @@
 
 from bio2bel_hmdb.constants import HMDB_SQLITE_PATH
 from bio2bel_hmdb.manager import Manager
-from bio2bel_hmdb.models import Metabolite,  Diseases
+from bio2bel_hmdb.models import Metabolite, Diseases
 from pybel.constants import NAMESPACE_DOMAIN_CHEMICAL, NAMESPACE_DOMAIN_OTHER
 from pybel_tools.definition_utils import write_namespace
 
@@ -14,6 +14,7 @@ def get_hmdb_accession():
     accessions = m.session.query(Metabolite.accession).all()
     return [a[0] for a in accessions]  # if anybody knows a better way of querying for a flat list. Please change.
 
+
 def get_hmdb_diseases():
     """ """
     m = Manager(HMDB_SQLITE_PATH)
@@ -22,7 +23,7 @@ def get_hmdb_diseases():
     return [a[0] for a in accessions]  # if anybody knows a better way of querying for a flat list. Please change.
 
 
-def write_HMDB_belns(file=None, values=None):
+def write_hmdb_belns(file=None, values=None):
     """
     Function to create a BEL namespace with HMDB identifiers.
 
@@ -44,6 +45,7 @@ def write_HMDB_belns(file=None, values=None):
         functions='A',
         file=file
     )
+
 
 def write_hmdb_disease_ns(file=None, values=None):
     """
@@ -67,5 +69,3 @@ def write_hmdb_disease_ns(file=None, values=None):
         functions='O',
         file=file
     )
-
-

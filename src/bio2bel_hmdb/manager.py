@@ -105,7 +105,7 @@ class Manager(object):
                                        column_name):
         """
 
-        :param element: the current parent XML element. E.g. "pathways" where the children would have the tag "pathway" .
+        :param element: the current parent XML element. E.g. "pathways" where the children would have the tag "pathway".
         :param models.Metabolite metabolite_instance: metabolite object which is associated with the instances (e.g. is
         involved in that "pathway")
         :param dict instance_dict: dictionary which tracks if the found instance is already present in the table and can
