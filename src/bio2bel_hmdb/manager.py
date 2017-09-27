@@ -332,5 +332,12 @@ class Manager(object):
         :param str hmdb_metabolite_id:
         :rtype: list
         """
-
         return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_id).first().proteins
+
+    def query_associated_diseases(self, hmdb_metabolite_id):
+        """Function to query the constructed HMDB database to get the metabolite associated proteins for BEL enrichment
+
+        :param str hmdb_metabolite_id:
+        :rtype: list
+        """
+        return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_id).first().diseases

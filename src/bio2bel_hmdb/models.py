@@ -3,9 +3,10 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from pybel.constants import FUNCTION, NAME, NAMESPACE, PROTEIN, ABUNDANCE
+from pybel.constants import FUNCTION, NAME, NAMESPACE, PROTEIN, ABUNDANCE, PATHOLOGY
 
 HMDB_ID = 'HMDB'
+HMDB_DISEASE = 'HMDB_D'
 UNIPROT = 'UP'
 
 Base = declarative_base()
@@ -204,6 +205,17 @@ class Diseases(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True, doc="Name of the disease")
     omim_id = Column(String, nullable=True, unique=True, doc="OMIM identifier associated with the disease")
+
+    def serialize_to_bel(self):
+        """Function to serialize to PyBEL node data dictionary.
+
+        :rtype: dict
+        """
+        return {
+            FUNCTION: PATHOLOGY,
+            NAMESPACE: HMDB_DISEASE,
+            NAME: self.name
+        }
 
 
 class MetaboliteDiseasesReferences(Base):
