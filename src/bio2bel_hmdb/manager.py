@@ -333,4 +333,4 @@ class Manager(object):
         :rtype: list
         """
 
-        return self.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first().proteins
+        return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_id).first().proteins

@@ -1,4 +1,5 @@
-pybel==0.9.0
+networkx==1.11
+pybel>=0.9.0
 pybel_tools
 sqlalchemy
 requests

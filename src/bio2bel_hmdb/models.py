@@ -3,6 +3,10 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from pybel.constants import FUNCTION, NAME, NAMESPACE, PROTEIN, ABUNDANCE
+
+HMDB_ID = 'HMDB'
+UNIPROT = 'UP'
 
 Base = declarative_base()
 
@@ -47,6 +51,17 @@ class Metabolite(Base):
     het_id = Column(String, nullable=True, doc="Het ID of the metabolite")
     chebi_id = Column(String, nullable=True, doc="Chebi ID of the metabolite")
     synthesis_reference = Column(String, nullable=True, doc="Synthesis reference citation of the metabolite")
+
+    def serialize_to_bel(self):
+        """Function to serialize to PyBEL node data dictionary.
+
+        :rtype: dict
+        """
+        return {
+            FUNCTION: ABUNDANCE,
+            NAMESPACE: HMDB_ID,
+            NAME: self.accession
+        }
 
 
 class SecondaryAccessions(Base):
@@ -138,6 +153,17 @@ class Proteins(Base):
     uniprot_id = Column(String, nullable=True, doc="Uniprot identifier of the protein")
     gene_name = Column(String, nullable=True, doc="Gene name of the protein coding gene")
     protein_type = Column(String, nullable=True, doc="Protein type like 'enzyme' etc.")
+
+    def serialize_to_bel(self):
+        """Function to serialize to PyBEL node data dictionary.
+
+        :rtype: dict
+        """
+        return {
+            FUNCTION: PROTEIN,
+            NAMESPACE: UNIPROT,
+            NAME: self.uniprot_id
+        }
 
 
 class MetaboliteProteins(Base):
