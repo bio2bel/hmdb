@@ -11,11 +11,11 @@ protein = PROTEIN, 'UP', 'P50440'
 
 # test enriching with tissues
 hmdb_tuple2 = ABUNDANCE, 'HMDB', 'HMDB00064'
-disease = PATHOLOGY, 'HMDB_D', 'Lung Cancer'
+disease_tuple = PATHOLOGY, 'HMDB_D', 'Lung Cancer'
 
 
 class TestEnrich(unittest.TestCase):
-    def test_enrich_proteins(self):
+    def test_enrich_metabolites_proteins(self):
         g = BELGraph()
         g.add_simple_node(*hmdb_tuple1)
 
@@ -27,7 +27,7 @@ class TestEnrich(unittest.TestCase):
         self.assertEqual(3, g.number_of_edges())
         self.assertTrue(g.has_edge(protein, hmdb_tuple1))
 
-    def test_enrich_diseases(self):
+    def test_enrich_metabolites_diseases(self):
         g = BELGraph()
         g.add_simple_node(*hmdb_tuple2)
 
@@ -37,4 +37,21 @@ class TestEnrich(unittest.TestCase):
         enrich_metabolites_diseases(g)
         self.assertEqual(4, g.number_of_nodes())
         self.assertEqual(3, g.number_of_edges())
-        self.assertTrue(g.has_edge(disease, hmdb_tuple2))
+        self.assertTrue(g.has_edge(disease_tuple, hmdb_tuple2))
+
+    def test_enrich_diseases_metabolites(self):
+        g = BELGraph()
+        g.add_simple_node(*disease_tuple)
+
+        self.assertEqual(1, g.number_of_nodes())
+        self.assertEqual(0, g.number_of_edges())
+
+        enrich_diseases_metabolites(g)
+
+
+        for edge in g.edges():
+            print(edge)
+
+        self.assertEqual(3, g.number_of_nodes())
+        self.assertEqual(2, g.number_of_edges())
+        self.assertTrue(g.has_edge(hmdb_tuple2, disease_tuple))

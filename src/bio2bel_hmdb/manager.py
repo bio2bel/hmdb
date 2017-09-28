@@ -327,7 +327,8 @@ class Manager(object):
         self.session.commit()
 
     def query_associated_proteins(self, hmdb_metabolite_id):
-        """Function to query the constructed HMDB database to get the metabolite associated proteins for BEL enrichment
+        """Function to query the constructed HMDB database to get the metabolite associated protein relations
+        for BEL enrichment
 
         :param str hmdb_metabolite_id:
         :rtype: list
@@ -335,9 +336,19 @@ class Manager(object):
         return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_id).first().proteins
 
     def query_associated_diseases(self, hmdb_metabolite_id):
-        """Function to query the constructed HMDB database to get the metabolite associated proteins for BEL enrichment
+        """Function to query the constructed HMDB database to get the metabolite associated disease relations
+         for BEL enrichment
 
         :param str hmdb_metabolite_id:
         :rtype: list
         """
         return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_id).first().diseases
+
+    def query_disease_associated_metabolites(self, disease_name):
+        """
+        Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
+        :param disease_name:
+        :rtype: list
+        """
+
+        return self.session.query(Diseases).filter(Diseases.name == disease_name).first().metabolites
