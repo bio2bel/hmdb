@@ -33,7 +33,7 @@ def enrich_metabolites_proteins(graph, connection=None):
             log.warning("Unable to map namespace: %s", data[NAMESPACE])
             continue
 
-        if metabolite_protein_interactions is None:
+        if not metabolite_protein_interactions:
             log.warning("Unable to find node: %s", node)
             continue
 
