@@ -58,9 +58,6 @@ class TestEnrich(DatabaseMixin):
         self.assertEqual(0, g.number_of_edges())
 
         enrich_proteins_metabolites(g)
-
-        for node, data in g.nodes(data=True):
-            print(node, data)
         self.assertEqual(3, g.number_of_nodes())
         self.assertEqual(2, g.number_of_edges())
         self.assertTrue(g.has_edge(hmdb_tuple1, protein_tuple))

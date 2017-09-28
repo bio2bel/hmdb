@@ -9,6 +9,9 @@ from pybel.constants import *
 log = logging.getLogger(__name__)
 
 
+def _disease_metabolite():
+    raise NotImplementedError
+
 @pipeline.in_place_mutator
 def enrich_metabolites_proteins(graph, connection=None):
     """Enriches a given BEL graph, which includes metabolites with proteins, that are associated to the metabolites.

@@ -112,8 +112,8 @@ class Manager(object):
         """
         return element_tag.split("}")[1]
 
-    def populate_with_1_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
-                                       column_name):
+    def _populate_with_1_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
+                                        column_name):
         """
 
         :param element: the current parent XML element. E.g. "pathways" where the children would have the tag "pathway".
@@ -142,8 +142,8 @@ class Manager(object):
             self.session.add(new_meta_rel)
         return instance_dict
 
-    def populate_with_2_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table, column,
-                                       instance_dict_key=None, metabolite_column='metabolite'):
+    def _populate_with_2_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table, column,
+                                        instance_dict_key=None, metabolite_column='metabolite'):
         """Function to parse two layered xml elements (parent elements covers at least one child
         which also consists of one more layer of tags) and populate sqlalchemy tables.
 
@@ -195,6 +195,44 @@ class Manager(object):
             self.session.add(new_meta_rel)
 
         return instance_dict
+
+    def _handle_diseases(self, element,  references_dict, diseases_dict, metabolite_instance):
+        for disease_element in element:
+            disease_instance = Diseases()
+
+            for disease_sub_element in disease_element:
+
+                dtag = self.get_tag(disease_sub_element.tag)
+
+                if dtag != "references":
+                    setattr(disease_instance, dtag, disease_sub_element.text)
+                else:
+                    if disease_instance.name not in diseases_dict:  # add disease instance if not already in table
+                        diseases_dict[disease_instance.name] = disease_instance
+                        self.session.add(disease_instance)
+
+                    for reference_element in disease_sub_element:
+                        new_reference_object_dict = {}  # dict to check if reference is already presend in table
+
+                        for reference_sub_element in reference_element:  # construct new reference object
+                            reference_tag = self.get_tag(reference_sub_element.tag)
+                            new_reference_object_dict[reference_tag] = reference_sub_element.text
+
+                        # add if not already in reference table
+                        if new_reference_object_dict['pubmed_id'] not in references_dict:
+                            references_dict[new_reference_object_dict['pubmed_id']] = References(
+                                **new_reference_object_dict)
+                            self.session.add(references_dict[new_reference_object_dict['pubmed_id']])
+
+                        rel_meta_dis_ref = MetaboliteDiseasesReferences(metabolite=metabolite_instance,
+                                                                        disease=diseases_dict[
+                                                                            disease_instance.name],
+                                                                        reference=references_dict[
+                                                                            new_reference_object_dict[
+                                                                                'pubmed_id']])
+                        self.session.add(rel_meta_dis_ref)
+        return references_dict, diseases_dict
+
 
     def populate(self, source=None):
         """Populate database with HMDB data
@@ -249,18 +287,18 @@ class Manager(object):
                         ontology_tag = self.get_tag(ontology_element.tag)
 
                         if ontology_tag == "biofunctions":
-                            biofunctions_dict = self.populate_with_1_layer_elements(ontology_element,
-                                                                                    metabolite_instance,
-                                                                                    biofunctions_dict, Biofunctions,
-                                                                                    MetaboliteBiofunctions,
+                            biofunctions_dict = self._populate_with_1_layer_elements(ontology_element,
+                                                                                     metabolite_instance,
+                                                                                     biofunctions_dict, Biofunctions,
+                                                                                     MetaboliteBiofunctions,
                                                                                     "biofunction")
                         if ontology_tag == "cellular_locations":
-                            cellular_locations_dict = self.populate_with_1_layer_elements(ontology_element,
-                                                                                          metabolite_instance,
-                                                                                          cellular_locations_dict,
-                                                                                          CellularLocations,
-                                                                                          MetaboliteCellularLocations,
-                                                                                          "cellular_location")
+                            cellular_locations_dict = self._populate_with_1_layer_elements(ontology_element,
+                                                                                           metabolite_instance,
+                                                                                           cellular_locations_dict,
+                                                                                           CellularLocations,
+                                                                                           MetaboliteCellularLocations,
+                                                                                           "cellular_location")
 
                 elif tag == "experimental_properties":  # will be delayed to later versions since not important for BEL
                     continue
@@ -272,16 +310,16 @@ class Manager(object):
                     continue
 
                 elif tag == "biofluid_locations":
-                    biofluids_dict = self.populate_with_1_layer_elements(element, metabolite_instance, biofluids_dict,
-                                                                         Biofluids, MetaboliteBiofluid, 'biofluid')
+                    biofluids_dict = self._populate_with_1_layer_elements(element, metabolite_instance, biofluids_dict,
+                                                                          Biofluids, MetaboliteBiofluid, 'biofluid')
 
                 elif tag == "tissue_locations":
-                    tissues_dict = self.populate_with_1_layer_elements(element, metabolite_instance, tissues_dict,
-                                                                       Tissues, MetaboliteTissues, 'tissue')
+                    tissues_dict = self._populate_with_1_layer_elements(element, metabolite_instance, tissues_dict,
+                                                                        Tissues, MetaboliteTissues, 'tissue')
 
                 elif tag == "pathways":
-                    pathways_dict = self.populate_with_2_layer_elements(element, metabolite_instance, pathways_dict,
-                                                                        Pathways, MetabolitePathways, 'pathway')
+                    pathways_dict = self._populate_with_2_layer_elements(element, metabolite_instance, pathways_dict,
+                                                                         Pathways, MetabolitePathways, 'pathway')
 
                 elif tag == "normal_concentrations":  # will be delayed to later versions since not important for BEL
                     continue
@@ -289,49 +327,17 @@ class Manager(object):
                     continue
 
                 elif tag == "diseases":
-                    for disease_element in element:
-                        disease_instance = Diseases()
-
-                        for disease_sub_element in disease_element:
-
-                            dtag = self.get_tag(disease_sub_element.tag)
-
-                            if dtag != "references":
-                                setattr(disease_instance, dtag, disease_sub_element.text)
-                            else:
-                                if disease_instance.name not in diseases_dict:  # add disease instance if not already in table
-                                    diseases_dict[disease_instance.name] = disease_instance
-                                    self.session.add(disease_instance)
-
-                                for reference_element in disease_sub_element:
-                                    new_reference_object_dict = {}  # dict to check if reference is already presend in table
-
-                                    for reference_sub_element in reference_element:  # construct new reference object
-                                        reference_tag = self.get_tag(reference_sub_element.tag)
-                                        new_reference_object_dict[reference_tag] = reference_sub_element.text
-
-                                    # add if not already in reference table
-                                    if new_reference_object_dict['pubmed_id'] not in references_dict:
-                                        references_dict[new_reference_object_dict['pubmed_id']] = References(
-                                            **new_reference_object_dict)
-                                        self.session.add(references_dict[new_reference_object_dict['pubmed_id']])
-
-                                    rel_meta_dis_ref = MetaboliteDiseasesReferences(metabolite=metabolite_instance,
-                                                                                    disease=diseases_dict[
-                                                                                        disease_instance.name],
-                                                                                    reference=references_dict[
-                                                                                        new_reference_object_dict[
-                                                                                            'pubmed_id']])
-                                    self.session.add(rel_meta_dis_ref)
+                    references_dict, diseases_dict = self._handle_diseases(element, references_dict,
+                                                                           diseases_dict, metabolite_instance)
 
                 elif tag == "general_references":
-                    references_dict = self.populate_with_2_layer_elements(element, metabolite_instance, references_dict,
-                                                                          References, MetaboliteReferences, 'reference',
+                    references_dict = self._populate_with_2_layer_elements(element, metabolite_instance, references_dict,
+                                                                           References, MetaboliteReferences, 'reference',
                                                                           "pubmed_id")
 
                 elif tag == "protein_associations":
-                    proteins_dict = self.populate_with_2_layer_elements(element, metabolite_instance, proteins_dict,
-                                                                        Proteins, MetaboliteProteins, 'protein')
+                    proteins_dict = self._populate_with_2_layer_elements(element, metabolite_instance, proteins_dict,
+                                                                         Proteins, MetaboliteProteins, 'protein')
 
                 else:  # feed in main metabolite table
                     setattr(metabolite_instance, tag, element.text)
