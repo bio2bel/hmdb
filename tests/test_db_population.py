@@ -1,34 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-import os
-import tempfile
 
-from bio2bel_hmdb.manager import Manager
 from bio2bel_hmdb.models import Metabolite, Biofluids, Synonyms, \
     SecondaryAccessions, Tissues, Pathways, Proteins, References, Diseases, \
     CellularLocations, Biofunctions
-from tests.constants import text_xml_path
+from tests.constants import DatabaseMixin
 
 
-class TestBuildDB(unittest.TestCase):
-    def setUp(self):
-        """Create temporary file"""
-
-        self.fd, self.path = tempfile.mkstemp()
-        self.connection = 'sqlite:///' + self.path
-
-        # create temporary database
-        self.manager = Manager(self.connection)
-        # fill temporary database with test data
-        self.manager.populate(text_xml_path)
-
-    def tearDown(self):
-        """Closes the connection in the manager and deletes the temporary database"""
-        self.manager.session.close()
-        os.close(self.fd)
-        os.remove(self.path)
-
+class TestBuildDB(DatabaseMixin):
     def test_populate_metabolite(self):
         """Test the population of the metabolite table"""
 

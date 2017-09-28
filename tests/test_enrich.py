@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import unittest
-
 from pybel import BELGraph
-from pybel.constants import PROTEIN, ABUNDANCE
+
 from bio2bel_hmdb.enrich import *
+from tests.constants import DatabaseMixin
 
 hmdb_tuple1 = ABUNDANCE, 'HMDB', 'HMDB00008'
 protein_tuple = PROTEIN, 'UP', 'P50440'
@@ -14,7 +13,7 @@ hmdb_tuple2 = ABUNDANCE, 'HMDB', 'HMDB00064'
 disease_tuple = PATHOLOGY, 'HMDB_D', 'Lung Cancer'
 
 
-class TestEnrich(unittest.TestCase):
+class TestEnrich(DatabaseMixin):
     def test_enrich_metabolites_proteins(self):
         g = BELGraph()
         g.add_simple_node(*hmdb_tuple1)
