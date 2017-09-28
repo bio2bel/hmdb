@@ -10,6 +10,7 @@ Welcome to hmdb's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   models
    bel
 
 
