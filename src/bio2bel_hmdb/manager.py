@@ -2,8 +2,8 @@
 
 import configparser
 import logging
-import zipfile
 import xml.etree.ElementTree as ET
+import zipfile
 
 import os
 import requests
@@ -49,6 +49,7 @@ class Manager(object):
     """
     The manager is handling the database construction, population and querying.
     """
+
     def __init__(self, connection=None):
         self.connection = self.get_connection(connection)
         self.engine = create_engine(self.connection)
@@ -339,6 +340,14 @@ class Manager(object):
 
         self.session.commit()
 
+    def get_metabolite_by_accession(self, hmdb_metabolite_accession):
+        """
+
+        :param str hmdb_metabolite_accession: The HMDB acession
+        :rtype: Metabolite
+        """
+        return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_accession).one_or_none()
+
     def query_metabolite_associated_proteins(self, hmdb_metabolite_id):
         """
         Function to query the constructed HMDB database to get the metabolite associated protein relations
@@ -347,7 +356,8 @@ class Manager(object):
         :param str hmdb_metabolite_id:
         :rtype: list
         """
-        return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_id).first().proteins
+        metabolite = self.get_metabolite_by_accession(hmdb_metabolite_id)
+        return metabolite.proteins
 
     def query_metabolite_associated_diseases(self, hmdb_metabolite_id):
         """Function to query the constructed HMDB database to get the metabolite associated disease relations
@@ -356,7 +366,8 @@ class Manager(object):
         :param str hmdb_metabolite_id:
         :rtype: list
         """
-        return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_id).first().diseases
+        metabolite = self.get_metabolite_by_accession(hmdb_metabolite_id)
+        return metabolite.diseases
 
     def query_disease_associated_metabolites(self, disease_name):
         """
@@ -375,4 +386,3 @@ class Manager(object):
         :rtype: list
         """
         return self.session.query(Proteins).filter(Proteins.uniprot_id == uniprot_id).first().metabolites
-

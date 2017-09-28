@@ -22,7 +22,7 @@ class TestBuildDB(DatabaseMixin):
         """Test the population of the biofluid and biofluid/metabolite mapping table"""
 
         # test if HMDB00064 has 7 associated biofluids
-        metabio1 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00064").first()
+        metabio1 = self.manager.get_metabolite_by_accession("HMDB00064")
         self.assertEqual(7, len(metabio1.biofluids))
 
         # test if there are 8 biofluids in total
@@ -35,7 +35,7 @@ class TestBuildDB(DatabaseMixin):
         syn1 = self.manager.session.query(Synonyms).count()
         self.assertEqual(9, syn1)
 
-        syn2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
+        syn2 = self.manager.get_metabolite_by_accession("HMDB00072")
         self.assertEqual("(1Z)-1-Propene-1,2,3-tricarboxylate", syn2.synonyms[0].synonym)
 
     def test_populate_secondary_accessions(self):
@@ -43,7 +43,7 @@ class TestBuildDB(DatabaseMixin):
         seca1 = self.manager.session.query(SecondaryAccessions).count()
         self.assertEqual(1, seca1)
 
-        seca2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
+        seca2 = self.manager.get_metabolite_by_accession("HMDB00072")
         self.assertEqual("HMDB00461", seca2.secondary_accessions[0].secondary_accession)
 
     def test_populate_tissue_locations(self):
@@ -52,7 +52,7 @@ class TestBuildDB(DatabaseMixin):
         tis1 = self.manager.session.query(Tissues).count()
         self.assertEqual(3, tis1)
         # test the tissue of the tissue object connected to the metabolite object via the metabolitetissue object
-        tis2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00064").first()
+        tis2 = self.manager.get_metabolite_by_accession("HMDB00064")
         self.assertEqual("Adipose Tissue", tis2.tissues[0].tissue.tissue)
 
     def test_populate_pathways(self):
@@ -60,10 +60,10 @@ class TestBuildDB(DatabaseMixin):
         pat1 = self.manager.session.query(Pathways).count()
         self.assertEqual(4, pat1)
 
-        pat2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == 'HMDB00072').first()
+        pat2 = self.manager.get_metabolite_by_accession('HMDB00072')
         self.assertEqual(3, len(pat2.pathways))
 
-        pat3 = self.manager.session.query(Metabolite).filter(Metabolite.accession == 'HMDB00072').first()
+        pat3 = self.manager.get_metabolite_by_accession('HMDB00072')
         self.assertEqual("double test added by colin", pat3.pathways[1].pathway.name)
 
     def test_populate_proteins(self):
@@ -71,10 +71,10 @@ class TestBuildDB(DatabaseMixin):
         pro1 = self.manager.session.query(Proteins).count()
         self.assertEqual(6, pro1)
 
-        pro2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == 'HMDB00072').first()
+        pro2 = self.manager.get_metabolite_by_accession('HMDB00072')
         self.assertEqual(2, len(pro2.proteins))
 
-        pro3 = self.manager.session.query(Metabolite).filter(Metabolite.accession == 'HMDB00072').first()
+        pro3 = self.manager.get_metabolite_by_accession('HMDB00072')
         self.assertEqual("HMDBP00725", pro3.proteins[0].protein.protein_accession)
 
     def test_populate_references(self):
