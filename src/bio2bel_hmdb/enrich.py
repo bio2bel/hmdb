@@ -174,3 +174,45 @@ def enrich_diseases_metabolites(graph, connection=None):
                     'additional_references': references[1::]
                 }
             })
+
+@pipeline.in_place_mutator
+def enrich_proteins_metabolites(graph, connection=None):
+    """Enriches a given BEL graph, which includes uniprot proteins with HMDB metabolites,
+    that are associated to the proteins.
+
+    :param pybel.BELGraph graph: A BEL graph
+    :param str connection: connection for the manager used to connect to a database
+    """
+
+    m = Manager.ensure(connection)
+
+    for node, data in graph.nodes(data=True):
+        if data[FUNCTION] != PROTEIN:
+            continue
+
+        if NAMESPACE not in data:
+            continue
+
+        if data[NAMESPACE] == 'UP':
+            protein_metabolite_interactions = m.query_protein_associated_metabolites(data[NAME])
+
+        else:
+            log.warning("Unable to map namespace: %s", data[NAMESPACE])
+            continue
+
+        if protein_metabolite_interactions is None:
+            log.warning("Unable to find node: %s", node)
+            continue
+
+        for association in protein_metabolite_interactions:
+            metabolite_data = association.metabolite.serialize_to_bel()
+            metabolite_tuple = graph.add_node_from_data(metabolite_data)
+
+            graph.add_edge(metabolite_tuple, node, attr_dict={
+                RELATION: ASSOCIATION,
+                EVIDENCE: None,
+                CITATION: {
+                    CITATION_TYPE: None,
+                    CITATION_REFERENCE: None,
+                },
+            })

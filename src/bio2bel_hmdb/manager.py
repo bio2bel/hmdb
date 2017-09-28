@@ -350,5 +350,13 @@ class Manager(object):
         :param disease_name:
         :rtype: list
         """
-
         return self.session.query(Diseases).filter(Diseases.name == disease_name).first().metabolites
+
+    def query_protein_associated_metabolites(self, uniprot_id):
+        """
+        Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
+        :param uniprot_id: uniprot identifier of a protein for which the associated metabolite relations should be outputted
+        :rtype: list
+        """
+        return self.session.query(Proteins).filter(Proteins.uniprot_id == uniprot_id).first().metabolites
+

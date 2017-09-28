@@ -7,7 +7,7 @@ from pybel.constants import PROTEIN, ABUNDANCE
 from bio2bel_hmdb.enrich import *
 
 hmdb_tuple1 = ABUNDANCE, 'HMDB', 'HMDB00008'
-protein = PROTEIN, 'UP', 'P50440'
+protein_tuple = PROTEIN, 'UP', 'P50440'
 
 # test enriching with tissues
 hmdb_tuple2 = ABUNDANCE, 'HMDB', 'HMDB00064'
@@ -25,7 +25,7 @@ class TestEnrich(unittest.TestCase):
         enrich_metabolites_proteins(g)
         self.assertEqual(4, g.number_of_nodes())
         self.assertEqual(3, g.number_of_edges())
-        self.assertTrue(g.has_edge(protein, hmdb_tuple1))
+        self.assertTrue(g.has_edge(protein_tuple, hmdb_tuple1))
 
     def test_enrich_metabolites_diseases(self):
         g = BELGraph()
@@ -47,11 +47,21 @@ class TestEnrich(unittest.TestCase):
         self.assertEqual(0, g.number_of_edges())
 
         enrich_diseases_metabolites(g)
-
-
-        for edge in g.edges():
-            print(edge)
-
         self.assertEqual(3, g.number_of_nodes())
         self.assertEqual(2, g.number_of_edges())
         self.assertTrue(g.has_edge(hmdb_tuple2, disease_tuple))
+
+    def test_enrich_proteins_metabolites(self):
+        g = BELGraph()
+        g.add_simple_node(*protein_tuple)
+
+        self.assertEqual(1, g.number_of_nodes())
+        self.assertEqual(0, g.number_of_edges())
+
+        enrich_proteins_metabolites(g)
+
+        for node, data in g.nodes(data=True):
+            print(node, data)
+        self.assertEqual(3, g.number_of_nodes())
+        self.assertEqual(2, g.number_of_edges())
+        self.assertTrue(g.has_edge(hmdb_tuple1, protein_tuple))
