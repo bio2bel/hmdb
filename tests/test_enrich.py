@@ -21,7 +21,7 @@ class TestEnrich(DatabaseMixin):
         self.assertEqual(1, g.number_of_nodes())
         self.assertEqual(0, g.number_of_edges())
 
-        enrich_metabolites_proteins(g)
+        enrich_metabolites_proteins(g, self.manager)
         self.assertEqual(4, g.number_of_nodes())
         self.assertEqual(3, g.number_of_edges())
         self.assertTrue(g.has_edge(protein_tuple, hmdb_tuple1))
@@ -33,7 +33,7 @@ class TestEnrich(DatabaseMixin):
         self.assertEqual(1, g.number_of_nodes())
         self.assertEqual(0, g.number_of_edges())
 
-        enrich_metabolites_diseases(g)
+        enrich_metabolites_diseases(g, self.manager)
         self.assertEqual(4, g.number_of_nodes())
         self.assertEqual(3, g.number_of_edges())
         self.assertTrue(g.has_edge(disease_tuple, hmdb_tuple2))
@@ -45,7 +45,7 @@ class TestEnrich(DatabaseMixin):
         self.assertEqual(1, g.number_of_nodes())
         self.assertEqual(0, g.number_of_edges())
 
-        enrich_diseases_metabolites(g)
+        enrich_diseases_metabolites(g, self.manager)
         self.assertEqual(3, g.number_of_nodes())
         self.assertEqual(2, g.number_of_edges())
         self.assertTrue(g.has_edge(hmdb_tuple2, disease_tuple))
@@ -57,7 +57,7 @@ class TestEnrich(DatabaseMixin):
         self.assertEqual(1, g.number_of_nodes())
         self.assertEqual(0, g.number_of_edges())
 
-        enrich_proteins_metabolites(g)
+        enrich_proteins_metabolites(g, self.manager)
         self.assertEqual(3, g.number_of_nodes())
         self.assertEqual(2, g.number_of_edges())
         self.assertTrue(g.has_edge(hmdb_tuple1, protein_tuple))

@@ -10,6 +10,7 @@ log = logging.getLogger(__name__)
 
 
 def _disease_metabolite():
+    """Function to be reused and reduce code for disease-metabolite enrichment"""
     raise NotImplementedError
 
 @pipeline.in_place_mutator

@@ -142,7 +142,8 @@ class Manager(object):
             self.session.add(new_meta_rel)
         return instance_dict
 
-    def _populate_with_2_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table, column,
+    def _populate_with_2_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
+                                        column,
                                         instance_dict_key=None, metabolite_column='metabolite'):
         """Function to parse two layered xml elements (parent elements covers at least one child
         which also consists of one more layer of tags) and populate sqlalchemy tables.
@@ -196,7 +197,17 @@ class Manager(object):
 
         return instance_dict
 
-    def _handle_diseases(self, element,  references_dict, diseases_dict, metabolite_instance):
+    def _handle_diseases(self, element, references_dict, diseases_dict, metabolite_instance):
+        """
+        This function has the purpose of keeping the populate function smaller
+        and to populate the database with disease and related reference information.
+
+        :param element: Element object from the xml ElementTree
+        :param references_dict: Dictionary to keep track of which references are already in the database
+        :param diseases_dict: Dictionary to keep track of which diseases are already in the database
+        :param metabolite_instance: Metabolite object to which the diseases and references are related
+        :return:
+        """
         for disease_element in element:
             disease_instance = Diseases()
 
@@ -233,9 +244,9 @@ class Manager(object):
                         self.session.add(rel_meta_dis_ref)
         return references_dict, diseases_dict
 
-
     def populate(self, source=None):
-        """Populate database with HMDB data
+        """
+        Populate database with the HMDB data.
 
         :param str source:
         """
@@ -291,7 +302,7 @@ class Manager(object):
                                                                                      metabolite_instance,
                                                                                      biofunctions_dict, Biofunctions,
                                                                                      MetaboliteBiofunctions,
-                                                                                    "biofunction")
+                                                                                     "biofunction")
                         if ontology_tag == "cellular_locations":
                             cellular_locations_dict = self._populate_with_1_layer_elements(ontology_element,
                                                                                            metabolite_instance,
@@ -331,9 +342,11 @@ class Manager(object):
                                                                            diseases_dict, metabolite_instance)
 
                 elif tag == "general_references":
-                    references_dict = self._populate_with_2_layer_elements(element, metabolite_instance, references_dict,
-                                                                           References, MetaboliteReferences, 'reference',
-                                                                          "pubmed_id")
+                    references_dict = self._populate_with_2_layer_elements(element, metabolite_instance,
+                                                                           references_dict,
+                                                                           References, MetaboliteReferences,
+                                                                           'reference',
+                                                                           "pubmed_id")
 
                 elif tag == "protein_associations":
                     proteins_dict = self._populate_with_2_layer_elements(element, metabolite_instance, proteins_dict,

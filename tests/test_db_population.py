@@ -7,7 +7,6 @@ from bio2bel_hmdb.models import Metabolite, Biofluids, Synonyms, \
     CellularLocations, Biofunctions
 from tests.constants import DatabaseMixin
 
-
 class TestBuildDB(DatabaseMixin):
     def test_populate_metabolite(self):
         """Test the population of the metabolite table"""
@@ -110,7 +109,6 @@ class TestBuildDB(DatabaseMixin):
         biof2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00064")
         self.assertEqual("Component of Arginine and proline metabolism",
                          biof2[0].biofunctions[0].biofunction.biofunction)
-
 
 if __name__ == '__main__':
     unittest.main()
