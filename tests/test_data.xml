@@ -326,9 +326,24 @@
     <biofluid>Urine</biofluid>
   </biofluid_locations>
   <tissue_locations>
-    <tissue>Adipose Tissue</tissue>
+<tissue>Adipose Tissue</tissue>
+    <tissue>Bladder</tissue>
+    <tissue>Brain</tissue>
+    <tissue>Epidermis</tissue>
+    <tissue>Fibroblasts</tissue>
+    <tissue>Heart</tissue>
+    <tissue>Intestine</tissue>
+    <tissue>Kidney</tissue>
+    <tissue>Muscle</tissue>
+    <tissue>Myelin</tissue>
+    <tissue>Nerve Cells</tissue>
+    <tissue>Neuron</tissue>
+    <tissue>Placenta</tissue>
     <tissue>Platelet</tissue>
     <tissue>Prostate</tissue>
+    <tissue>Skeletal Muscle</tissue>
+    <tissue>Spleen</tissue>
+    <tissue>Testes</tissue>
   </tissue_locations>
   <pathways>
     <pathway>
@@ -575,18 +590,78 @@
   </tissue_locations>
   <pathways>
     <pathway>
+      <name>2-ketoglutarate dehydrogenase complex deficiency</name>
+      <smpdb_id>SMP00549</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>Citric Acid Cycle</name>
+      <smpdb_id>SMP00057</smpdb_id>
+      <kegg_map_id>map00020</kegg_map_id>
+    </pathway>
+    <pathway>
+      <name>Congenital lactic acidosis</name>
+      <smpdb_id>SMP00546</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>Fumarase deficiency</name>
+      <smpdb_id>SMP00547</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
       <name>Glutaminolysis and Cancer</name>
       <smpdb_id>SMP02298</smpdb_id>
       <kegg_map_id/>
     </pathway>
     <pathway>
-      <name>double test added by colin</name>
-      <smpdb_id>SMP00721</smpdb_id>
+      <name>Mitochondrial complex II deficiency</name>
+      <smpdb_id>SMP00548</smpdb_id>
       <kegg_map_id/>
     </pathway>
     <pathway>
-      <name>Mitochondrial complex II deficiency</name>
-      <smpdb_id>SMP00548</smpdb_id>
+      <name>Pyruvate dehydrogenase deficiency (E2)</name>
+      <smpdb_id>SMP00551</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>Pyruvate dehydrogenase deficiency (E3)</name>
+      <smpdb_id>SMP00550</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>The oncogenic action of 2-hydroxyglutarate</name>
+      <smpdb_id>SMP02291</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>The oncogenic action of D-2-hydroxyglutarate in  Hydroxygluaricaciduria </name>
+      <smpdb_id>SMP02359</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>The oncogenic action of Fumarate</name>
+      <smpdb_id>SMP02295</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>The oncogenic action of L-2-hydroxyglutarate in  Hydroxygluaricaciduria</name>
+      <smpdb_id>SMP02358</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>The oncogenic action of Succinate</name>
+      <smpdb_id>SMP02292</smpdb_id>
+      <kegg_map_id/>
+    </pathway>
+    <pathway>
+      <name>Transfer of Acetyl Groups into Mitochondria</name>
+      <smpdb_id>SMP00466</smpdb_id>
+      <kegg_map_id></kegg_map_id>
+    </pathway>
+    <pathway>
+      <name>Warburg Effect</name>
+      <smpdb_id>SMP00654</smpdb_id>
       <kegg_map_id/>
     </pathway>
   </pathways>
