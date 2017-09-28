@@ -27,7 +27,7 @@ def enrich_metabolites_proteins(graph, connection=None):
             continue
 
         if data[NAMESPACE] == 'HMDB':
-            metabolite_protein_interactions = m.query_associated_proteins(data[NAME])
+            metabolite_protein_interactions = m.query_metabolite_associated_proteins(data[NAME])
 
         else:
             log.warning("Unable to map namespace: %s", data[NAMESPACE])
@@ -73,7 +73,7 @@ def enrich_metabolites_diseases(graph, connection=None):
             continue
 
         if data[NAMESPACE] == 'HMDB':
-            metabolite_disease_interactions = m.query_associated_diseases(data[NAME])
+            metabolite_disease_interactions = m.query_metabolite_associated_diseases(data[NAME])
 
         else:
             log.warning("Unable to map namespace: %s", data[NAMESPACE])

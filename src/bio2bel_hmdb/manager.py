@@ -25,7 +25,11 @@ log = logging.getLogger(__name__)
 
 
 def get_data(source=None):
-    """Download HMDB data"""
+    """Download HMDB data
+
+    :param str source: String representing the filename of a .xml file which should be taken as input for the database
+    construction. If None the full HMDB metabolite .xml will be downloaded and used to populate the database.
+    """
 
     if not source:
         req = requests.get(DATA_URL)
@@ -42,6 +46,9 @@ def get_data(source=None):
 
 
 class Manager(object):
+    """
+    The manager is handling the database construction, population and querying.
+    """
     def __init__(self, connection=None):
         self.connection = self.get_connection(connection)
         self.engine = create_engine(self.connection)
@@ -80,7 +87,10 @@ class Manager(object):
 
     @staticmethod
     def ensure(connection=None):
-        """Checks and allows for a Manager to be passed to the function. """
+        """Checks and allows for a Manager to be passed to the function.
+
+        :param connection: can be either a already build manager or a connection string to build a manager with.
+        """
         if connection is None or isinstance(connection, str):
             return Manager(connection=connection)
 
@@ -186,7 +196,10 @@ class Manager(object):
         return instance_dict
 
     def populate(self, source=None):
-        """Populate database with HMDB data"""
+        """Populate database with HMDB data
+
+        :param str source:
+        """
 
         # construct xml tree
         tree = get_data(source)
@@ -326,8 +339,9 @@ class Manager(object):
 
         self.session.commit()
 
-    def query_associated_proteins(self, hmdb_metabolite_id):
-        """Function to query the constructed HMDB database to get the metabolite associated protein relations
+    def query_metabolite_associated_proteins(self, hmdb_metabolite_id):
+        """
+        Function to query the constructed HMDB database to get the metabolite associated protein relations
         for BEL enrichment
 
         :param str hmdb_metabolite_id:
@@ -335,7 +349,7 @@ class Manager(object):
         """
         return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_id).first().proteins
 
-    def query_associated_diseases(self, hmdb_metabolite_id):
+    def query_metabolite_associated_diseases(self, hmdb_metabolite_id):
         """Function to query the constructed HMDB database to get the metabolite associated disease relations
          for BEL enrichment
 
@@ -347,6 +361,7 @@ class Manager(object):
     def query_disease_associated_metabolites(self, disease_name):
         """
         Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
+
         :param disease_name:
         :rtype: list
         """
@@ -355,6 +370,7 @@ class Manager(object):
     def query_protein_associated_metabolites(self, uniprot_id):
         """
         Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
+
         :param uniprot_id: uniprot identifier of a protein for which the associated metabolite relations should be outputted
         :rtype: list
         """
