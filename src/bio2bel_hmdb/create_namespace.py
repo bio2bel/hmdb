@@ -94,6 +94,7 @@ def write_hmdb_disease_ns(file=None, values=None):
         file=file
     )
 
+
 def construct_hmdb_disease_mapping(connection=None):
     """
     constructs a mapping of hmdb disease names to actually useful ontologies.
@@ -101,11 +102,14 @@ def construct_hmdb_disease_mapping(connection=None):
     :return:
     """
 
-    def check_disease_ns(ns, hmdb_diseases):
+    def check_ns(ns, terms):
         """
+        download and extract values from an BEL namespace and create a mapping from the terms to the BEL namespaces,
+        if the terms occur in the namespace.
 
-        :param ns:
-        :param hmdb_diseases:
+        :param str ns: the name of the namespace which should be checked
+        :param terms: a list of terms which should be searched for in the namespace
+        and that will be mapped to the namespace
         :rtype doid_mapping: dict
         :rtype hmdb_diseases: list
         """
@@ -113,28 +117,24 @@ def construct_hmdb_disease_mapping(connection=None):
         # download latest version of the namespace
         doid_path = get_latest_arty_namespace(ns)
         doid_ns = get_bel_resource(doid_path)
-        doid_values = {value.lower():value for value in doid_ns['Values']}
+        doid_values = {value.lower(): value for value in doid_ns['Values']}
         doid_mapping = {}
         i = 0
-        while i < len(hmdb_diseases):
-            d_lower = hmdb_diseases[i].lower()
+        while i < len(terms):
+            d_lower = terms[i].lower()
             if d_lower in doid_values:
-                doid_mapping[hmdb_diseases.pop(i)] = doid_values[d_lower]
-                i -=1
+                doid_mapping[terms.pop(i)] = doid_values[d_lower]
+                i -= 1
             i += 1
-        return doid_mapping, hmdb_diseases
+        return doid_mapping, terms
 
     mapping = {}
     hmdb_diseases = get_hmdb_diseases(connection)
     for ontology in ONTOLOGIES:
         # check if disease name exists in the ontology
-        mapping[ontology], hmdb_diseases = check_disease_ns(ontology, hmdb_diseases)
+        mapping[ontology], hmdb_diseases = check_ns(ontology, hmdb_diseases)
 
         if not hmdb_diseases:
             break
 
     return mapping, len(hmdb_diseases)
-
-
-
-
