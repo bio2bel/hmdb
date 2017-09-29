@@ -25,10 +25,10 @@ log = logging.getLogger(__name__)
 
 
 def get_data(source=None):
-    """Download HMDB data
+    """
+    Parse .xml file into an ElementTree
 
-    :param str source: String representing the filename of a .xml file which should be taken as input for the database
-    construction. If None the full HMDB metabolite .xml will be downloaded and used to populate the database.
+    :param str source: String representing the filename of a .xml file. If None the full HMDB metabolite .xml will be downloaded and parsed into a tree.
     """
 
     if not source:
@@ -47,7 +47,7 @@ def get_data(source=None):
 
 class Manager(object):
     """
-    The manager is handling the database construction, population and querying.
+    Managers handle the database construction, population and querying.
     """
 
     def __init__(self, connection=None):
@@ -105,9 +105,9 @@ class Manager(object):
         Base.metadata.create_all(self.engine, checkfirst=check_first)
 
     def get_tag(self, element_tag):
-        """Function to delete the xml namespace prefix when calling element.tag
+        """Delete the XML namespace prefix when calling element.tag
 
-        :param element_tag: tag attribute of an xml element
+        :param element_tag: tag attribute of an XML element
         :rtype: str
         """
         return element_tag.split("}")[1]
@@ -115,6 +115,7 @@ class Manager(object):
     def _populate_with_1_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
                                         column_name):
         """
+        Parse and populate database with metabolite elements, which themselfes have one more layer.
 
         :param element: the current parent XML element. E.g. "pathways" where the children would have the tag "pathway".
         :param models.Metabolite metabolite_instance: metabolite object which is associated with the instances (e.g. is
@@ -138,15 +139,14 @@ class Manager(object):
 
             # create metabolite-biofluid relation object
             new_meta_rel_dict = {"metabolite": metabolite_instance, column_name: instance_dict[instance_dict_key]}
-            new_meta_rel = relation_table(**new_meta_rel_dict)
-            self.session.add(new_meta_rel)
+            self.session.add(relation_table(**new_meta_rel_dict))
         return instance_dict
 
     def _populate_with_2_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
                                         column,
                                         instance_dict_key=None, metabolite_column='metabolite'):
-        """Function to parse two layered xml elements (parent elements covers at least one child
-        which also consists of one more layer of tags) and populate sqlalchemy tables.
+        """
+        Parse and populate database with metabolite elements, which themselfes have two more layers.
 
         :param element: the current parent XML element. E.g. "pathways" where the children would have the tag "pathway".
         :param models.Metabolite metabolite_instance: metabolite object which is associated with the instances (e.g. is
@@ -197,10 +197,9 @@ class Manager(object):
 
         return instance_dict
 
-    def _handle_diseases(self, element, references_dict, diseases_dict, metabolite_instance):
+    def _populate_diseases(self, element, references_dict, diseases_dict, metabolite_instance):
         """
-        This function has the purpose of keeping the populate function smaller
-        and to populate the database with disease and related reference information.
+        populate the database with disease and related reference information.
 
         :param element: Element object from the xml ElementTree
         :param references_dict: Dictionary to keep track of which references are already in the database
@@ -338,8 +337,8 @@ class Manager(object):
                     continue
 
                 elif tag == "diseases":
-                    references_dict, diseases_dict = self._handle_diseases(element, references_dict,
-                                                                           diseases_dict, metabolite_instance)
+                    references_dict, diseases_dict = self._populate_diseases(element, references_dict,
+                                                                             diseases_dict, metabolite_instance)
 
                 elif tag == "general_references":
                     references_dict = self._populate_with_2_layer_elements(element, metabolite_instance,

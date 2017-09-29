@@ -13,7 +13,7 @@ Base = declarative_base()
 
 
 class Metabolite(Base):
-    """Table which stores the metabolite and its descriptive information."""
+    """Table which stores the metabolites and all the information provided about them in HMDB."""
     __tablename__ = "metabolite"
 
     id = Column(Integer, primary_key=True)
@@ -54,7 +54,7 @@ class Metabolite(Base):
     synthesis_reference = Column(String, nullable=True, doc="Synthesis reference citation of the metabolite")
 
     def serialize_to_bel(self):
-        """Function to serialize to PyBEL node data dictionary.
+        """Function to serialize a metabolite object to a PyBEL node data dictionary.
 
         :rtype: dict
         """
@@ -66,7 +66,7 @@ class Metabolite(Base):
 
 
 class SecondaryAccessions(Base):
-    """Table storing the synonyms of metabolites."""
+    """Table storing the different synonyms of metabolites."""
     __tablename__ = "secondary_accessions"
 
     id = Column(Integer, primary_key=True)
@@ -156,7 +156,7 @@ class Proteins(Base):
     protein_type = Column(String, nullable=True, doc="Protein type like 'enzyme' etc.")
 
     def serialize_to_bel(self):
-        """Function to serialize to PyBEL node data dictionary.
+        """Function to serialize a protein object to a PyBEL node data dictionary.
 
         :rtype: dict
         """
@@ -207,7 +207,7 @@ class Diseases(Base):
     omim_id = Column(String, nullable=True, unique=True, doc="OMIM identifier associated with the disease")
 
     def serialize_to_bel(self):
-        """Function to serialize to PyBEL node data dictionary.
+        """Function to serialize a disease object to a PyBEL node data dictionary.
 
         :rtype: dict
         """

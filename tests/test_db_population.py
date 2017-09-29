@@ -9,7 +9,7 @@ from tests.constants import DatabaseMixin
 
 class TestBuildDB(DatabaseMixin):
     def test_populate_metabolite(self):
-        """Test the population of the metabolite table"""
+        """Test the population of the 'Metabolite' table"""
 
         meta1 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00008").one_or_none()
         self.assertEqual("AFENDNXGAFYKQO-UHFFFAOYSA-N", meta1.inchikey)
@@ -18,30 +18,28 @@ class TestBuildDB(DatabaseMixin):
         self.assertEqual("DB00148", meta2.drugbank_id)
 
     def test_populate_biofluid_locations(self):
-        """Test the population of the biofluid and biofluid/metabolite mapping table"""
+        """Test the population of the 'Biofluids' and 'BiofluidMetabolite' relation table"""
 
         # test if HMDB00064 has 7 associated biofluids
         metabio1 = self.manager.get_metabolite_by_accession("HMDB00064")
         self.assertEqual(7, len(metabio1.biofluids))
 
-        # test if there are 8 biofluids in total
-        metabio2 = self.manager.session.query(Biofluids).count()
-        self.assertEqual(8, metabio2)
+        metabio1 = self.manager.get_metabolite_by_accession("HMDB00064")
+        self.assertEqual("Breast Milk", metabio1.biofluids[1].biofluid.biofluid)
 
     def test_populate_synonyms(self):
-        """Test if the synonyms table is getting populated by the manager"""
+        """Test if the 'Synonyms' table is getting populated by the manager"""
 
         syn = self.manager.get_metabolite_by_accession("HMDB00072")
         self.assertEqual("(1Z)-1-Propene-1,2,3-tricarboxylate", syn.synonyms[0].synonym)
 
     def test_populate_secondary_accessions(self):
-        """Test if populate function populates the secondary accession table correctly"""
+        """Test if the manager populate function populates the 'SecondaryAccessions' table correctly"""
         seca = self.manager.get_metabolite_by_accession("HMDB00072")
         self.assertEqual("HMDB00461", seca.secondary_accessions[0].secondary_accession)
 
     def test_populate_tissue_locations(self):
-        """Test if the tissues and metabolite tissues table are populated by the manager"""
-
+        """Test if the 'Tissues' table and 'MetaboliteTissues' table are populated by the manager"""
         tis = self.manager.get_metabolite_by_accession("HMDB00064")
         self.assertEqual(18, len(tis.tissues))
         # test the tissue of the tissue object connected to the metabolite object via the metabolitetissue object
