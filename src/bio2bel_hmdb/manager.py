@@ -15,6 +15,7 @@ from bio2bel_hmdb.constants import (
     DATA_URL,
     HMDB_SQLITE_PATH,
     HMDB_CONFIG_FILE_PATH,
+    DATA_FILE
 )
 from bio2bel_hmdb.models import Base, Metabolite, Biofluids, MetaboliteBiofluid, \
     Synonyms, SecondaryAccessions, Tissues, MetaboliteTissues, \
@@ -34,8 +35,8 @@ def get_data(source=None):
     if not source:
         req = requests.get(DATA_URL)
         hmdb_zip = zipfile.ZipFile(BytesIO(req.content))
-        hmdb_zip.extract("hmdb_metabolites.xml")
-        source = "hmdb_metabolites.xml"
+        hmdb_zip.extract(DATA_FILE)
+        source = DATA_FILE
         tree = ET.parse(source)
         # clean up
         os.remove(source)
@@ -55,7 +56,6 @@ class Manager(object):
         self.engine = create_engine(self.connection)
         self.sessionmake = sessionmaker(bind=self.engine, autoflush=False, expire_on_commit=False)
         self.session = self.sessionmake()
-        self.make_tables()
 
     @staticmethod
     def get_connection(connection=None):
@@ -143,8 +143,7 @@ class Manager(object):
         return instance_dict
 
     def _populate_with_2_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
-                                        column,
-                                        instance_dict_key=None, metabolite_column='metabolite'):
+                                        column, instance_dict_key=None, metabolite_column='metabolite'):
         """
         Parse and populate database with metabolite elements, which themselfes have two more layers.
 
@@ -229,17 +228,17 @@ class Manager(object):
                             new_reference_object_dict[reference_tag] = reference_sub_element.text
 
                         # add if not already in reference table
-                        if new_reference_object_dict['pubmed_id'] not in references_dict:
-                            references_dict[new_reference_object_dict['pubmed_id']] = References(
+                        if new_reference_object_dict['reference_text'] not in references_dict:
+                            references_dict[new_reference_object_dict['reference_text']] = References(
                                 **new_reference_object_dict)
-                            self.session.add(references_dict[new_reference_object_dict['pubmed_id']])
+                            self.session.add(references_dict[new_reference_object_dict['reference_text']])
 
                         rel_meta_dis_ref = MetaboliteDiseasesReferences(metabolite=metabolite_instance,
                                                                         disease=diseases_dict[
                                                                             disease_instance.name],
                                                                         reference=references_dict[
                                                                             new_reference_object_dict[
-                                                                                'pubmed_id']])
+                                                                                'reference_text']])
                         self.session.add(rel_meta_dis_ref)
         return references_dict, diseases_dict
 
@@ -345,7 +344,7 @@ class Manager(object):
                                                                            references_dict,
                                                                            References, MetaboliteReferences,
                                                                            'reference',
-                                                                           "pubmed_id")
+                                                                           "reference_text")
 
                 elif tag == "protein_associations":
                     proteins_dict = self._populate_with_2_layer_elements(element, metabolite_instance, proteins_dict,

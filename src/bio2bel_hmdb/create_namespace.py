@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from bio2bel_hmdb.constants import HMDB_SQLITE_PATH
+from bio2bel_hmdb.constants import HMDB_SQLITE_PATH, ONTOLOGIES
 from bio2bel_hmdb.manager import Manager
 from bio2bel_hmdb.models import Metabolite, Diseases
 from pybel.constants import NAMESPACE_DOMAIN_CHEMICAL, NAMESPACE_DOMAIN_OTHER
@@ -21,7 +21,7 @@ def get_hmdb_accession(connection=None):
     if connection == None:
         connection = HMDB_SQLITE_PATH
 
-    manager = Manager(connection)
+    manager = Manager.ensure(connection)
     accessions = manager.session.query(Metabolite.accession).all()
     if not accessions:
         logging.warning("Database not populated. Please populate database before calling this function")
@@ -39,7 +39,7 @@ def get_hmdb_diseases(connection=None):
     if connection == None:
         connection = HMDB_SQLITE_PATH
 
-    manager = Manager(connection)
+    manager = Manager.ensure(connection)
     accessions = manager.session.query(Diseases.name).all()
     if not accessions:
         logging.warning("Database not populated. Please populate database before calling this function")
@@ -94,17 +94,47 @@ def write_hmdb_disease_ns(file=None, values=None):
         file=file
     )
 
-def construct_hmdb_disease_mapping():
+def construct_hmdb_disease_mapping(connection=None):
     """
     constructs a mapping of hmdb disease names to actually useful ontologies.
 
     :return:
     """
-    def check_disease_doid(hmdb_disease):
 
-        doid_path = get_latest_arty_namespace('disease-ontology')
-        doid_ns = get_bel_resource()
+    def check_disease_ns(ns, hmdb_diseases):
+        """
 
-        doid_values = doid_ns['values']
+        :param ns:
+        :param hmdb_diseases:
+        :rtype doid_mapping: dict
+        :rtype hmdb_diseases: list
+        """
+
+        # download latest version of the namespace
+        doid_path = get_latest_arty_namespace(ns)
+        doid_ns = get_bel_resource(doid_path)
+        doid_values = {value.lower():value for value in doid_ns['Values']}
+        doid_mapping = {}
+        i = 0
+        while i < len(hmdb_diseases):
+            d_lower = hmdb_diseases[i].lower()
+            if d_lower in doid_values:
+                doid_mapping[hmdb_diseases.pop(i)] = doid_values[d_lower]
+                i -=1
+            i += 1
+        return doid_mapping, hmdb_diseases
+
+    mapping = {}
+    hmdb_diseases = get_hmdb_diseases(connection)
+    for ontology in ONTOLOGIES:
+        # check if disease name exists in the ontology
+        mapping[ontology], hmdb_diseases = check_disease_ns(ontology, hmdb_diseases)
+
+        if not hmdb_diseases:
+            break
+
+    return mapping, len(hmdb_diseases)
+
+
 
 

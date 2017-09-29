@@ -140,8 +140,8 @@ class Pathways(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=True, unique=True, doc="Name of the pathway.")
-    smpdb_id = Column(String, nullable=True, unique=True, doc="SMPDB identifier of the pathway.")
-    kegg_map_id = Column(String, nullable=True, unique=True, doc="KEGG Map identifier of the pathway.")
+    smpdb_id = Column(String, nullable=True, unique=False, doc="SMPDB identifier of the pathway.")
+    kegg_map_id = Column(String, nullable=True, unique=False, doc="KEGG Map identifier of the pathway.")
 
 
 class Proteins(Base):
@@ -183,7 +183,7 @@ class References(Base):
     __tablename__ = "references"
 
     id = Column(Integer, primary_key=True)
-    reference_text = Column(String, nullable=True, unique=True, doc="Citation of the referene article")
+    reference_text = Column(String, nullable=False, unique=True, doc="Citation of the referene article")
     pubmed_id = Column(String, nullable=True, unique=True, doc="PubMed identifier of the article")
 
 
@@ -204,7 +204,7 @@ class Diseases(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True, doc="Name of the disease")
-    omim_id = Column(String, nullable=True, unique=True, doc="OMIM identifier associated with the disease")
+    omim_id = Column(String, nullable=True, doc="OMIM identifier associated with the disease")
 
     def serialize_to_bel(self):
         """Function to serialize a disease object to a PyBEL node data dictionary.
