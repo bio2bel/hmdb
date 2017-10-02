@@ -2,7 +2,6 @@ Current State
 =============
 
 
-
 Database model:
 ---------------
 
@@ -17,8 +16,8 @@ Not all of the information found in HMDB is yet integrated into PyHMDB.
 PyHMDB does not yet inlcude:
 - Taxonomy information
 - Spectra information
-- Experimental properties
-- Predicted properties
+- Experimental properties (datamodel is implemented but tables will not get populated)
+- Predicted properties (datamodel is implemented but tables will not get populated)
 - Normal concentration
 - Abnormal concentration
 

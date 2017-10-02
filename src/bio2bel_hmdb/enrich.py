@@ -10,6 +10,7 @@ log = logging.getLogger(__name__)
 
 
 def _check_namespaces(data, bel_function, bel_namespace):
+    """Makes code more structured and reusable."""
     if data[FUNCTION] != bel_function:
         return False
 

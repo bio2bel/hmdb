@@ -7,20 +7,38 @@ Welcome to the PyHMDB documentation!
 ====================================
 
 PyHMDB is a package which allows the user to work with a local sqlite version of the Human Metabolome Database (HMDB).
-Next to creating the local database there are also functions provided, which will enrich given Biological Expression Language (BEL) graphs with information about metabolites, proteins and diseases, that can be found in the HMDB.
-PyHMDB is still under development and still lacks some aspects of HMDB. Please find more information about the current status of PyHMDB here.
+Next to creating the local database there are also functions provided, which will enrich given Biological Expression Language (BEL) graphs with information about metabolites, proteins and diseases, that is present in HMDB.
+HMDB BEL namespaces for these BEL graphs can be written.
+PyHMDB is still under development and still lacks some aspects of HMDB. Please find more information about the current status of PyHMDB here_.
 
+.. _here: current_status.html
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Getting Started
+
+   installation
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    models
-   bel
+   manager
+   bel_serialization
    construct_namespaces
+
+.. toctree::
+   :maxdepth: 2
+   :caption: How To
+
+   set_up_hmdb
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Project
+
    current_status
-
-
 
 Indices and tables
 ==================

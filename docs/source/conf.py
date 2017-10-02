@@ -49,7 +49,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'hmdb'
+project = 'PyHMDB'
 copyright = '2017, Colin Birkenbihl, Charles Tapley Hoyt'
 author = 'Colin Birkenbihl, Charles Tapley Hoyt'
 
@@ -155,7 +155,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'hmdb', 'hmdb Documentation',
+    (master_doc, 'PyHMDB', 'PyHMDB Documentation',
      [author], 1)
 ]
 
@@ -166,8 +166,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'hmdb', 'hmdb Documentation',
-     author, 'hmdb', 'One line description of project.',
+    (master_doc, 'PyHMDB', 'PyHMDB Documentation',
+     author, 'PyHMDB', 'One line description of project.',
      'Miscellaneous'),
 ]
 
