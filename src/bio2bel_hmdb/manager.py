@@ -403,3 +403,29 @@ class Manager(object):
         :rtype: list
         """
         return self.session.query(Proteins).filter(Proteins.uniprot_id == uniprot_id).one_or_none().metabolites
+
+    def get_hmdb_accession(self):
+        """
+        Create a list of all HMDB metabolite identifiers present in the database.
+
+        :param str connection: connection string for the manager
+        :rtype: list
+        """
+        accessions = self.session.query(Metabolite.accession).all()
+        if not accessions:
+            logging.warning("Database not populated. Please populate database before calling this function")
+
+        return [a[0] for a in accessions]  # if anybody knows a better way of querying for a flat list. Please change.
+
+    def get_hmdb_diseases(self):
+        """
+        Create a list of all disease names present in the database.
+
+        :param str connection: connection string for the manager
+        :rtype: list
+        """
+        accessions = self.session.query(Diseases.name).all()
+        if not accessions:
+            logging.warning("Database not populated. Please populate database before calling this function")
+
+        return [a[0] for a in accessions]  # if anybody knows a better way of querying for a flat list. Please change.

@@ -2,9 +2,7 @@
 
 import unittest
 
-from bio2bel_hmdb.models import Metabolite, Biofluids, Synonyms, \
-    SecondaryAccessions, Pathways, Proteins, References, Diseases, \
-    CellularLocations, Biofunctions
+from bio2bel_hmdb.models import Metabolite, Proteins, References, Diseases, CellularLocations, Biofunctions
 from tests.constants import DatabaseMixin
 
 

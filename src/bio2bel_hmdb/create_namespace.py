@@ -2,60 +2,27 @@
 
 from bio2bel_hmdb.constants import HMDB_SQLITE_PATH, ONTOLOGIES
 from bio2bel_hmdb.manager import Manager
-from bio2bel_hmdb.models import Metabolite, Diseases
 from pybel.constants import NAMESPACE_DOMAIN_CHEMICAL, NAMESPACE_DOMAIN_OTHER
 from pybel_tools.definition_utils import write_namespace
 from pybel_tools.resources import get_latest_arty_namespace
 from pybel.utils import get_bel_resource
 
-import logging
+from tests.constants import text_xml_path
 
 
-def get_hmdb_accession(connection=None):
-    """
-    Create a list of all HMDB metabolite identifiers present in the database.
-
-    :param str connection: connection string for the manager
-    :rtype: list
-    """
-    if connection == None:
-        connection = HMDB_SQLITE_PATH
-
-    manager = Manager.ensure(connection)
-    accessions = manager.session.query(Metabolite.accession).all()
-    if not accessions:
-        logging.warning("Database not populated. Please populate database before calling this function")
-
-    return [a[0] for a in accessions]  # if anybody knows a better way of querying for a flat list. Please change.
-
-
-def get_hmdb_diseases(connection=None):
-    """
-    Create a list of all disease names present in the database.
-
-    :param str connection: connection string for the manager
-    :rtype: list
-    """
-    if connection == None:
-        connection = HMDB_SQLITE_PATH
-
-    manager = Manager.ensure(connection)
-    accessions = manager.session.query(Diseases.name).all()
-    if not accessions:
-        logging.warning("Database not populated. Please populate database before calling this function")
-
-    return [a[0] for a in accessions]  # if anybody knows a better way of querying for a flat list. Please change.
-
-
-def write_hmdb_id_ns(file=None, values=None):
+def write_hmdb_id_ns(file=None, values=None, connection=None):
     """
     Create a BEL namespace with HMDB identifiers.
 
     :param file: file to which the namespace should be written. If None it will be outputted in stdout
     :param values: Values that should be part of the namespace. (HMDB identifiers)
+    :param str connection: Connection string to connect manager to a database. Can also directly be a manager
     """
+
+    m = Manager.ensure(connection)
+
     if values is None:
-        values = get_hmdb_accession()
+        values = m.get_hmdb_accession()
 
     write_namespace(
         namespace_name='Human Metabolome Database',
@@ -71,15 +38,18 @@ def write_hmdb_id_ns(file=None, values=None):
     )
 
 
-def write_hmdb_disease_ns(file=None, values=None):
+def write_hmdb_disease_ns(file=None, values=None, connection=None):
     """
     Create a BEL namespace with HMDB disease names.
 
     :param file: file to which the namespace should be written. If None it will be outputted in stdout
     :param values: Values that should be part of the namespace. (disease names)
+    :param str connection: Connection string to connect manager to a database. Can also directly be a manager.
     """
+    m = Manager.ensure(connection)
+
     if values is None:
-        values = get_hmdb_diseases()
+        values = m.get_hmdb_diseases()
 
     write_namespace(
         namespace_name='Human Metabolome Database Disease Names',
@@ -99,7 +69,8 @@ def construct_hmdb_disease_mapping(connection=None):
     """
     constructs a mapping of hmdb disease names to actually useful ontologies.
 
-    :return:
+    :param str connection: Connection string to connect manager to a database. Can also directly be a manager.
+    :rtype: dict, int
     """
 
     def check_ns(ns, terms):
@@ -128,8 +99,10 @@ def construct_hmdb_disease_mapping(connection=None):
             i += 1
         return doid_mapping, terms
 
+    m = Manager.ensure(connection)
+    hmdb_diseases = m.get_hmdb_diseases()
+
     mapping = {}
-    hmdb_diseases = get_hmdb_diseases(connection)
     for ontology in ONTOLOGIES:
         # check if disease name exists in the ontology
         mapping[ontology], hmdb_diseases = check_ns(ontology, hmdb_diseases)
