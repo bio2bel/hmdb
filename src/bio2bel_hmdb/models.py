@@ -232,7 +232,7 @@ class MetaboliteDiseasesReferences(Base):
 
 
 class PropertyValues(Base):
-    """Table storing the values of chemical properties
+    """Table storing the values of chemical properties.
     Not used for BEL enrichment"""
     __tablename__ = "property_values"
 
@@ -242,7 +242,7 @@ class PropertyValues(Base):
 
 
 class PropertyKinds(Base):
-    """Table storing the 'kind' of chemical properties e.g. logP
+    """Table storing the 'kind' of chemical properties e.g. logP.
     Not used for BEL enrichment"""
     __tablename__ = "property_kinds"
 
@@ -252,7 +252,7 @@ class PropertyKinds(Base):
 
 
 class PropertySource(Base):
-    """Table storing the sources of properties e.g. software like 'ALOGPS'
+    """Table storing the sources of properties e.g. software like 'ALOGPS'.
     Not used for BEL enrichment"""
     __tablename__ = "property_source"
 
