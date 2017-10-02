@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = python3 -m sphinx
-SPHINXPROJ    = hmdb
+SPHINXPROJ    = PyHMDB
 SOURCEDIR     = source
 BUILDDIR      = build
 

@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from bio2bel_hmdb.constants import HMDB_SQLITE_PATH, ONTOLOGIES
+from bio2bel_hmdb.constants import ONTOLOGIES
 from bio2bel_hmdb.manager import Manager
 from pybel.constants import NAMESPACE_DOMAIN_CHEMICAL, NAMESPACE_DOMAIN_OTHER
 from pybel_tools.definition_utils import write_namespace
 from pybel_tools.resources import get_latest_arty_namespace
 from pybel.utils import get_bel_resource
-
-from tests.constants import text_xml_path
 
 
 def write_hmdb_id_ns(file=None, values=None, connection=None):

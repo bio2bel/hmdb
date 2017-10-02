@@ -17,7 +17,7 @@ PyHMDB is still under development and still lacks some aspects of HMDB. Please f
    :maxdepth: 2
    :caption: Getting Started
 
-   installation
+   installation_guide
 
 .. toctree::
    :maxdepth: 2
