@@ -23,5 +23,13 @@ PyHMDB does not yet inlcude:
 
 PyHMDB does yet lack funtions to:
 - convert metabolite namespaces from and to HMDB identifiers
-- convert disease namespaces from and to HMDB disease names
 - query functions (only querying with metabolite identifiers for diseases and proteins and vice versa is supported right now)
+
+Roadmap
+-------
+
+The next steps in the development of PyHMDB are:
+#. add namespace mappings from metabolite HMDB identifiers to different databases/namespaces
+#. add query functions for several tables and entries
+#. change BEL enrichment functions to automatically work even when pathology nodes are not in HMDB disease namespace
+#. include missing HMDB tables and relations listed above

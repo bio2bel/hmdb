@@ -68,6 +68,8 @@ def construct_hmdb_disease_mapping(connection=None):
     constructs a mapping of hmdb disease names to actually useful ontologies.
 
     :param str connection: Connection string to connect manager to a database. Can also directly be a manager.
+    :return: 1. Dictionary with the mappings from HMDB to the other ontologies. Consists of 3 dictionaries, one for each ontology. In those dictionaries the keys are the HMDB terms and they map to the corresponding ontology terms.
+        2. Number of HMDB diseases that could not be mapped to any of the other ontologies
     :rtype: dict, int
     """
 
@@ -107,5 +109,6 @@ def construct_hmdb_disease_mapping(connection=None):
 
         if not hmdb_diseases:
             break
+    unmapped = len(hmdb_diseases)
 
-    return mapping, len(hmdb_diseases)
+    return mapping, unmapped

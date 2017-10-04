@@ -33,6 +33,7 @@ PyHMDB is still under development and still lacks some aspects of HMDB. Please f
    :caption: How To
 
    set_up_hmdb
+   enrich_bel
 
 .. toctree::
    :maxdepth: 2
