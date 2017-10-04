@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import codecs
 import os
 import re
-import codecs
 
 import setuptools
 
@@ -19,6 +19,9 @@ ENTRY_POINTS = {
     'bio2bel': [
         'hmdb = bio2bel_hmdb',
     ],
+    'console_scripts': [
+        'bio2bel_hmdb = bio2bel_hmdb.cli:main'
+    ]
 }
 
 HERE = os.path.abspath(os.path.dirname(__file__))
