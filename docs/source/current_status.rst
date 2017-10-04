@@ -29,7 +29,10 @@ Roadmap
 -------
 
 The next steps in the development of PyHMDB are:
-#. add namespace mappings from metabolite HMDB identifiers to different databases/namespaces
-#. add query functions for several tables and entries
+
+1. add namespace mappings from metabolite HMDB identifiers to different databases/namespaces
+2. add query functions for several tables and entries
 #. change BEL enrichment functions to automatically work even when pathology nodes are not in HMDB disease namespace
 #. include missing HMDB tables and relations listed above
+
+
