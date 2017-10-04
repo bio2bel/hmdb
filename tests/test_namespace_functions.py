@@ -25,4 +25,4 @@ class TestCreateNS(DatabaseMixin):
         keys = list(mapping['human-phenotype-ontology'].keys()) + list(mapping['disease-ontology'].keys())
         values = list(mapping['human-phenotype-ontology'].values()) + list(mapping['disease-ontology'].values())
         self.assertEqual(set(diseases), set(keys))
-        self.assertEqual(['Cirrhosis', 'lung cancer', 'schizophrenia'], values)
+        self.assertEqual({'Cirrhosis', 'lung cancer', 'schizophrenia'}, set(values))
