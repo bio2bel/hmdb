@@ -1,5 +1,7 @@
 import click
 
+from bio2bel_hmdb.manager import Manager
+
 
 @click.group()
 def main():
@@ -7,11 +9,13 @@ def main():
 
 
 @main.command()
-@click.option("--file", type=int, default="yzp", help="Do the dance")
-def build(file):
-    """Do it"""
-    click.echo(file)
-
+def build():
+    """Build the local version of the full HMDB."""
+    m = Manager()
+    click.echo("create tables")
+    m.make_tables()
+    click.echo("populate tables")
+    m.populate()
 
 if __name__ == '__main__':
     main()
