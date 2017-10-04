@@ -12,7 +12,6 @@ env:
       - TOXENV=rst-lint
       - TOXENV=docs
 
-
 before_install:
     - pip install codecov
 
