@@ -205,6 +205,11 @@ class Diseases(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True, doc="Name of the disease")
     omim_id = Column(String, nullable=True, doc="OMIM identifier associated with the disease")
+    dion = Column(String, nullable=False, doc="Disease Ontology name for this disease. Found using string matching")
+    hpo = Column(String, nullable=False,
+                 doc="Humand Phenotype Ontology name for this disease. Found using string matching")
+    mesh_diseases = Column(String, nullable=False,
+                           doc="MeSH Disease name for this disease. Found using string matching")
 
     def serialize_to_bel(self):
         """Function to serialize a disease object to a PyBEL node data dictionary.

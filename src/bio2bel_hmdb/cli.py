@@ -7,7 +7,6 @@ from bio2bel_hmdb.manager import Manager
 def main():
     """Command Line Interface for PyHMDB"""
 
-
 @main.command()
 def build():
     """Build the local version of the full HMDB."""
