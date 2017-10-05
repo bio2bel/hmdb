@@ -10,12 +10,15 @@ import requests
 from io import BytesIO
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from pybel_tools.resources import get_latest_arty_namespace
+from pybel.utils import get_bel_resource
 
 from bio2bel_hmdb.constants import (
     DATA_URL,
     HMDB_SQLITE_PATH,
     HMDB_CONFIG_FILE_PATH,
-    DATA_FILE
+    DATA_FILE,
+    ONTOLOGIES
 )
 from bio2bel_hmdb.models import Base, Metabolite, Biofluids, MetaboliteBiofluid, \
     Synonyms, SecondaryAccessions, Tissues, MetaboliteTissues, \
@@ -196,7 +199,7 @@ class Manager(object):
 
         return instance_dict
 
-    def _populate_diseases(self, element, references_dict, diseases_dict, metabolite_instance):
+    def _populate_diseases(self, element, references_dict, diseases_dict, metabolite_instance, disease_ontologies):
         """
         populate the database with disease and related reference information.
 
@@ -217,6 +220,12 @@ class Manager(object):
                     setattr(disease_instance, dtag, disease_sub_element.text)
                 else:
                     if disease_instance.name not in diseases_dict:  # add disease instance if not already in table
+                        #map to different disease ontologies
+                        disease_lower = disease_instance.disease.lower() # for case insensitivity
+                        for ontology in disease_ontologies:
+                            if disease_lower in disease_ontologies[ontology]:
+                                setattr(disease_instance, ontology, disease_ontologies[ontology][disease_lower]) #FIXME ontology is no column
+
                         diseases_dict[disease_instance.name] = disease_instance
                         self.session.add(disease_instance)
 
@@ -242,6 +251,16 @@ class Manager(object):
                         self.session.add(rel_meta_dis_ref)
         return references_dict, diseases_dict
 
+    def _disease_ontology_dict(self, ontology):
+        """
+        c
+        :rtype: dict
+        """
+        doid_path = get_latest_arty_namespace(ontology)
+        doid_ns = get_bel_resource(doid_path)
+        return {value.lower(): value for value in doid_ns['Values']}
+
+
     def populate(self, source=None):
         """
         Populate database with the HMDB data.
@@ -252,6 +271,9 @@ class Manager(object):
         # construct xml tree
         tree = get_data(source)
         root = tree.getroot()
+
+        #construct sets for disease ontologies for mapping hmdb diseases
+        disease_ontologies = {ontology: self._disease_ontology_dict(ontology) for ontology in ONTOLOGIES}
 
         # dicts to check unique constraints for specific tables
         biofluids_dict = {}
@@ -337,7 +359,8 @@ class Manager(object):
 
                 elif tag == "diseases":
                     references_dict, diseases_dict = self._populate_diseases(element, references_dict,
-                                                                             diseases_dict, metabolite_instance)
+                                                                             diseases_dict, metabolite_instance,
+                                                                             disease_ontologies)
 
                 elif tag == "general_references":
                     references_dict = self._populate_with_2_layer_elements(element, metabolite_instance,

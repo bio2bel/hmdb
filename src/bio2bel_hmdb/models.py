@@ -205,7 +205,7 @@ class Diseases(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True, doc="Name of the disease")
     omim_id = Column(String, nullable=True, doc="OMIM identifier associated with the disease")
-    dion = Column(String, nullable=False, doc="Disease Ontology name for this disease. Found using string matching")
+    disease-ontology = Column(String, nullable=False, doc="Disease Ontology name for this disease. Found using string matching")
     hpo = Column(String, nullable=False,
                  doc="Humand Phenotype Ontology name for this disease. Found using string matching")
     mesh_diseases = Column(String, nullable=False,
