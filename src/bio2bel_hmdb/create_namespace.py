@@ -65,7 +65,8 @@ def write_hmdb_disease_ns(file=None, values=None, connection=None):
 
 def construct_hmdb_disease_mapping(connection=None):
     """
-    constructs a mapping of hmdb disease names to actually useful ontologies.
+    This function is depricated. The mappings are already in the disease table in the database.
+    Function constructs a mapping of hmdb disease names to actually useful ontologies.
 
     :param str connection: Connection string to connect manager to a database. Can also directly be a manager.
     :return: 1. Dictionary with the mappings from HMDB to the other ontologies. Consists of 3 dictionaries, one for each ontology. In those dictionaries the keys are the HMDB terms and they map to the corresponding ontology terms.

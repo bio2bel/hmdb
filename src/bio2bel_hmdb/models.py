@@ -205,10 +205,10 @@ class Diseases(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True, doc="Name of the disease")
     omim_id = Column(String, nullable=True, doc="OMIM identifier associated with the disease")
-    disease-ontology = Column(String, nullable=False, doc="Disease Ontology name for this disease. Found using string matching")
-    hpo = Column(String, nullable=False,
+    dion = Column(String, nullable=True, doc="Disease Ontology name for this disease. Found using string matching")
+    hpo = Column(String, nullable=True,
                  doc="Humand Phenotype Ontology name for this disease. Found using string matching")
-    mesh_diseases = Column(String, nullable=False,
+    mesh_diseases = Column(String, nullable=True,
                            doc="MeSH Disease name for this disease. Found using string matching")
 
     def serialize_to_bel(self):

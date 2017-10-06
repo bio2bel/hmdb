@@ -75,12 +75,15 @@ class TestBuildDB(DatabaseMixin):
 
     def test_populate_diseases(self):
         """Tests for testing if population of Diseases and MetaboliteDiseases table is successfull"""
-        dis1 = self.manager.session.query(Diseases).count()
-        self.assertEqual(3, dis1)
+        dis = self.manager.session.query(Diseases).count()
+        self.assertEqual(3, dis)
 
-        dis2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
-        self.assertEqual("Schizophrenia", dis2.diseases[1].disease.name)
-        self.assertEqual("2415198", dis2.diseases[1].reference.pubmed_id)
+        dis = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
+        self.assertEqual("Schizophrenia", dis.diseases[1].disease.name)
+        self.assertEqual("2415198", dis.diseases[1].reference.pubmed_id)
+        # test mapping
+        self.assertEqual("lung cancer", dis.diseases[2].disease.dion)
+        self.assertEqual("Schizophrenia", dis.diseases[1].disease.hpo)
 
     def test_populate_cellular_locations(self):
         """Tests for testing if population of CellularLocation and MetaboliteCelularLocations table is successfull"""
