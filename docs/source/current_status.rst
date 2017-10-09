@@ -34,5 +34,6 @@ The next steps in the development of PyHMDB are:
 2. add query functions for several tables and entries
 #. change BEL enrichment functions to automatically work even when pathology nodes are not in HMDB disease namespace
 #. include missing HMDB tables and relations listed above
+#. maybe add parallelization to the database population to improve run time
 
 

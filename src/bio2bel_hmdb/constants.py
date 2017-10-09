@@ -20,6 +20,6 @@ HMDB_SQLITE_PATH = 'sqlite:///' + os.path.join(HMDB_DATA_DIR, HMDB_DATABASE_NAME
 HMDB_CONFIG_FILE_PATH = os.path.join(HMDB_DATA_DIR, 'config.ini')
 
 ONTOLOGIES = ['disease-ontology', 'human-phenotype-ontology', 'mesh-diseases']
-DISEASE_ONTOLOGY = 'DION'
+DISEASE_ONTOLOGY = 'DOID'
 HUMAN_PHENOTYPE_ONTOLOGY = 'HPO'
-MESH_DISEASES = 'MESH'
+MESH_DISEASES = 'MeSH'

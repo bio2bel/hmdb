@@ -47,7 +47,7 @@ def write_metabolites_proteins_bel(manager, file=None):
 
         protein = interaction.protein.uniprot_id
         metabolite = interaction.metabolite.accession
-        print_bel_association('a', 'HMDB', metabolite, 'path', 'UP', protein, file)
+        write_bel_association('a', 'HMDB', metabolite, 'path', 'UP', protein, file)
         print('UNSET ALL', file=file)
 
 
@@ -87,24 +87,24 @@ def write_metabolites_diseases_bel(manager, file=None):
 
         accession = interaction.metabolite.accession
 
-        if interaction.reference.pubmed_id is not None:
+        if interaction.reference.pubmed_id is None:
             citation = interaction.reference.reference_text
-            print('SET Citation = {"{}"}'.format(citation), file=file)
+            print('SET Citation = {{"{}"}}'.format(citation), file=file)
         else:
             pubmed = interaction.reference.pubmed_id
             journal = get_journal(interaction)
-            print('SET Citation = {"PubMed", "{}", "{}"}'.format(journal, pubmed))
+            print('SET Citation = {{"PubMed", "{}", "{}"}}'.format(journal, pubmed))
 
         print('SET Evidence = "Database Entry"', file=file)
         print('SET Confidence = "Axiomatic"', file=file)
         print('SET Species = "9606”')
         print('SET Disease = "{}"'.format(disease_name))
 
-        print_bel_association('a', 'HMDB', accession, 'path', dis_namespace, disease_name, file)
+        write_bel_association('a', 'HMDB', accession, 'path', dis_namespace, disease_name, file)
         print('UNSET ALL', file=file)
 
 
-def print_bel_association(abundance1, namespace1, accession1, abundance2, namespace2, accession2, file=None):
+def write_bel_association(abundance1, namespace1, accession1, abundance2, namespace2, accession2, file=None):
     """
     prints a BEL association.
 
@@ -127,3 +127,4 @@ def print_bel_association(abundance1, namespace1, accession1, abundance2, namesp
         ),
         file=file
     )
+
