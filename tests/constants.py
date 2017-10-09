@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import unittest
-
 import os
 import tempfile
+import unittest
 
 from bio2bel_hmdb.manager import Manager
 
@@ -24,7 +23,7 @@ class DatabaseMixin(unittest.TestCase):
         cls.manager = Manager(cls.connection)
         cls.manager.make_tables()
         # fill temporary database with test data
-        cls.manager.populate(text_xml_path)
+        cls.manager.populate(text_xml_path, map_dis=False)
 
     @classmethod
     def tearDownClass(cls):

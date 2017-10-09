@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import os
+import tempfile
 import unittest
 
+from bio2bel_hmdb.manager import Manager
 from bio2bel_hmdb.models import Metabolite, Proteins, References, Diseases, CellularLocations, Biofunctions
-from tests.constants import DatabaseMixin
+from tests.constants import DatabaseMixin, text_xml_path
 
 
 class TestBuildDB(DatabaseMixin):
@@ -56,34 +59,27 @@ class TestBuildDB(DatabaseMixin):
 
     def test_populate_proteins(self):
         """Tests for testing if population of Protein and MetaboliteProtein table is successfull"""
-        pro1 = self.manager.session.query(Proteins).count()
-        self.assertEqual(6, pro1)
+        pro = self.manager.session.query(Proteins).count()
+        self.assertEqual(6, pro)
 
-        pro2 = self.manager.get_metabolite_by_accession('HMDB00072')
-        self.assertEqual(2, len(pro2.proteins))
+        pro = self.manager.get_metabolite_by_accession('HMDB00072')
+        self.assertEqual(2, len(pro.proteins))
 
-        pro3 = self.manager.get_metabolite_by_accession('HMDB00072')
-        self.assertEqual("HMDBP00725", pro3.proteins[0].protein.protein_accession)
+        pro = self.manager.get_metabolite_by_accession('HMDB00072')
+        self.assertEqual("HMDBP00725", pro.proteins[0].protein.protein_accession)
 
     def test_populate_references(self):
         """Tests for testing if population of References and MetaboliteReferences table is successfull"""
-        ref1 = self.manager.session.query(References).count()
-        self.assertEqual(11, ref1)
+        ref = self.manager.session.query(References).count()
+        self.assertEqual(11, ref)
 
-        ref2 = self.manager.session.query(References).filter(References.pubmed_id == "7126379")
-        self.assertEqual("Kobayash74.", ref2[0].reference_text)
+        ref = self.manager.session.query(References).filter(References.pubmed_id == "7126379")
+        self.assertEqual("Kobayash74.", ref[0].reference_text)
 
     def test_populate_diseases(self):
         """Tests for testing if population of Diseases and MetaboliteDiseases table is successfull"""
         dis = self.manager.session.query(Diseases).count()
         self.assertEqual(3, dis)
-
-        dis = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
-        self.assertEqual("Schizophrenia", dis.diseases[1].disease.name)
-        self.assertEqual("2415198", dis.diseases[1].reference.pubmed_id)
-        # test mapping
-        self.assertEqual("lung cancer", dis.diseases[2].disease.dion)
-        self.assertEqual("Schizophrenia", dis.diseases[1].disease.hpo)
 
     def test_populate_cellular_locations(self):
         """Tests for testing if population of CellularLocation and MetaboliteCelularLocations table is successfull"""
@@ -101,6 +97,37 @@ class TestBuildDB(DatabaseMixin):
         biof2 = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00064")
         self.assertEqual("Component of Arginine and proline metabolism",
                          biof2[0].biofunctions[0].biofunction.biofunction)
+
+
+class TestDiseaseMapping(unittest.TestCase):
+    """Tests for the disease name mapping"""
+
+    def setUp(self):
+        """Create temporary file"""
+
+        self.fd, self.path = tempfile.mkstemp()
+        self.connection = 'sqlite:///' + self.path
+
+        # create temporary database
+        self.manager = Manager(self.connection)
+        self.manager.make_tables()
+        # fill temporary database with test data
+        self.manager.populate(text_xml_path)
+
+    def tearDown(self):
+        """Closes the connection in the manager and deletes the temporary database"""
+        self.manager.session.close()
+        os.close(self.fd)
+        os.remove(self.path)
+
+    def test_disease_mapping(self):
+        """test if diseases are mapped correctly"""
+        dis = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
+        self.assertEqual("Schizophrenia", dis.diseases[1].disease.name)
+        self.assertEqual("2415198", dis.diseases[1].reference.pubmed_id)
+        # test mapping
+        self.assertEqual("lung cancer", dis.diseases[2].disease.dion)
+        self.assertEqual("Schizophrenia", dis.diseases[1].disease.hpo)
 
 
 if __name__ == '__main__':

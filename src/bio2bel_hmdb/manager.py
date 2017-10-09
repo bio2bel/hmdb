@@ -2,16 +2,16 @@
 
 import configparser
 import logging
+import os
 import xml.etree.ElementTree as ET
 import zipfile
-
-import os
-import requests
 from io import BytesIO
+
+import requests
+from pybel.utils import get_bel_resource
+from pybel_tools.resources import get_latest_arty_namespace
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from pybel_tools.resources import get_latest_arty_namespace
-from pybel.utils import get_bel_resource
 
 from bio2bel_hmdb.constants import (
     DATA_URL,
@@ -62,7 +62,8 @@ class Manager(object):
 
     @staticmethod
     def get_connection(connection=None):
-        """Return the SQLAlchemy connection string if it is set
+        """
+        Return the SQLAlchemy connection string if it is set
 
         :param connection: SQLAlchemy connection string
         :rtype: str
@@ -91,7 +92,8 @@ class Manager(object):
 
     @staticmethod
     def ensure(connection=None):
-        """Checks and allows for a Manager to be passed to the function.
+        """
+        Checks and allows for a Manager to be passed to the function.
 
         :param connection: can be either a already build manager or a connection string to build a manager with.
         """
@@ -104,11 +106,12 @@ class Manager(object):
         raise TypeError
 
     def make_tables(self, check_first=True):
-        """Create tables from model.py"""
+        """Create the empty database (tables)"""
         Base.metadata.create_all(self.engine, checkfirst=check_first)
 
     def get_tag(self, element_tag):
-        """Delete the XML namespace prefix when calling element.tag
+        """
+        Delete the XML namespace prefix when calling element.tag
 
         :param element_tag: tag attribute of an XML element
         :rtype: str
@@ -199,15 +202,17 @@ class Manager(object):
 
         return instance_dict
 
-    def _populate_diseases(self, element, references_dict, diseases_dict, metabolite_instance, disease_ontologies):
+    def _populate_diseases(self, element, references_dict, diseases_dict, metabolite_instance, disease_ontologies=None,
+                           map_dis=True):
         """
         populate the database with disease and related reference information.
 
         :param element: Element object from the xml ElementTree
-        :param references_dict: Dictionary to keep track of which references are already in the database
-        :param diseases_dict: Dictionary to keep track of which diseases are already in the database
-        :param metabolite_instance: Metabolite object to which the diseases and references are related
-        :return:
+        :param dict references_dict: Dictionary to keep track of which references are already in the database
+        :param dict diseases_dict: Dictionary to keep track of which diseases are already in the database
+        :param models.Metabolite metabolite_instance: Metabolite object to which the diseases and references are related
+        :param boolean map_dis: If True the HMDB disease names will be mapped to different ontologies.
+        :rtype: dict, dict
         """
         for disease_element in element:
             disease_instance = Diseases()
@@ -220,17 +225,18 @@ class Manager(object):
                     setattr(disease_instance, dtag, disease_sub_element.text)
                 else:
                     if disease_instance.name not in diseases_dict:  # add disease instance if not already in table
-                        # map to different disease ontologies
-                        disease_lower = disease_instance.name.lower()  # for case insensitivity
-                        for ontology in disease_ontologies:
-                            if disease_lower in disease_ontologies[ontology]:
-                                if ontology == 'disease-ontology':
-                                    setattr(disease_instance, 'dion', disease_ontologies[ontology][disease_lower])
-                                elif ontology == 'human-phenotype-ontology':
-                                    setattr(disease_instance, 'hpo', disease_ontologies[ontology][disease_lower])
-                                else:
-                                    setattr(disease_instance, 'mesh_diseases',
-                                            disease_ontologies[ontology][disease_lower])
+                        # map to different disease ontologies if map is True
+                        if map_dis:
+                            disease_lower = disease_instance.name.lower()  # for case insensitivity
+                            for ontology in disease_ontologies:
+                                if disease_lower in disease_ontologies[ontology]:
+                                    if ontology == 'disease-ontology':
+                                        setattr(disease_instance, 'dion', disease_ontologies[ontology][disease_lower])
+                                    elif ontology == 'human-phenotype-ontology':
+                                        setattr(disease_instance, 'hpo', disease_ontologies[ontology][disease_lower])
+                                    else:
+                                        setattr(disease_instance, 'mesh_diseases',
+                                                disease_ontologies[ontology][disease_lower])
 
                         diseases_dict[disease_instance.name] = disease_instance
                         self.session.add(disease_instance)
@@ -258,18 +264,19 @@ class Manager(object):
 
     def _disease_ontology_dict(self, ontology):
         """
-        c
+        creates dictionaries from the disease ontologies used for mapping HMDB disease names to those ontologies.
+
         :rtype: dict
         """
         doid_path = get_latest_arty_namespace(ontology)
         doid_ns = get_bel_resource(doid_path)
         return {value.lower(): value for value in doid_ns['Values']}
 
-    def populate(self, source=None):
+    def populate(self, source=None, map_dis=True):
         """
         Populate database with the HMDB data.
 
-        :param str source:
+        :param str source: Path to an .xml file. If None the whole HMDB will be downloaded and used for population.
         """
 
         # construct xml tree
@@ -277,7 +284,10 @@ class Manager(object):
         root = tree.getroot()
 
         # construct sets for disease ontologies for mapping hmdb diseases
-        disease_ontologies = {ontology: self._disease_ontology_dict(ontology) for ontology in ONTOLOGIES}
+        if map_dis:
+            disease_ontologies = {ontology: self._disease_ontology_dict(ontology) for ontology in ONTOLOGIES}
+        else:
+            disease_ontologies = None
 
         # dicts to check unique constraints for specific tables
         biofluids_dict = {}
@@ -364,7 +374,7 @@ class Manager(object):
                 elif tag == "diseases":
                     references_dict, diseases_dict = self._populate_diseases(element, references_dict,
                                                                              diseases_dict, metabolite_instance,
-                                                                             disease_ontologies)
+                                                                             disease_ontologies, map_dis=map_dis)
 
                 elif tag == "general_references":
                     references_dict = self._populate_with_2_layer_elements(element, metabolite_instance,
@@ -386,28 +396,28 @@ class Manager(object):
 
     def get_metabolite_by_accession(self, hmdb_metabolite_accession):
         """
+        query the constructed HMDB database and extract a metabolite object.
 
-        :param str hmdb_metabolite_accession: The HMDB acession
-        :rtype: Metabolite
+        :param str hmdb_metabolite_accession: HMDB metabolite identifier
+        :rtype: models.Metabolite
         """
         return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_accession).one_or_none()
 
     def query_metabolite_associated_proteins(self, hmdb_metabolite_id):
         """
-        Function to query the constructed HMDB database to get the metabolite associated protein relations
-        for BEL enrichment
+        query the constructed HMDB database to get the metabolite associated protein relations for BEL enrichment
 
-        :param str hmdb_metabolite_id:
+        :param str hmdb_metabolite_id: HMDB metabolite identifier
         :rtype: list
         """
         metabolite = self.get_metabolite_by_accession(hmdb_metabolite_id)
         return metabolite.proteins
 
     def query_metabolite_associated_diseases(self, hmdb_metabolite_id):
-        """Function to query the constructed HMDB database to get the metabolite associated disease relations
-         for BEL enrichment
+        """
+        query the constructed HMDB database to get the metabolite associated disease relations for BEL enrichment
 
-        :param str hmdb_metabolite_id:
+        :param str hmdb_metabolite_id: HMDB metabolite identifier
         :rtype: list
         """
         metabolite = self.get_metabolite_by_accession(hmdb_metabolite_id)
@@ -417,7 +427,7 @@ class Manager(object):
         """
         Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
 
-        :param disease_name:
+        :param disease_name: HMDB disease name
         :rtype: list
         """
         return self.session.query(Diseases).filter(Diseases.name == disease_name).one_or_none().metabolites
@@ -426,7 +436,7 @@ class Manager(object):
         """
         Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
 
-        :param uniprot_id: uniprot identifier of a protein for which the associated metabolite relations should be outputted
+        :param str uniprot_id: uniprot identifier of a protein for which the associated metabolite relations should be outputted
         :rtype: list
         """
         return self.session.query(Proteins).filter(Proteins.uniprot_id == uniprot_id).one_or_none().metabolites
@@ -435,12 +445,11 @@ class Manager(object):
         """
         Create a list of all HMDB metabolite identifiers present in the database.
 
-        :param str connection: connection string for the manager
         :rtype: list
         """
         accessions = self.session.query(Metabolite.accession).all()
         if not accessions:
-            logging.warning("Database not populated. Please populate database before calling this function")
+            log.warning("Database not populated. Please populate database before calling this function")
 
         return [a[0] for a in accessions]  # if anybody knows a better way of querying for a flat list. Please change.
 
@@ -448,11 +457,19 @@ class Manager(object):
         """
         Create a list of all disease names present in the database.
 
-        :param str connection: connection string for the manager
         :rtype: list
         """
         accessions = self.session.query(Diseases.name).all()
         if not accessions:
-            logging.warning("Database not populated. Please populate database before calling this function")
+            log.warning("Database not populated. Please populate database before calling this function")
 
         return [a[0] for a in accessions]  # if anybody knows a better way of querying for a flat list. Please change.
+
+    def get_interactions(self, interaction_table):
+        """
+        extracts all interactions from the many to many interaction table.
+
+        :param type interaction_table: Relation table from the database model. (e.g. MetaboliteProteins)
+        :rtype: query
+        """
+        return self.session.query(interaction_table).all()
