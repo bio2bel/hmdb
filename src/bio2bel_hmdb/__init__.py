@@ -9,5 +9,5 @@ __url__ = 'https://github.com/bio2bel/hmdb'
 __author__ = 'Colin Birkenbihl, Charles Tapley Hoyt'
 __email__ = 'colin.birkenbihl@scai.fraunhofer.de'
 
-__license__ = 'Apache 2.0 License'
+__license__ = 'MIT License'
 __copyright__ = 'Copyright (c) 2017 Colin Birkenbihl, Charles Tapley Hoyt'
