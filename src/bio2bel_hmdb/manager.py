@@ -11,17 +11,13 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from bio2bel_hmdb.constants import (
-    DATA_URL,
-    HMDB_SQLITE_PATH,
-    HMDB_CONFIG_FILE_PATH,
-    DATA_FILE,
-    ONTOLOGIES
+from bio2bel_hmdb.constants import DATA_FILE, DATA_URL, HMDB_CONFIG_FILE_PATH, HMDB_SQLITE_PATH, ONTOLOGIES
+from bio2bel_hmdb.models import (
+    Base, Biofluids, Biofunctions, CellularLocations, Diseases, Metabolite,
+    MetaboliteBiofluid, MetaboliteBiofunctions, MetaboliteCellularLocations, MetaboliteDiseasesReferences,
+    MetabolitePathways, MetaboliteProteins, MetaboliteReferences, MetaboliteTissues, Pathways, Proteins, References,
+    SecondaryAccessions, Synonyms, Tissues,
 )
-from bio2bel_hmdb.models import Base, Metabolite, Biofluids, MetaboliteBiofluid, \
-    Synonyms, SecondaryAccessions, Tissues, MetaboliteTissues, \
-    Pathways, MetabolitePathways, Proteins, MetaboliteProteins, References, MetaboliteReferences, Diseases, \
-    MetaboliteDiseasesReferences, Biofunctions, MetaboliteBiofunctions, CellularLocations, MetaboliteCellularLocations
 from pybel.resources.arty import get_latest_arty_namespace
 from pybel.resources.definitions import get_bel_resource
 
@@ -316,8 +312,10 @@ class Manager(object):
 
                 if tag == "secondary_accessions":
                     for secondary_accession_element in element:
-                        new_secondary_accession = SecondaryAccessions(metabolite=metabolite_instance,
-                                                                      secondary_accession=secondary_accession_element.text)
+                        new_secondary_accession = SecondaryAccessions(
+                            metabolite=metabolite_instance,
+                            secondary_accession=secondary_accession_element.text
+                        )
                         self.session.add(new_secondary_accession)
 
                 elif tag == "synonyms":
