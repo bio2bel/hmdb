@@ -105,7 +105,8 @@ class Manager(object):
         """Create the empty database (tables)"""
         Base.metadata.create_all(self.engine, checkfirst=check_first)
 
-    def get_tag(self, element_tag):
+    @staticmethod
+    def get_tag(element_tag):
         """
         Delete the XML namespace prefix when calling element.tag
 
@@ -258,7 +259,8 @@ class Manager(object):
                         self.session.add(rel_meta_dis_ref)
         return references_dict, diseases_dict
 
-    def _disease_ontology_dict(self, ontology):
+    @staticmethod
+    def _disease_ontology_dict(ontology):
         """
         creates dictionaries from the disease ontologies used for mapping HMDB disease names to those ontologies.
 
