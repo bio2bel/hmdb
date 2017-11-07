@@ -8,8 +8,6 @@ import zipfile
 from io import BytesIO
 
 import requests
-from pybel.resources.definitions import get_bel_resource
-from pybel_tools.resources import get_latest_arty_namespace
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -24,6 +22,8 @@ from bio2bel_hmdb.models import Base, Metabolite, Biofluids, MetaboliteBiofluid,
     Synonyms, SecondaryAccessions, Tissues, MetaboliteTissues, \
     Pathways, MetabolitePathways, Proteins, MetaboliteProteins, References, MetaboliteReferences, Diseases, \
     MetaboliteDiseasesReferences, Biofunctions, MetaboliteBiofunctions, CellularLocations, MetaboliteCellularLocations
+from pybel.resources.arty import get_latest_arty_namespace
+from pybel.resources.definitions import get_bel_resource
 
 log = logging.getLogger(__name__)
 
