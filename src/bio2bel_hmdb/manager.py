@@ -277,6 +277,7 @@ class Manager(object):
         Populate database with the HMDB data.
 
         :param str source: Path to an .xml file. If None the whole HMDB will be downloaded and used for population.
+        :param bool map_dis: Should diseases be mapped?
         """
 
         # construct xml tree
@@ -395,8 +396,7 @@ class Manager(object):
         self.session.commit()
 
     def get_metabolite_by_accession(self, hmdb_metabolite_accession):
-        """
-        query the constructed HMDB database and extract a metabolite object.
+        """Query the constructed HMDB database and extract a metabolite object.
 
         :param str hmdb_metabolite_accession: HMDB metabolite identifier
         :rtype: models.Metabolite
@@ -404,8 +404,7 @@ class Manager(object):
         return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_accession).one_or_none()
 
     def query_metabolite_associated_proteins(self, hmdb_metabolite_id):
-        """
-        query the constructed HMDB database to get the metabolite associated protein relations for BEL enrichment
+        """Query the constructed HMDB database to get the metabolite associated protein relations for BEL enrichment
 
         :param str hmdb_metabolite_id: HMDB metabolite identifier
         :rtype: list
@@ -414,8 +413,7 @@ class Manager(object):
         return metabolite.proteins
 
     def query_metabolite_associated_diseases(self, hmdb_metabolite_id):
-        """
-        query the constructed HMDB database to get the metabolite associated disease relations for BEL enrichment
+        """Query the constructed HMDB database to get the metabolite associated disease relations for BEL enrichment
 
         :param str hmdb_metabolite_id: HMDB metabolite identifier
         :rtype: list
@@ -424,8 +422,7 @@ class Manager(object):
         return metabolite.diseases
 
     def query_disease_associated_metabolites(self, disease_name):
-        """
-        Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
+        """Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
 
         :param disease_name: HMDB disease name
         :rtype: list
@@ -433,17 +430,16 @@ class Manager(object):
         return self.session.query(Diseases).filter(Diseases.name == disease_name).one_or_none().metabolites
 
     def query_protein_associated_metabolites(self, uniprot_id):
-        """
-        Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
+        """Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
 
-        :param str uniprot_id: uniprot identifier of a protein for which the associated metabolite relations should be outputted
+        :param str uniprot_id: uniprot identifier of a protein for which the associated metabolite relations should be
+                                outputted
         :rtype: list
         """
         return self.session.query(Proteins).filter(Proteins.uniprot_id == uniprot_id).one_or_none().metabolites
 
     def get_hmdb_accession(self):
-        """
-        Create a list of all HMDB metabolite identifiers present in the database.
+        """Create a list of all HMDB metabolite identifiers present in the database.
 
         :rtype: list
         """
@@ -454,8 +450,7 @@ class Manager(object):
         return [a[0] for a in accessions]  # if anybody knows a better way of querying for a flat list. Please change.
 
     def get_hmdb_diseases(self):
-        """
-        Create a list of all disease names present in the database.
+        """Create a list of all disease names present in the database.
 
         :rtype: list
         """
