@@ -463,7 +463,7 @@ class Manager(object):
         if not accessions:
             log.warning("Database not populated. Please populate database before calling this function")
 
-        return [a[0] for a in accessions]  # if anybody knows a better way of querying for a flat list. Please change.
+        return [a for a, in accessions]
 
     def get_interactions(self, interaction_table):
         """
