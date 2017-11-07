@@ -8,7 +8,7 @@ import zipfile
 from io import BytesIO
 
 import requests
-from pybel.utils import get_bel_resource
+from pybel.resources.definitions import get_bel_resource
 from pybel_tools.resources import get_latest_arty_namespace
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

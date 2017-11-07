@@ -15,7 +15,7 @@ def write_interpro_tree_boilerplate(file=None):
     :param file file: A writeable file or file like. Defaults to stdout
     """
     write_boilerplate(
-        document_name='HMDB Enrichment',
+        name='HMDB Enrichment',
         authors='Colin Birkenbihl, Charles Tapley Hoyt',
         contact='colin.birkenbihl@scai.fraunhofer.de',
         licenses='Creative Commons by 4.0',
@@ -25,8 +25,8 @@ def write_interpro_tree_boilerplate(file=None):
             # FIXME
         },
         namespace_patterns={},
-        annotations_dict={'Confidence': CONFIDENCE},
-        annotations_patterns={},
+        annotation_dict={'Confidence': CONFIDENCE},
+        annotation_patterns={},
         file=file
     )
 

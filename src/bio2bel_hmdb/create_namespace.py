@@ -5,7 +5,7 @@ from bio2bel_hmdb.manager import Manager
 from pybel.constants import NAMESPACE_DOMAIN_CHEMICAL, NAMESPACE_DOMAIN_OTHER
 from pybel_tools.definition_utils import write_namespace
 from pybel_tools.resources import get_latest_arty_namespace
-from pybel.utils import get_bel_resource
+from pybel.resources.definitions import get_bel_resource
 
 
 def write_hmdb_id_ns(file=None, values=None, connection=None):
