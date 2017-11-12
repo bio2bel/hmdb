@@ -110,7 +110,7 @@ class TestDiseaseMapping(unittest.TestCase):
 
         # create temporary database
         self.manager = Manager(self.connection)
-        self.manager.make_tables()
+        self.manager.create_all()
         # fill temporary database with test data
         self.manager.populate(text_xml_path)
 

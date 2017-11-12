@@ -13,7 +13,9 @@ from PyHMDB.manager import Manager
 2. The Manager needs to create the datamodel/SQL tables:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    >>> m.make_tables()
+    >>> m.create_all()
+
+
 
 3. The database gets populated:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

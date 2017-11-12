@@ -21,7 +21,7 @@ class DatabaseMixin(unittest.TestCase):
 
         # create temporary database
         cls.manager = Manager(cls.connection)
-        cls.manager.make_tables()
+        cls.manager.create_all()
         # fill temporary database with test data
         cls.manager.populate(text_xml_path, map_dis=False)
 

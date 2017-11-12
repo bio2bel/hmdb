@@ -11,12 +11,11 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from bio2bel_hmdb.constants import DATA_FILE, DATA_URL, HMDB_CONFIG_FILE_PATH, HMDB_SQLITE_PATH, ONTOLOGIES
+from bio2bel_hmdb.constants import CONFIG_FILE_PATH, DATA_FILE, DATA_URL, DEFAULT_CACHE_CONNECTION, ONTOLOGIES
 from bio2bel_hmdb.models import (
-    Base, Biofluids, Biofunctions, CellularLocations, Diseases, Metabolite,
-    MetaboliteBiofluid, MetaboliteBiofunctions, MetaboliteCellularLocations, MetaboliteDiseasesReferences,
-    MetabolitePathways, MetaboliteProteins, MetaboliteReferences, MetaboliteTissues, Pathways, Proteins, References,
-    SecondaryAccessions, Synonyms, Tissues,
+    Base, Biofluids, Biofunctions, CellularLocations, Diseases, Metabolite, MetaboliteBiofluid, MetaboliteBiofunctions,
+    MetaboliteCellularLocations, MetaboliteDiseasesReferences, MetabolitePathways, MetaboliteProteins,
+    MetaboliteReferences, MetaboliteTissues, Pathways, Proteins, References, SecondaryAccessions, Synonyms, Tissues,
 )
 from pybel.resources.arty import get_latest_arty_namespace
 from pybel.resources.definitions import get_bel_resource
@@ -25,12 +24,11 @@ log = logging.getLogger(__name__)
 
 
 def get_data(source=None):
-    """
-    Parse .xml file into an ElementTree
+    """Parse .xml file into an ElementTree
 
-    :param str source: String representing the filename of a .xml file. If None the full HMDB metabolite .xml will be downloaded and parsed into a tree.
+    :param Optional[str] source: String representing the filename of a .xml file. If None the full HMDB metabolite .xml
+                                 will be downloaded and parsed into a tree.
     """
-
     if not source:
         req = requests.get(DATA_URL)
         hmdb_zip = zipfile.ZipFile(BytesIO(req.content))
@@ -46,20 +44,26 @@ def get_data(source=None):
 
 
 class Manager(object):
-    """
-    Managers handle the database construction, population and querying.
-    """
+    """Managers handle the database construction, population and querying."""
 
     def __init__(self, connection=None):
         self.connection = self.get_connection(connection)
         self.engine = create_engine(self.connection)
-        self.sessionmake = sessionmaker(bind=self.engine, autoflush=False, expire_on_commit=False)
-        self.session = self.sessionmake()
+        self.session_maker = sessionmaker(bind=self.engine, autoflush=False, expire_on_commit=False)
+        self.session = self.session_maker()
+        self.create_all()
+
+    def create_all(self, check_first=True):
+        """Create the empty database (tables)"""
+        Base.metadata.create_all(self.engine, checkfirst=check_first)
+
+    def drop_all(self, check_first=True):
+        """Create the empty database (tables)"""
+        Base.metadata.drop_all(self.engine, checkfirst=check_first)
 
     @staticmethod
     def get_connection(connection=None):
-        """
-        Return the SQLAlchemy connection string if it is set
+        """Return the SQLAlchemy connection string if it is set
 
         :param connection: SQLAlchemy connection string
         :rtype: str
@@ -70,7 +74,7 @@ class Manager(object):
 
         config = configparser.ConfigParser()
 
-        cfp = HMDB_CONFIG_FILE_PATH
+        cfp = CONFIG_FILE_PATH
 
         if os.path.exists(cfp):
             log.info('fetch database configuration from {}'.format(cfp))
@@ -80,16 +84,15 @@ class Manager(object):
             return connection
 
         with open(cfp, 'w') as config_file:
-            config['database'] = {'sqlalchemy_connection_string': HMDB_SQLITE_PATH}
+            config['database'] = {'sqlalchemy_connection_string': DEFAULT_CACHE_CONNECTION}
             config.write(config_file)
             log.info('create configuration file {}'.format(cfp))
 
-        return HMDB_SQLITE_PATH
+        return DEFAULT_CACHE_CONNECTION
 
     @staticmethod
     def ensure(connection=None):
-        """
-        Checks and allows for a Manager to be passed to the function.
+        """Checks and allows for a Manager to be passed to the function.
 
         :param connection: can be either a already build manager or a connection string to build a manager with.
         """
@@ -101,14 +104,9 @@ class Manager(object):
 
         raise TypeError
 
-    def make_tables(self, check_first=True):
-        """Create the empty database (tables)"""
-        Base.metadata.create_all(self.engine, checkfirst=check_first)
-
     @staticmethod
     def get_tag(element_tag):
-        """
-        Delete the XML namespace prefix when calling element.tag
+        """Delete the XML namespace prefix when calling element.tag
 
         :param element_tag: tag attribute of an XML element
         :rtype: str
@@ -117,19 +115,18 @@ class Manager(object):
 
     def _populate_with_1_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
                                         column_name):
-        """
-        Parse and populate database with metabolite elements, which themselfes have one more layer.
+        """Parse and populate database with metabolite elements, which themselfes have one more layer.
 
         :param element: the current parent XML element. E.g. "pathways" where the children would have the tag "pathway".
         :param models.Metabolite metabolite_instance: metabolite object which is associated with the instances (e.g. is
-        involved in that "pathway")
+                                                      involved in that "pathway")
         :param dict instance_dict: dictionary which tracks if the found instance is already present in the table and can
-        then refer to it
+                                   then refer to it
         :param class table: sqlalchemy class to which the instances belong. E.g. "Pathways"
         :param class relation_table: sqlalchemy class which stores the many to many relation between the instances and
-        the metabolites
+                                     the metabolites
         :param str column_name: Name of the column in the relation tables which does not represent the metabolite.
-        e.g. reference, pathway etc
+                                e.g. reference, pathway etc
         :rtype: dict
         """
         for instance_element in element:
@@ -147,8 +144,7 @@ class Manager(object):
 
     def _populate_with_2_layer_elements(self, element, metabolite_instance, instance_dict, table, relation_table,
                                         column, instance_dict_key=None, metabolite_column='metabolite'):
-        """
-        Parse and populate database with metabolite elements, which themselfes have two more layers.
+        """Parse and populate database with metabolite elements, which themselves have two more layers.
 
         :param element: the current parent XML element. E.g. "pathways" where the children would have the tag "pathway".
         :param models.Metabolite metabolite_instance: metabolite object which is associated with the instances (e.g. is
@@ -201,8 +197,7 @@ class Manager(object):
 
     def _populate_diseases(self, element, references_dict, diseases_dict, metabolite_instance, disease_ontologies=None,
                            map_dis=True):
-        """
-        populate the database with disease and related reference information.
+        """Populates the database with disease and related reference information.
 
         :param element: Element object from the xml ElementTree
         :param dict references_dict: Dictionary to keep track of which references are already in the database
@@ -261,8 +256,7 @@ class Manager(object):
 
     @staticmethod
     def _disease_ontology_dict(ontology):
-        """
-        creates dictionaries from the disease ontologies used for mapping HMDB disease names to those ontologies.
+        """Creates dictionaries from the disease ontologies used for mapping HMDB disease names to those ontologies.
 
         :rtype: dict
         """
@@ -271,8 +265,7 @@ class Manager(object):
         return {value.lower(): value for value in doid_ns['Values']}
 
     def populate(self, source=None, map_dis=True):
-        """
-        Populate database with the HMDB data.
+        """Populates the database with the HMDB data
 
         :param str source: Path to an .xml file. If None the whole HMDB will be downloaded and used for population.
         :param bool map_dis: Should diseases be mapped?
@@ -461,8 +454,7 @@ class Manager(object):
         return [a for a, in accessions]
 
     def get_interactions(self, interaction_table):
-        """
-        extracts all interactions from the many to many interaction table.
+        """Extracts all interactions from the many to many interaction table.
 
         :param type interaction_table: Relation table from the database model. (e.g. MetaboliteProteins)
         :rtype: query

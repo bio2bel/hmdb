@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Float, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from pybel.constants import FUNCTION, NAME, NAMESPACE, PROTEIN, ABUNDANCE, PATHOLOGY
+
+from pybel.constants import ABUNDANCE, FUNCTION, NAME, NAMESPACE, PATHOLOGY, PROTEIN
 
 HMDB_ID = 'HMDB'
 HMDB_DISEASE = 'HMDB_D'
