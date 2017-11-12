@@ -10,7 +10,7 @@ from bio2bel_hmdb.constants import DEFAULT_CACHE_CONNECTION
 
 @click.group()
 def main():
-    """Bio2BEL HMDB"""
+    """HMDB to BEL"""
     logging.basicConfig(level=logging.INFO)
 
 
