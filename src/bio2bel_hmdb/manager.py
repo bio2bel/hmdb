@@ -94,7 +94,7 @@ class Manager(object):
     def ensure(connection=None):
         """Checks and allows for a Manager to be passed to the function.
 
-        :param connection: can be either a already build manager or a connection string to build a manager with.
+        :param connection: can be either an already build manager or a connection string to build a manager with.
         """
         if connection is None or isinstance(connection, str):
             return Manager(connection=connection)
