@@ -11,6 +11,7 @@ META_PATH = os.path.join('src', 'bio2bel_hmdb', '__init__.py')
 INSTALL_REQUIRES = [
     'click',
     'sqlalchemy',
+    'bio2bel',
     'pybel>=0.9.0',
     'pybel_tools',
     'requests',

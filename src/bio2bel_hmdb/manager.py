@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import configparser
 import logging
 import os
 import xml.etree.ElementTree as ET
@@ -11,7 +10,8 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from bio2bel_hmdb.constants import CONFIG_FILE_PATH, DATA_FILE, DATA_URL, DEFAULT_CACHE_CONNECTION, ONTOLOGIES
+from bio2bel.utils import get_connection
+from bio2bel_hmdb.constants import DATA_FILE, DATA_URL, MODULE_NAME, ONTOLOGIES
 from bio2bel_hmdb.models import (
     Base, Biofluids, Biofunctions, CellularLocations, Diseases, Metabolite, MetaboliteBiofluid, MetaboliteBiofunctions,
     MetaboliteCellularLocations, MetaboliteDiseasesReferences, MetabolitePathways, MetaboliteProteins,
@@ -47,7 +47,7 @@ class Manager(object):
     """Managers handle the database construction, population and querying."""
 
     def __init__(self, connection=None):
-        self.connection = self.get_connection(connection)
+        self.connection = get_connection(MODULE_NAME, connection=connection)
         self.engine = create_engine(self.connection)
         self.session_maker = sessionmaker(bind=self.engine, autoflush=False, expire_on_commit=False)
         self.session = self.session_maker()
@@ -60,35 +60,6 @@ class Manager(object):
     def drop_all(self, check_first=True):
         """Create the empty database (tables)"""
         Base.metadata.drop_all(self.engine, checkfirst=check_first)
-
-    @staticmethod
-    def get_connection(connection=None):
-        """Return the SQLAlchemy connection string if it is set
-
-        :param connection: SQLAlchemy connection string
-        :rtype: str
-        """
-
-        if connection:
-            return connection
-
-        config = configparser.ConfigParser()
-
-        cfp = CONFIG_FILE_PATH
-
-        if os.path.exists(cfp):
-            log.info('fetch database configuration from {}'.format(cfp))
-            config.read(cfp)
-            connection = config['database']['sqlalchemy_connection_string']
-            log.info('load connection string from {}: {}'.format(cfp, connection))
-            return connection
-
-        with open(cfp, 'w') as config_file:
-            config['database'] = {'sqlalchemy_connection_string': DEFAULT_CACHE_CONNECTION}
-            config.write(config_file)
-            log.info('create configuration file {}'.format(cfp))
-
-        return DEFAULT_CACHE_CONNECTION
 
     @staticmethod
     def ensure(connection=None):
