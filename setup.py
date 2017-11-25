@@ -15,7 +15,8 @@ INSTALL_REQUIRES = [
     'pybel>=0.9.0',
     'pybel_tools',
     'requests',
-    'networkx==1.11'
+    'networkx==1.11',
+    'tqdm',
 ]
 ENTRY_POINTS = {
     'bio2bel': [

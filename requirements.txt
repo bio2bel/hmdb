@@ -5,3 +5,4 @@ pybel>=0.9.0
 pybel_tools
 sqlalchemy
 requests
+tqdm

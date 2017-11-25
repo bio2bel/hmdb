@@ -17,6 +17,7 @@ from bio2bel_hmdb.models import (
     MetaboliteCellularLocations, MetaboliteDiseasesReferences, MetabolitePathways, MetaboliteProteins,
     MetaboliteReferences, MetaboliteTissues, Pathways, Proteins, References, SecondaryAccessions, Synonyms, Tissues,
 )
+from tqdm import tqdm
 from pybel.resources.arty import get_latest_arty_namespace
 from pybel.resources.definitions import get_bel_resource
 
@@ -248,7 +249,10 @@ class Manager(object):
 
         # construct sets for disease ontologies for mapping hmdb diseases
         if map_dis:
-            disease_ontologies = {ontology: self._disease_ontology_dict(ontology) for ontology in ONTOLOGIES}
+            disease_ontologies = {
+                ontology: self._disease_ontology_dict(ontology)
+                for ontology in ONTOLOGIES
+            }
         else:
             disease_ontologies = None
 
@@ -262,7 +266,7 @@ class Manager(object):
         biofunctions_dict = {}
         cellular_locations_dict = {}
 
-        for metabolite in root:
+        for metabolite in tqdm(root, desc='HMDB Metabolite'):
             # create metabolite dict used to feed in main metabolite table
             metabolite_instance = Metabolite()
 
