@@ -49,9 +49,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'PyHMDB'
-copyright = '2017, Colin Birkenbihl, Charles Tapley Hoyt'
-author = 'Colin Birkenbihl, Charles Tapley Hoyt'
+project = 'Bio2BEL HMDB'
+copyright = '2017-2018, Charles Tapley Hoyt and Colin Birkenbihl'
+author = 'Charles Tapley Hoyt and Colin Birkenbihl'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
