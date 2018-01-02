@@ -1,0 +1,18 @@
+[run]
+branch = True
+source = bio2bel_hmdb
+omit =
+    src/bio2bel_hmdb/__main__.py
+    src/bio2bel_hmdb/cli.py
+    tests/*
+
+[paths]
+source =
+    src/bio2bel_hmdb
+    .tox/*/lib/python*/site-packages/bio2bel_hmdb
+
+[report]
+show_missing = True
+exclude_lines =
+    def __str__
+    def __repr__
