@@ -31,5 +31,3 @@ class TestWriteBelDocument(unittest.TestCase):
 
     def test_write_bel_asso(self):
         """test if diseases are mapped correctly"""
-
-    raise NotImplementedError

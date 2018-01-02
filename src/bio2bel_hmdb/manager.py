@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import configparser
 import logging
 import os
 import xml.etree.ElementTree as ET
@@ -11,12 +10,14 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from bio2bel_hmdb.constants import CONFIG_FILE_PATH, DATA_FILE, DATA_URL, DEFAULT_CACHE_CONNECTION, ONTOLOGIES
+from bio2bel.utils import get_connection
+from bio2bel_hmdb.constants import DATA_FILE, DATA_URL, MODULE_NAME, ONTOLOGIES
 from bio2bel_hmdb.models import (
     Base, Biofluids, Biofunctions, CellularLocations, Diseases, Metabolite, MetaboliteBiofluid, MetaboliteBiofunctions,
     MetaboliteCellularLocations, MetaboliteDiseasesReferences, MetabolitePathways, MetaboliteProteins,
     MetaboliteReferences, MetaboliteTissues, Pathways, Proteins, References, SecondaryAccessions, Synonyms, Tissues,
 )
+from tqdm import tqdm
 from pybel.resources.arty import get_latest_arty_namespace
 from pybel.resources.definitions import get_bel_resource
 
@@ -47,7 +48,7 @@ class Manager(object):
     """Managers handle the database construction, population and querying."""
 
     def __init__(self, connection=None):
-        self.connection = self.get_connection(connection)
+        self.connection = get_connection(MODULE_NAME, connection=connection)
         self.engine = create_engine(self.connection)
         self.session_maker = sessionmaker(bind=self.engine, autoflush=False, expire_on_commit=False)
         self.session = self.session_maker()
@@ -62,39 +63,10 @@ class Manager(object):
         Base.metadata.drop_all(self.engine, checkfirst=check_first)
 
     @staticmethod
-    def get_connection(connection=None):
-        """Return the SQLAlchemy connection string if it is set
-
-        :param connection: SQLAlchemy connection string
-        :rtype: str
-        """
-
-        if connection:
-            return connection
-
-        config = configparser.ConfigParser()
-
-        cfp = CONFIG_FILE_PATH
-
-        if os.path.exists(cfp):
-            log.info('fetch database configuration from {}'.format(cfp))
-            config.read(cfp)
-            connection = config['database']['sqlalchemy_connection_string']
-            log.info('load connection string from {}: {}'.format(cfp, connection))
-            return connection
-
-        with open(cfp, 'w') as config_file:
-            config['database'] = {'sqlalchemy_connection_string': DEFAULT_CACHE_CONNECTION}
-            config.write(config_file)
-            log.info('create configuration file {}'.format(cfp))
-
-        return DEFAULT_CACHE_CONNECTION
-
-    @staticmethod
     def ensure(connection=None):
         """Checks and allows for a Manager to be passed to the function.
 
-        :param connection: can be either a already build manager or a connection string to build a manager with.
+        :param connection: can be either an already build manager or a connection string to build a manager with.
         """
         if connection is None or isinstance(connection, str):
             return Manager(connection=connection)
@@ -277,7 +249,10 @@ class Manager(object):
 
         # construct sets for disease ontologies for mapping hmdb diseases
         if map_dis:
-            disease_ontologies = {ontology: self._disease_ontology_dict(ontology) for ontology in ONTOLOGIES}
+            disease_ontologies = {
+                ontology: self._disease_ontology_dict(ontology)
+                for ontology in ONTOLOGIES
+            }
         else:
             disease_ontologies = None
 
@@ -291,7 +266,7 @@ class Manager(object):
         biofunctions_dict = {}
         cellular_locations_dict = {}
 
-        for metabolite in root:
+        for metabolite in tqdm(root, desc='HMDB Metabolite'):
             # create metabolite dict used to feed in main metabolite table
             metabolite_instance = Metabolite()
 

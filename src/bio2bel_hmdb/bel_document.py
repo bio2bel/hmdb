@@ -32,8 +32,7 @@ def write_interpro_tree_boilerplate(file=None):
 
 
 def write_metabolites_proteins_bel(manager, file=None):
-    """
-    writes the metabolite-protein association relations found in HMDB into a BEL document.
+    """Writes the metabolite-protein association relations found in HMDB into a BEL document.
 
     :param manager: Manager object connected to the local HMDB database
     :param file file: A writeable file or file like. Defaults to stdout
@@ -52,8 +51,7 @@ def write_metabolites_proteins_bel(manager, file=None):
 
 
 def get_journal(interaction):
-    """
-    gets the journal name from the in HMDB provided reference strings.
+    """Gets the journal name from the in HMDB provided reference strings.
 
     :param interaction: interaction_table object (e.g. MetaboliteProteins)
     :rtype: str
@@ -105,8 +103,7 @@ def write_metabolites_diseases_bel(manager, file=None):
 
 
 def write_bel_association(abundance1, namespace1, accession1, abundance2, namespace2, accession2, file=None):
-    """
-    prints a BEL association.
+    """Prints a BEL association.
 
     :param str abundance1: Abundance of the subject
     :param str namespace1: Namespace of the subject

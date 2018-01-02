@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 import flask_admin
 from flask import Flask
 from flask_admin.contrib.sqla import ModelView
@@ -9,21 +8,20 @@ from bio2bel_hmdb.manager import Manager
 from bio2bel_hmdb.models import *
 
 
-def add_admin(app, manager):
-    admin = flask_admin.Admin(app, url='/')
-    admin.add_view(ModelView(Metabolite, manager.session))
-    admin.add_view(ModelView(Pathways, manager.session))
-    admin.add_view(ModelView(Diseases, manager.session))
-    admin.add_view(ModelView(Proteins, manager.session))
-    return admin
-
-
 def create_application(connection=None):
-    app = Flask(__name__)
+    app_ = Flask(__name__)
     manager = Manager(connection=connection)
-    add_admin(app, manager)
+    add_admin(app_, manager)
     return app
 
+
+def add_admin(app, session, **kwargs):
+    admin = flask_admin.Admin(app, **kwargs)
+    admin.add_view(ModelView(Metabolite, session))
+    admin.add_view(ModelView(Pathways, session))
+    admin.add_view(ModelView(Diseases, session))
+    admin.add_view(ModelView(Proteins, session))
+    return admin
 
 if __name__ == '__main__':
     app = create_application()
