@@ -1,7 +1,7 @@
+pybel>=0.10.1
 click
 networkx==1.11
 bio2bel
-pybel>=0.9.0
 pybel_tools
 sqlalchemy
 requests

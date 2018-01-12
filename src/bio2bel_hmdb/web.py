@@ -4,8 +4,8 @@ import flask_admin
 from flask import Flask
 from flask_admin.contrib.sqla import ModelView
 
-from bio2bel_hmdb.manager import Manager
-from bio2bel_hmdb.models import *
+from .manager import Manager
+from .models import *
 
 
 def create_application(connection=None):
@@ -22,6 +22,7 @@ def add_admin(app, session, **kwargs):
     admin.add_view(ModelView(Diseases, session))
     admin.add_view(ModelView(Proteins, session))
     return admin
+
 
 if __name__ == '__main__':
     app = create_application()

@@ -2,9 +2,10 @@
 
 import logging
 
-from pybel_tools import pipeline
-from bio2bel_hmdb.manager import Manager
 from pybel.constants import *
+from pybel_tools import pipeline
+
+from .manager import Manager
 
 log = logging.getLogger(__name__)
 

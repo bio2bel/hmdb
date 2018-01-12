@@ -15,8 +15,6 @@ DATA_FILE = 'hmdb_metabolites.xml'
 SWEAT_URL = 'http://www.hmdb.ca/system/downloads/current/sweat_metabolites.zip'
 SWEAT_FILE = 'sweat_metabolites.xml'
 
-CONFIG_FILE_PATH = os.path.join(DATA_DIR, 'config.ini')
-
 ONTOLOGIES = ['disease-ontology', 'human-phenotype-ontology', 'mesh-diseases']
 DISEASE_ONTOLOGY = 'DOID'
 HUMAN_PHENOTYPE_ONTOLOGY = 'HPO'

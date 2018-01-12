@@ -1,11 +1,11 @@
 import logging
 
+from pybel.resources.defaults import CONFIDENCE
 from pybel.utils import ensure_quotes
 from pybel_tools.document_utils import write_boilerplate
-from pybel_tools.resources import CONFIDENCE
 
-from bio2bel_hmdb.constants import DISEASE_ONTOLOGY, HUMAN_PHENOTYPE_ONTOLOGY, MESH_DISEASES
-from bio2bel_hmdb.models import MetaboliteProteins, MetaboliteDiseasesReferences
+from .constants import DISEASE_ONTOLOGY, HUMAN_PHENOTYPE_ONTOLOGY, MESH_DISEASES
+from .models import MetaboliteDiseasesReferences, MetaboliteProteins
 
 
 def write_interpro_tree_boilerplate(file=None):
@@ -21,11 +21,11 @@ def write_interpro_tree_boilerplate(file=None):
         licenses='Creative Commons by 4.0',
         copyright='Copyright (c) 2017 Colin Birkenbihl, Charles Tapley Hoyt. All Rights Reserved.',
         description="""This BEL document represents relations from HMDB.""",
-        namespace_dict={
+        namespace_url={
             # FIXME
         },
         namespace_patterns={},
-        annotation_dict={'Confidence': CONFIDENCE},
+        annotation_url={'Confidence': CONFIDENCE},
         annotation_patterns={},
         file=file
     )

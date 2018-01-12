@@ -7,19 +7,19 @@ import zipfile
 from io import BytesIO
 
 import requests
+from pybel.resources.arty import get_latest_arty_namespace
+from pybel.resources.definitions import get_bel_resource
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from tqdm import tqdm
 
 from bio2bel.utils import get_connection
-from bio2bel_hmdb.constants import DATA_FILE, DATA_URL, MODULE_NAME, ONTOLOGIES
-from bio2bel_hmdb.models import (
+from .constants import DATA_FILE, DATA_URL, MODULE_NAME, ONTOLOGIES
+from .models import (
     Base, Biofluids, Biofunctions, CellularLocations, Diseases, Metabolite, MetaboliteBiofluid, MetaboliteBiofunctions,
     MetaboliteCellularLocations, MetaboliteDiseasesReferences, MetabolitePathways, MetaboliteProteins,
     MetaboliteReferences, MetaboliteTissues, Pathways, Proteins, References, SecondaryAccessions, Synonyms, Tissues,
 )
-from tqdm import tqdm
-from pybel.resources.arty import get_latest_arty_namespace
-from pybel.resources.definitions import get_bel_resource
 
 log = logging.getLogger(__name__)
 

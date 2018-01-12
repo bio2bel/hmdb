@@ -4,8 +4,8 @@ import logging
 
 import click
 
-from bio2bel_hmdb.constants import DEFAULT_CACHE_CONNECTION
-from bio2bel_hmdb.manager import Manager
+from .constants import DEFAULT_CACHE_CONNECTION
+from .manager import Manager
 
 
 @click.group()
