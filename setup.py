@@ -18,6 +18,9 @@ INSTALL_REQUIRES = [
     'networkx==1.11',
     'tqdm',
 ]
+EXTRAS_REQUIRE = {
+    'web': ['flask', 'flask_admin'],
+}
 ENTRY_POINTS = {
     'bio2bel': [
         'hmdb = bio2bel_hmdb',
@@ -72,5 +75,6 @@ if __name__ == '__main__':
         packages=PACKAGES,
         package_dir={'': 'src'},
         install_requires=INSTALL_REQUIRES,
+        extras_require=EXTRAS_REQUIRE,
         entry_points=ENTRY_POINTS,
-)
+    )

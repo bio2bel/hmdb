@@ -6,3 +6,5 @@ pybel_tools
 sqlalchemy
 requests
 tqdm
+flask[web]
+flask_admin[web]
