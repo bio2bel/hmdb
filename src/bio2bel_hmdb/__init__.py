@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from .manager import Manager
+
 __version__ = '0.1.1-dev'
 
 __title__ = 'bio2bel_hmdb'
