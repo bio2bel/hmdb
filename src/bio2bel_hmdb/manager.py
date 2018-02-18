@@ -2,18 +2,17 @@
 
 import logging
 import os
+import requests
 import xml.etree.ElementTree as ET
 import zipfile
 from io import BytesIO
-
-import requests
-from pybel.resources.arty import get_latest_arty_namespace
-from pybel.resources.definitions import get_bel_resource
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from tqdm import tqdm
 
 from bio2bel.utils import get_connection
+from pybel.resources.arty import get_latest_arty_namespace
+from pybel.resources.definitions import get_bel_resource
 from .constants import DATA_FILE, DATA_URL, MODULE_NAME, ONTOLOGIES
 from .models import (
     Base, Biofluids, Biofunctions, CellularLocations, Diseases, Metabolite, MetaboliteBiofluid, MetaboliteBiofunctions,
