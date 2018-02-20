@@ -34,8 +34,8 @@ def drop(connection):
 @click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
 def web(connection):
     """Run the web app"""
-    from .web import create_application
-    app = create_application(connection=connection)
+    from .web import get_app
+    app = get_app(connection=connection)
     app.run(host='0.0.0.0', port=5000)
 
 
