@@ -9,33 +9,38 @@ from .manager import Manager
 
 
 @click.group()
-def main():
+@click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
+@click.pass_context
+def main(ctx, connection):
     """HMDB to BEL"""
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+    ctx.obj = Manager(connection=connection)
 
 
 @main.command()
-def populate(connection):
+@click.pass_obj
+def populate(manager):
     """Populate the database"""
-    m = Manager(connection=connection)
-    m.populate()
+    manager.populate()
 
 
 @main.command()
-@click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
-def drop(connection):
+@click.pass_obj
+def drop(manager):
     """Drop the database"""
-    m = Manager(connection=connection)
-    m.drop_all()
+    manager.drop_all()
 
 
 @main.command()
-@click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
-def web(connection):
+@click.option('-v', '--debug', is_flag=True)
+@click.option('-p', '--port')
+@click.option('-h', '--host')
+@click.pass_obj
+def web(manager, debug, port, host):
     """Run the web app"""
     from .web import get_app
-    app = get_app(connection=connection)
-    app.run(host='0.0.0.0', port=5000)
+    app = get_app(connection=manager, url='/')
+    app.run(host=host, port=port, debug=debug)
 
 
 if __name__ == '__main__':
