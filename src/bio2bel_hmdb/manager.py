@@ -369,7 +369,7 @@ class Manager(object):
         """Query the constructed HMDB database and extract a metabolite object.
 
         :param str hmdb_metabolite_accession: HMDB metabolite identifier
-        :rtype: models.Metabolite
+        :rtype: Optional[models.Metabolite]
         """
         return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_accession).one_or_none()
 
@@ -443,3 +443,21 @@ class Manager(object):
 
     def get_metabolite_protein_interactions(self):
         return self._get_interactions(MetaboliteProteins)
+
+    def count_diseases(self):
+        return self.session.query(Diseases).count()
+
+    def count_cellular_locations(self):
+        return self.session.query(CellularLocations).count()
+
+    def count_references(self):
+        return self.session.query(References).count()
+
+    def get_reference_by_pubmed_id(self, pubmed_id):
+        return self.session.query(References).filter(References.pubmed_id == pubmed_id).one_or_none()
+
+    def count_proteins(self):
+        return self.session.query(Proteins).count()
+
+    def count_biofunctions(self):
+        return self.session.query(Biofunctions).count()

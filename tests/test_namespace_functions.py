@@ -2,8 +2,8 @@
 
 import unittest
 
+from bio2bel_hmdb.to_belns import construct_hmdb_disease_mapping
 from tests.constants import DatabaseMixin
-from bio2bel_hmdb.create_namespace import construct_hmdb_disease_mapping
 
 diseases = ['Cirrhosis', 'Lung Cancer', 'Schizophrenia']
 
