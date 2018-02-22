@@ -1,8 +1,8 @@
-pybel>=0.10.1
+pybel>=0.11.1
 click
 networkx==1.11
 bio2bel
-pybel_tools
+pybel_tools>=0.5.1
 sqlalchemy
 requests
 tqdm

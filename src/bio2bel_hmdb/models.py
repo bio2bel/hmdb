@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
+"""The data model for the local HMDB version consists of 22 different tables that represent the relations found in the
+original HMDB data.
+"""
+
 from sqlalchemy import Column, Float, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 from pybel.constants import ABUNDANCE, FUNCTION, NAME, NAMESPACE, PATHOLOGY, PROTEIN
+from pybel.dsl import abundance, pathology, protein
 
 HMDB_ID = 'HMDB'
 HMDB_DISEASE = 'HMDB_D'
@@ -57,13 +62,9 @@ class Metabolite(Base):
     def serialize_to_bel(self):
         """Function to serialize a metabolite object to a PyBEL node data dictionary.
 
-        :rtype: dict
+        :rtype: pybel.dsl.abundance
         """
-        return {
-            FUNCTION: ABUNDANCE,
-            NAMESPACE: HMDB_ID,
-            NAME: self.accession
-        }
+        return abundance(namespace=HMDB_ID, name=str(self.accession))
 
 
 class SecondaryAccessions(Base):
@@ -152,20 +153,16 @@ class Proteins(Base):
     id = Column(Integer, primary_key=True)
     protein_accession = Column(String, nullable=False, unique=True, doc="HMDB accession number for the protein")
     name = Column(String, nullable=False)
-    uniprot_id = Column(String, nullable=True, doc="Uniprot identifier of the protein")
+    uniprot_id = Column(String, nullable=True, doc="UniProt identifier of the protein")
     gene_name = Column(String, nullable=True, doc="Gene name of the protein coding gene")
     protein_type = Column(String, nullable=True, doc="Protein type like 'enzyme' etc.")
 
     def serialize_to_bel(self):
         """Function to serialize a protein object to a PyBEL node data dictionary.
 
-        :rtype: dict
+        :rtype: pybel.dsl.protein
         """
-        return {
-            FUNCTION: PROTEIN,
-            NAMESPACE: UNIPROT,
-            NAME: self.uniprot_id
-        }
+        return protein(namespace=UNIPROT, name=str(self.uniprot_id))
 
 
 class MetaboliteProteins(Base):
@@ -173,8 +170,10 @@ class MetaboliteProteins(Base):
     __tablename__ = "metabolite_proteins"
 
     id = Column(Integer, primary_key=True)
+
     metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
     metabolite = relationship("Metabolite", backref="proteins")
+
     protein_id = Column(Integer, ForeignKey("proteins.id"))
     protein = relationship("Proteins", backref="metabolites")
 
@@ -184,7 +183,7 @@ class References(Base):
     __tablename__ = "references"
 
     id = Column(Integer, primary_key=True)
-    reference_text = Column(String, nullable=False, unique=True, doc="Citation of the referene article")
+    reference_text = Column(String, nullable=False, unique=True, doc="Citation of the reference article")
     pubmed_id = Column(String, nullable=True, unique=True, doc="PubMed identifier of the article")
 
 
@@ -215,13 +214,9 @@ class Diseases(Base):
     def serialize_to_bel(self):
         """Function to serialize a disease object to a PyBEL node data dictionary.
 
-        :rtype: dict
+        :rtype: pybel.dsl.pathology
         """
-        return {
-            FUNCTION: PATHOLOGY,
-            NAMESPACE: HMDB_DISEASE,
-            NAME: self.name
-        }
+        return pathology(namespace=HMDB_DISEASE, name=str(self.name))
 
 
 class MetaboliteDiseasesReferences(Base):

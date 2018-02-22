@@ -5,41 +5,17 @@ import logging
 from pybel.resources.defaults import CONFIDENCE
 from pybel.utils import ensure_quotes
 from pybel_tools.document_utils import write_boilerplate
-
 from .constants import DISEASE_ONTOLOGY, HUMAN_PHENOTYPE_ONTOLOGY, MESH_DISEASES
 from .models import MetaboliteDiseasesReferences, MetaboliteProteins
-
-
-def write_interpro_tree_boilerplate(file=None):
-    """
-    writes the BEL document header to the file
-
-    :param file file: A writeable file or file like. Defaults to stdout
-    """
-    write_boilerplate(
-        name='HMDB Enrichment',
-        authors='Colin Birkenbihl, Charles Tapley Hoyt',
-        contact='colin.birkenbihl@scai.fraunhofer.de',
-        licenses='Creative Commons by 4.0',
-        copyright='Copyright (c) 2017 Colin Birkenbihl, Charles Tapley Hoyt. All Rights Reserved.',
-        description="""This BEL document represents relations from HMDB.""",
-        namespace_url={
-            # FIXME
-        },
-        namespace_patterns={},
-        annotation_url={'Confidence': CONFIDENCE},
-        annotation_patterns={},
-        file=file
-    )
 
 
 def write_metabolites_proteins_bel(manager, file=None):
     """Writes the metabolite-protein association relations found in HMDB into a BEL document.
 
-    :param manager: Manager object connected to the local HMDB database
+    :param bio2bel_hmdb.Manager manager: Manager object connected to the local HMDB database
     :param file file: A writeable file or file like. Defaults to stdout
     """
-    interactions = manager.get_interactions(MetaboliteProteins)
+    interactions = manager.get_metabolite_protein_interactions()
 
     for interaction in interactions:
         print('SET Citation = {"Human Metabolite Database"}', file=file)
@@ -62,24 +38,26 @@ def get_journal(interaction):
 
 
 def write_metabolites_diseases_bel(manager, file=None):
-    """
-    writes the metabolite-disease association relations found in HMDB into a BEL document.
+    """Writes the metabolite-disease association relations found in HMDB into a BEL document.
 
-    :param manager: Manager object connected to the local HMDB database
+    :param bio2bel_hmdb.Manager manager: Manager object connected to the local HMDB database
     :param file file: A writeable file or file like. Defaults to stdout
     """
-    interactions = manager.get_interactions(MetaboliteDiseasesReferences)
+    interactions = manager.get_metabolite_disease_interactions()
 
     for interaction in interactions:
         if interaction.disease.dion is not None:
             disease_name = interaction.disease.dion
             dis_namespace = DISEASE_ONTOLOGY
+
         elif interaction.disease.hpo is not None:
             disease_name = interaction.disease.hpo
             dis_namespace = HUMAN_PHENOTYPE_ONTOLOGY
+
         elif interaction.disease.mesh_diseases is not None:
             disease_name = interaction.disease.mesh_diseases
             dis_namespace = MESH_DISEASES
+
         else:
             logging.warning('HMDB disease name is not found in disease ontologies. HMDB name is used.')
             dis_namespace = 'HMDB_D'
@@ -126,4 +104,3 @@ def write_bel_association(abundance1, namespace1, accession1, abundance2, namesp
         ),
         file=file
     )
-

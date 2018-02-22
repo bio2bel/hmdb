@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+"""The Manager is a key component of PyHMDB. This class is used to create, populate and query the local HMDB version.
+"""
+
 import logging
 import os
 import requests
@@ -427,10 +430,16 @@ class Manager(object):
 
         return [a for a, in accessions]
 
-    def get_interactions(self, interaction_table):
+    def _get_interactions(self, interaction_table):
         """Extracts all interactions from the many to many interaction table.
 
         :param type interaction_table: Relation table from the database model. (e.g. MetaboliteProteins)
         :rtype: query
         """
         return self.session.query(interaction_table).all()
+
+    def get_metabolite_disease_interactions(self):
+        return self._get_interactions(MetaboliteDiseasesReferences)
+
+    def get_metabolite_protein_interactions(self):
+        return self._get_interactions(MetaboliteProteins)

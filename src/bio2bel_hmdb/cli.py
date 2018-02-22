@@ -15,9 +15,8 @@ def main():
 
 
 @main.command()
-@click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
 def populate(connection):
-    """Populates the database"""
+    """Populate the database"""
     m = Manager(connection=connection)
     m.populate()
 
@@ -25,9 +24,9 @@ def populate(connection):
 @main.command()
 @click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
 def drop(connection):
-    """Drops the database"""
+    """Drop the database"""
     m = Manager(connection=connection)
-    m.populate()
+    m.drop_all()
 
 
 @main.command()
