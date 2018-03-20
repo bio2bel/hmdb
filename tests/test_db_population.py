@@ -116,7 +116,7 @@ class TestDiseaseMapping(unittest.TestCase):
 
     def test_disease_mapping(self):
         """test if diseases are mapped correctly"""
-        dis = self.manager.session.query(Metabolite).filter(Metabolite.accession == "HMDB00072").first()
+        dis = self.manager.get_metabolite_by_accession("HMDB00072")
         self.assertEqual("Schizophrenia", dis.diseases[1].disease.name)
         self.assertEqual("2415198", dis.diseases[1].reference.pubmed_id)
         # test mapping

@@ -5,17 +5,18 @@
 
 import logging
 import os
-import requests
 import xml.etree.ElementTree as ET
 import zipfile
 from io import BytesIO
+
+import requests
+from pybel.resources.arty import get_latest_arty_namespace
+from pybel.resources.definitions import get_bel_resource
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from tqdm import tqdm
 
 from bio2bel.utils import get_connection
-from pybel.resources.arty import get_latest_arty_namespace
-from pybel.resources.definitions import get_bel_resource
 from .constants import DATA_FILE, DATA_URL, MODULE_NAME, ONTOLOGIES
 from .models import (
     Base, Biofluids, Biofunctions, CellularLocations, Diseases, Metabolite, MetaboliteBiofluid, MetaboliteBiofunctions,
@@ -370,6 +371,12 @@ class Manager(object):
 
         :param str hmdb_metabolite_accession: HMDB metabolite identifier
         :rtype: Optional[models.Metabolite]
+
+        Example:
+
+        >>> import bio2bel_hmdb
+        >>> manager = bio2bel_hmdb.Manager()
+        >>> manager.get_metabolite_by_accession("HMDB00072")
         """
         return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_accession).one_or_none()
 
@@ -377,9 +384,13 @@ class Manager(object):
         """Query the constructed HMDB database to get the metabolite associated protein relations for BEL enrichment
 
         :param str hmdb_metabolite_id: HMDB metabolite identifier
-        :rtype: list
+        :rtype: Optional[list[models.Protein]]
         """
         metabolite = self.get_metabolite_by_accession(hmdb_metabolite_id)
+
+        if metabolite is None:
+            return
+
         return metabolite.proteins
 
     def query_metabolite_associated_diseases(self, hmdb_metabolite_id):

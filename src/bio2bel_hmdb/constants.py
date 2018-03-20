@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
-
 from bio2bel.utils import get_connection, get_data_dir
 
 MODULE_NAME = 'hmdb'
@@ -15,7 +13,13 @@ DATA_FILE = 'hmdb_metabolites.xml'
 SWEAT_URL = 'http://www.hmdb.ca/system/downloads/current/sweat_metabolites.zip'
 SWEAT_FILE = 'sweat_metabolites.xml'
 
-ONTOLOGIES = ['disease-ontology', 'human-phenotype-ontology', 'mesh-diseases']
-DISEASE_ONTOLOGY = 'DOID'
-HUMAN_PHENOTYPE_ONTOLOGY = 'HPO'
-MESH_DISEASES = 'MeSH'
+DOID = 'disease-ontology'
+HP = 'hp'
+MESHD = 'mesh-diseases'
+
+#: Artifactory names of ontologies
+ONTOLOGIES = [
+    DOID,
+    HP,
+    MESHD
+]

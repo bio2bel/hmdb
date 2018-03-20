@@ -2,11 +2,7 @@
 
 import logging
 
-from pybel.resources.defaults import CONFIDENCE
 from pybel.utils import ensure_quotes
-from pybel_tools.document_utils import write_boilerplate
-from .constants import DISEASE_ONTOLOGY, HUMAN_PHENOTYPE_ONTOLOGY, MESH_DISEASES
-from .models import MetaboliteDiseasesReferences, MetaboliteProteins
 
 
 def write_metabolites_proteins_bel(manager, file=None):
@@ -48,15 +44,15 @@ def write_metabolites_diseases_bel(manager, file=None):
     for interaction in interactions:
         if interaction.disease.dion is not None:
             disease_name = interaction.disease.dion
-            dis_namespace = DISEASE_ONTOLOGY
+            dis_namespace = 'DOID'
 
         elif interaction.disease.hpo is not None:
             disease_name = interaction.disease.hpo
-            dis_namespace = HUMAN_PHENOTYPE_ONTOLOGY
+            dis_namespace = 'HP'
 
         elif interaction.disease.mesh_diseases is not None:
             disease_name = interaction.disease.mesh_diseases
-            dis_namespace = MESH_DISEASES
+            dis_namespace = 'MESH'
 
         else:
             logging.warning('HMDB disease name is not found in disease ontologies. HMDB name is used.')

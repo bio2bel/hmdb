@@ -4,12 +4,10 @@
 original HMDB data.
 """
 
+from pybel.dsl import abundance, pathology, protein
 from sqlalchemy import Column, Float, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
-from pybel.constants import ABUNDANCE, FUNCTION, NAME, NAMESPACE, PATHOLOGY, PROTEIN
-from pybel.dsl import abundance, pathology, protein
 
 HMDB_ID = 'HMDB'
 HMDB_DISEASE = 'HMDB_D'
