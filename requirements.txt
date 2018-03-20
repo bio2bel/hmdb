@@ -1,3 +1,4 @@
+pandas
 pybel>=0.11.1
 click
 networkx==1.11

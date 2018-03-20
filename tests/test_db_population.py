@@ -5,7 +5,6 @@ import tempfile
 import unittest
 
 from bio2bel_hmdb.manager import Manager
-from bio2bel_hmdb.models import Metabolite
 from tests.constants import DatabaseMixin, text_xml_path
 
 
@@ -71,7 +70,7 @@ class TestBuildDB(DatabaseMixin):
         self.assertEqual(11, self.manager.count_references())
 
         ref = self.manager.get_reference_by_pubmed_id("7126379")
-        self.assertEqual("Kobayash74.", ref[0].reference_text)
+        self.assertEqual("Kobayash74.", ref.reference_text)
 
     def test_populate_diseases(self):
         """Tests for testing if population of Diseases and MetaboliteDiseases table is successfull"""
@@ -82,13 +81,13 @@ class TestBuildDB(DatabaseMixin):
         self.assertEqual(3, self.manager.count_cellular_locations())
 
         cel2 = self.manager.get_metabolite_by_accession("HMDB00064")
-        self.assertEqual("Mitochondria", cel2[0].cellular_locations[2].cellular_location.cellular_location)
+        self.assertEqual("Mitochondria", cel2.cellular_locations[2].cellular_location.cellular_location)
 
     def test_populate_biofunctions(self):
         """Tests for testing if population of Biofunctions and MetaboliteBiofunctions table is successfull"""
         self.assertEqual(3, self.manager.count_biofunctions())
 
-        biof2 = self.manager.session.get_metabolite_by_accession("HMDB00064")
+        biof2 = self.manager.get_metabolite_by_accession("HMDB00064")
         self.assertEqual("Component of Arginine and proline metabolism",
                          biof2[0].biofunctions[0].biofunction.biofunction)
 
@@ -116,12 +115,17 @@ class TestDiseaseMapping(unittest.TestCase):
 
     def test_disease_mapping(self):
         """test if diseases are mapped correctly"""
-        dis = self.manager.get_metabolite_by_accession("HMDB00072")
-        self.assertEqual("Schizophrenia", dis.diseases[1].disease.name)
-        self.assertEqual("2415198", dis.diseases[1].reference.pubmed_id)
+        metabolite = self.manager.get_metabolite_by_accession("HMDB00072")
+        self.assertEqual("Schizophrenia", metabolite.diseases[1].disease.name)
+        self.assertEqual("2415198", metabolite.diseases[1].reference.pubmed_id)
+
         # test mapping
-        self.assertEqual("lung cancer", dis.diseases[2].disease.dion)
-        self.assertEqual("Schizophrenia", dis.diseases[1].disease.hpo)
+        self.assertEqual("lung cancer", metabolite.diseases[2].disease.dion)
+
+        self.assertIsNotNone(metabolite.diseases[1])
+        self.assertIsNotNone(metabolite.diseases[1].disease)
+        self.assertIsNotNone(metabolite.diseases[1].disease.hpo)
+        self.assertEqual("Schizophrenia", metabolite.diseases[1].disease.hpo)
 
 
 if __name__ == '__main__':
