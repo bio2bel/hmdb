@@ -11,7 +11,7 @@ DEFAULT_CACHE_CONNECTION = get_connection(MODULE_NAME)
 #: Data source
 DATA_URL = 'http://www.hmdb.ca/system/downloads/current/hmdb_metabolites.zip'
 DATA_PATH = os.path.join(DATA_DIR, 'hmdb_metabolites.zip')
-DATA_FILE_UNZIPPED = 'hmdb_metabolites.xml'
+DATA_FILE_UNZIPPED = os.path.join(DATA_DIR, 'hmdb_metabolites.xml')
 
 SWEAT_URL = 'http://www.hmdb.ca/system/downloads/current/sweat_metabolites.zip'
 SWEAT_FILE = 'sweat_metabolites.xml'
