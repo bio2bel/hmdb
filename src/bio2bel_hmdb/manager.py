@@ -16,9 +16,9 @@ from pybel.resources.arty import get_latest_arty_namespace
 from pybel.resources.definitions import get_bel_resource
 from .constants import DATA_FILE_UNZIPPED, DATA_PATH, DATA_URL, MODULE_NAME, ONTOLOGIES, DATA_DIR
 from .models import (
-    Base, Biofluids, Biofunctions, CellularLocations, Diseases, Metabolite, MetaboliteBiofluid, MetaboliteBiofunctions,
-    MetaboliteCellularLocations, MetaboliteDiseasesReferences, MetabolitePathways, MetaboliteProteins,
-    MetaboliteReferences, MetaboliteTissues, Pathways, Proteins, References, SecondaryAccessions, Synonyms, Tissues,
+    Base, Biofluid, Biofunction, CellularLocation, Disease, Metabolite, MetaboliteBiofluid, MetaboliteBiofunction,
+    MetaboliteCellularLocation, MetaboliteDiseaseReference, MetabolitePathway, MetaboliteProtein, MetaboliteReference,
+    MetaboliteSynonym, MetaboliteTissue, Pathway, Protein, Reference, SecondaryAccession, Tissue,
 )
 
 log = logging.getLogger(__name__)
@@ -71,10 +71,11 @@ class Manager(AbstractManager):
     """Managers handle the database construction, population and querying."""
 
     module_name = MODULE_NAME
-    flask_admin_models = [Metabolite, Diseases, Proteins, Pathways, Biofluids]
+    flask_admin_models = [Metabolite, Disease, Protein, Pathway, Biofluid]
 
     @property
     def base(self):
+        """Returns the declarative base for HMDB"""
         return Base
 
     @staticmethod
@@ -180,7 +181,7 @@ class Manager(AbstractManager):
         :rtype: dict, dict
         """
         for disease_element in element:
-            disease_instance = Diseases()
+            disease_instance = Disease()
 
             for disease_sub_element in disease_element:
 
@@ -215,15 +216,15 @@ class Manager(AbstractManager):
 
                         # add if not already in reference table
                         if new_reference_object_dict['reference_text'] not in references_dict:
-                            references_dict[new_reference_object_dict['reference_text']] = References(
+                            references_dict[new_reference_object_dict['reference_text']] = Reference(
                                 **new_reference_object_dict)
                             self.session.add(references_dict[new_reference_object_dict['reference_text']])
 
-                        rel_meta_dis_ref = MetaboliteDiseasesReferences(metabolite=metabolite_instance,
-                                                                        disease=diseases_dict[disease_instance.name],
-                                                                        reference=references_dict[
-                                                                            new_reference_object_dict[
-                                                                                'reference_text']])
+                        rel_meta_dis_ref = MetaboliteDiseaseReference(metabolite=metabolite_instance,
+                                                                      disease=diseases_dict[disease_instance.name],
+                                                                      reference=references_dict[
+                                                                          new_reference_object_dict[
+                                                                              'reference_text']])
                         self.session.add(rel_meta_dis_ref)
         return references_dict, diseases_dict
 
@@ -284,7 +285,7 @@ class Manager(AbstractManager):
 
                 if tag == "secondary_accessions":
                     for secondary_accession_element in element:
-                        new_secondary_accession = SecondaryAccessions(
+                        new_secondary_accession = SecondaryAccession(
                             metabolite=metabolite_instance,
                             secondary_accession=secondary_accession_element.text
                         )
@@ -292,7 +293,7 @@ class Manager(AbstractManager):
 
                 elif tag == "synonyms":
                     for synonym_element in element:
-                        new_synonym = Synonyms(metabolite=metabolite_instance, synonym=synonym_element.text)
+                        new_synonym = MetaboliteSynonym(metabolite=metabolite_instance, synonym=synonym_element.text)
                         self.session.add(new_synonym)
 
                 elif tag == "taxonomy":  # will be delayed to later versions since not important for BEL
@@ -305,15 +306,15 @@ class Manager(AbstractManager):
                         if ontology_tag == "biofunctions":
                             biofunctions_dict = self._populate_with_1_layer_elements(ontology_element,
                                                                                      metabolite_instance,
-                                                                                     biofunctions_dict, Biofunctions,
-                                                                                     MetaboliteBiofunctions,
+                                                                                     biofunctions_dict, Biofunction,
+                                                                                     MetaboliteBiofunction,
                                                                                      "biofunction")
                         if ontology_tag == "cellular_locations":
                             cellular_locations_dict = self._populate_with_1_layer_elements(ontology_element,
                                                                                            metabolite_instance,
                                                                                            cellular_locations_dict,
-                                                                                           CellularLocations,
-                                                                                           MetaboliteCellularLocations,
+                                                                                           CellularLocation,
+                                                                                           MetaboliteCellularLocation,
                                                                                            "cellular_location")
 
                 elif tag == "experimental_properties":  # will be delayed to later versions since not important for BEL
@@ -327,15 +328,15 @@ class Manager(AbstractManager):
 
                 elif tag == "biofluid_locations":
                     biofluids_dict = self._populate_with_1_layer_elements(element, metabolite_instance, biofluids_dict,
-                                                                          Biofluids, MetaboliteBiofluid, 'biofluid')
+                                                                          Biofluid, MetaboliteBiofluid, 'biofluid')
 
                 elif tag == "tissue_locations":
                     tissues_dict = self._populate_with_1_layer_elements(element, metabolite_instance, tissues_dict,
-                                                                        Tissues, MetaboliteTissues, 'tissue')
+                                                                        Tissue, MetaboliteTissue, 'tissue')
 
                 elif tag == "pathways":
                     pathways_dict = self._populate_with_2_layer_elements(element, metabolite_instance, pathways_dict,
-                                                                         Pathways, MetabolitePathways, 'pathway')
+                                                                         Pathway, MetabolitePathway, 'pathway')
 
                 elif tag == "normal_concentrations":  # will be delayed to later versions since not important for BEL
                     continue
@@ -350,13 +351,13 @@ class Manager(AbstractManager):
                 elif tag == "general_references":
                     references_dict = self._populate_with_2_layer_elements(element, metabolite_instance,
                                                                            references_dict,
-                                                                           References, MetaboliteReferences,
+                                                                           Reference, MetaboliteReference,
                                                                            'reference',
                                                                            "reference_text")
 
                 elif tag == "protein_associations":
                     proteins_dict = self._populate_with_2_layer_elements(element, metabolite_instance, proteins_dict,
-                                                                         Proteins, MetaboliteProteins, 'protein')
+                                                                         Protein, MetaboliteProtein, 'protein')
 
                 else:  # feed in main metabolite table
                     setattr(metabolite_instance, tag, element.text)
@@ -407,7 +408,7 @@ class Manager(AbstractManager):
         :param disease_name: HMDB disease name
         :rtype: list
         """
-        return self.session.query(Diseases).filter(Diseases.name == disease_name).one_or_none().metabolites
+        return self.session.query(Disease).filter(Disease.name == disease_name).one_or_none().metabolites
 
     def query_protein_associated_metabolites(self, uniprot_id):
         """Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
@@ -416,7 +417,7 @@ class Manager(AbstractManager):
                                 outputted
         :rtype: list
         """
-        return self.session.query(Proteins).filter(Proteins.uniprot_id == uniprot_id).one_or_none().metabolites
+        return self.session.query(Protein).filter(Protein.uniprot_id == uniprot_id).one_or_none().metabolites
 
     def get_hmdb_accession(self):
         """Create a list of all HMDB metabolite identifiers present in the database.
@@ -434,7 +435,7 @@ class Manager(AbstractManager):
 
         :rtype: list
         """
-        accessions = self.session.query(Diseases.name).all()
+        accessions = self.session.query(Disease.name).all()
         if not accessions:
             log.warning("Database not populated. Please populate database before calling this function")
 
@@ -449,39 +450,86 @@ class Manager(AbstractManager):
         return self.session.query(interaction_table).all()
 
     def get_metabolite_disease_interactions(self):
-        return self._get_models(MetaboliteDiseasesReferences)
+        """
+        :rtype: list[MetaboliteDiseaseReference]
+        """
+        return self._get_models(MetaboliteDiseaseReference)
 
     def get_metabolite_protein_interactions(self):
-        return self._get_models(MetaboliteProteins)
+        """
+        :rtype: list[MetaboliteProtein]
+        """
+        return self._get_models(MetaboliteProtein)
 
     def count_diseases(self):
-        return self.session.query(Diseases).count()
+        """Counts the number of diseases in the database
+
+        :rtype: int
+        """
+        return self.session.query(Disease).count()
 
     def count_cellular_locations(self):
-        return self.session.query(CellularLocations).count()
+        """Counts the number of cellular locations in the database
+
+        :rtype: int
+        """
+        return self.session.query(CellularLocation).count()
 
     def count_references(self):
-        return self.session.query(References).count()
+        """Counts the number of literature references in the database
+
+        :rtype: int
+        """
+        return self.session.query(Reference).count()
 
     def get_reference_by_pubmed_id(self, pubmed_id):
-        return self.session.query(References).filter(References.pubmed_id == pubmed_id).one_or_none()
+        """Gets a reference by its PubMed identifier if it exists
+
+        :param str pubmed_id: The PubMed identifier to search
+        :rtype: Optional[Reference]
+        """
+        return self.session.query(Reference).filter(Reference.pubmed_id == pubmed_id).one_or_none()
 
     def count_proteins(self):
-        return self.session.query(Proteins).count()
+        """Counts the number of proteins in the database
+
+        :rtype: int
+        """
+        return self.session.query(Protein).count()
 
     def count_biofunctions(self):
-        return self.session.query(Biofunctions).count()
+        """Counts the number of biofunctions in the database
+
+        :rtype: int
+        """
+        return self.session.query(Biofunction).count()
 
     def count_metabolites(self):
+        """Counts the number of metabolites in the database
+
+        :rtype: int
+        """
         return self._count_model(Metabolite)
 
     def count_pathways(self):
-        return self._count_model(Pathways)
+        """Counts the number of pathways in the database
+
+        :rtype: int
+        """
+        return self._count_model(Pathway)
 
     def count_tissues(self):
-        return self._count_model(Tissues)
+        """Counts the number of tissues in the database
+
+        :rtype: int
+        """
+        return self._count_model(Tissue)
 
     def summarize(self):
+        """Summarizes the contents of the database in a dictionary
+
+        :rtype: dict[str,int]
+        """
         return dict(
             proteins=self.count_proteins(),
             diseases=self.count_diseases(),

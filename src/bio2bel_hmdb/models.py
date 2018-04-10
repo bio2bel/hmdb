@@ -4,10 +4,11 @@
 original HMDB data.
 """
 
-from pybel.dsl import abundance, pathology, protein
 from sqlalchemy import Column, Float, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+
+from pybel.dsl import abundance, pathology, protein
 
 HMDB_ID = 'HMDB'
 HMDB_DISEASE = 'HMDB_D'
@@ -15,10 +16,31 @@ UNIPROT = 'UP'
 
 Base = declarative_base()
 
+BASE_TABLE_NAME = 'hmdb'
+METABOLITE_TABLE_NAME = '{}_metabolite'.format(BASE_TABLE_NAME)
+METABOLITE_SECONDARY_ACCESSION_TABLE_NAME = '{}_metaboliteAccession'.format(BASE_TABLE_NAME)
+METABOLITE_SYNONYM_TABLE_NAME = '{}_metaboliteSynonym'.format(BASE_TABLE_NAME)
+BIOFLUID_TABLE_NAME = '{}_biofluid'.format(BASE_TABLE_NAME)
+METABOLITE_BIOFLUID_TABLE_NAME = '{}_metabolite_biofluid'.format(BASE_TABLE_NAME)
+TISSUE_TABLE_NAME = '{}_tissue'.format(BASE_TABLE_NAME)
+METABOLITE_TISSUE_TABLE_NAME = '{}_metabolite_tissue'.format(BASE_TABLE_NAME)
+PATHWAY_TABLE_NAME = '{}_pathway'.format(BASE_TABLE_NAME)
+METABOLITE_PATHWAY_TABLE_NAME = '{}_metabolite_pathway'.format(BASE_TABLE_NAME)
+PROTEIN_TABLE_NAME = '{}_protein'.format(BASE_TABLE_NAME)
+METABOLITE_PROTEIN_TABLE_NAME = '{}_metabolite_protein'.format(BASE_TABLE_NAME)
+REFERENCE_TABLE_NAME = '{}_reference'.format(BASE_TABLE_NAME)
+METABOLITE_REFERENCE_TABLE_NAME = '{}_metabolite_reference'.format(BASE_TABLE_NAME)
+DISEASE_TABLE_NAME = '{}_disease'.format(BASE_TABLE_NAME)
+METABOLITE_DISEASE_REFERENCE_TABLE_NAME = '{}_metabolite_disease'.format(BASE_TABLE_NAME)
+CELLULAR_LOCATION_TABLE_NAME = '{}_cellularLocation'.format(BASE_TABLE_NAME)
+METABOLITE_CELLULAR_LOCATION_TABLE_NAME = '{}_metabolite_cellularLocation'.format(BASE_TABLE_NAME)
+BIOFUNCTION_TABLE_NAME = '{}_biofunction'.format(BASE_TABLE_NAME)
+METABOLITE_BIOFUNCTION_TABLE_NAME = '{}_metabolite_biofunction'.format(BASE_TABLE_NAME)
+
 
 class Metabolite(Base):
     """Table which stores the metabolites and all the information provided about them in HMDB."""
-    __tablename__ = "metabolite"
+    __tablename__ = METABOLITE_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
     version = Column(String(255), nullable=False, doc="Current version listing that metabolite")
@@ -40,8 +62,10 @@ class Metabolite(Base):
     state = Column(String(255), nullable=True, doc="Aggregate state of the metabolite")
     drugbank_id = Column(String(255), nullable=True, doc="DrugBank identifier of the metabolite")
     drugbank_metabolite_id = Column(String(255), nullable=True, doc="Drugbank metabolite ID of the metabolite")
-    phenol_explorer_compound_id = Column(String(255), nullable=True, doc="Phenol explorer compound ID of the metabolite")
-    phenol_explorer_metabolite_id = Column(String(255), nullable=True, doc="Phenol explorer metabolite ID of the metabolite")
+    phenol_explorer_compound_id = Column(String(255), nullable=True,
+                                         doc="Phenol explorer compound ID of the metabolite")
+    phenol_explorer_metabolite_id = Column(String(255), nullable=True,
+                                           doc="Phenol explorer metabolite ID of the metabolite")
     foodb_id = Column(String(255), nullable=True, doc="FooDB ID of the metabolite")
     knapsack_id = Column(String(255), nullable=True, doc="Knapsack ID of the metabolite")
     chemspider_id = Column(String(255), nullable=True, doc="Chemspider ID of the metabolite")
@@ -57,6 +81,9 @@ class Metabolite(Base):
     chebi_id = Column(String(255), nullable=True, doc="ChEBI identifier of the metabolite")
     synthesis_reference = Column(String(255), nullable=True, doc="Synthesis reference citation of the metabolite")
 
+    def __repr__(self):
+        return '<Metabolite HMDB:{}>'.format(self.accession)
+
     def serialize_to_bel(self):
         """Function to serialize a metabolite object to a PyBEL node data dictionary.
 
@@ -65,88 +92,101 @@ class Metabolite(Base):
         return abundance(namespace=HMDB_ID, name=str(self.accession))
 
 
-class SecondaryAccessions(Base):
+class SecondaryAccession(Base):
     """Table storing the different synonyms of metabolites."""
-    __tablename__ = "secondary_accessions"
+    __tablename__ = METABOLITE_SECONDARY_ACCESSION_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
-    secondary_accession = Column(String(255), nullable=False, unique=True, doc="Other accession numbers for the metabolite")
-    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
-    metabolite = relationship("Metabolite", backref="secondary_accessions")
+
+    secondary_accession = Column(String(255), nullable=False, unique=True,
+                                 doc="Other accession numbers for the metabolite")
+
+    metabolite_id = Column(Integer, ForeignKey("{}.id".format(METABOLITE_TABLE_NAME)))
+    metabolite = relationship("Metabolite", backref="accessions")
 
 
-class Biofluids(Base):
+class MetaboliteSynonym(Base):
+    """Table storing the synonyms of metabolites."""
+    __tablename__ = METABOLITE_SYNONYM_TABLE_NAME
+
+    id = Column(Integer, primary_key=True)
+
+    synonym = Column(String(255), nullable=False, unique=True, doc="Synonym for the metabolite")
+
+    metabolite_id = Column(Integer, ForeignKey("{}.id".format(METABOLITE_TABLE_NAME)))
+    metabolite = relationship("Metabolite", backref="synonyms")
+
+
+class Biofluid(Base):
     """Table storing the different biofluids"""
-    __tablename__ = "biofluids"
+    __tablename__ = BIOFLUID_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
-    biofluid = Column(String(255), nullable=False, unique=True, doc="Biofluid in which metabolites are found")
+    biofluid = Column(String(255), nullable=False, unique=True, doc="Name of the biofluid")
 
 
 class MetaboliteBiofluid(Base):
     """Table representing the Metabolite and Biofluid relations"""
-    __tablename__ = "metabolite_biofluid"
+    __tablename__ = METABOLITE_BIOFLUID_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
-    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+
+    metabolite_id = Column(Integer, ForeignKey("{}.id".format(METABOLITE_TABLE_NAME)))
     metabolite = relationship("Metabolite", backref="biofluids")
-    biofluid_id = Column(Integer, ForeignKey("biofluids.id"))
-    biofluid = relationship("Biofluids", backref="metabolites")
+
+    biofluid_id = Column(Integer, ForeignKey("{}.id".format(BIOFLUID_TABLE_NAME)))
+    biofluid = relationship("Biofluid", backref="metabolites")
 
 
-class Synonyms(Base):
-    """Table storing the synonyms of metabolites."""
-    __tablename__ = "synonyms"
-
-    id = Column(Integer, primary_key=True)
-    synonym = Column(String(255), nullable=False, unique=True, doc="Synonym for the metabolite")
-    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
-    metabolite = relationship("Metabolite", backref="synonyms")
-
-
-class MetaboliteTissues(Base):
-    """Table storing the different relations between tissues and metabolites"""
-    __tablename__ = "metabolite_tissues"
-
-    id = Column(Integer, primary_key=True)
-    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
-    metabolite = relationship("Metabolite", backref="tissues")
-    tissue_id = Column(Integer, ForeignKey("tissues.id"))
-    tissue = relationship("Tissues", backref="metabolites")
-
-
-class Tissues(Base):
+class Tissue(Base):
     """Table storing the different tissues"""
-    __tablename__ = "tissues"
+    __tablename__ = TISSUE_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
     tissue = Column(String(255), nullable=False, unique=True, doc="Tissue type")
 
 
-class MetabolitePathways(Base):
-    """Table storing the different relations between pathways and metabolites"""
-    __tablename__ = "metabolite_pathways"
+class MetaboliteTissue(Base):
+    """Table storing the different relations between tissues and metabolites"""
+    __tablename__ = "metabolite_tissues"
 
     id = Column(Integer, primary_key=True)
-    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
-    metabolite = relationship("Metabolite", backref="pathways")
-    pathway_id = Column(Integer, ForeignKey("pathways.id"))
-    pathway = relationship("Pathways", backref="metabolites")
+
+    metabolite_id = Column(Integer, ForeignKey("{}.id".format(METABOLITE_TABLE_NAME)))
+    metabolite = relationship("Metabolite", backref="tissues")
+
+    tissue_id = Column(Integer, ForeignKey("{}.id".format(TISSUE_TABLE_NAME)))
+    tissue = relationship("Tissue", backref="metabolites")
 
 
-class Pathways(Base):
+class Pathway(Base):
     """Table storing the different tissues"""
-    __tablename__ = "pathways"
+    __tablename__ = PATHWAY_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
+
     name = Column(String(255), nullable=True, unique=True, doc="Name of the pathway.")
+
     smpdb_id = Column(String(255), nullable=True, unique=False, doc="SMPDB identifier of the pathway.")
     kegg_map_id = Column(String(255), nullable=True, unique=False, doc="KEGG Map identifier of the pathway.")
 
 
-class Proteins(Base):
+class MetabolitePathway(Base):
+    """Table storing the different relations between pathways and metabolites"""
+    __tablename__ = METABOLITE_PATHWAY_TABLE_NAME
+
+    id = Column(Integer, primary_key=True)
+
+    metabolite_id = Column(Integer, ForeignKey("{}.id".format(METABOLITE_TABLE_NAME)))
+    metabolite = relationship("Metabolite", backref="pathways")
+
+    pathway_id = Column(Integer, ForeignKey("{}.id".format(PATHWAY_TABLE_NAME)))
+    pathway = relationship("Pathway", backref="metabolites")
+
+
+class Protein(Base):
     """Table to store the protein information"""
-    __tablename__ = "proteins"
+    __tablename__ = PROTEIN_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
     protein_accession = Column(String(255), nullable=False, unique=True, doc="HMDB accession number for the protein")
@@ -163,42 +203,48 @@ class Proteins(Base):
         return protein(namespace=UNIPROT, name=str(self.uniprot_id))
 
 
-class MetaboliteProteins(Base):
+class MetaboliteProtein(Base):
     """Table representing the many to many relationship between metabolites and proteins"""
-    __tablename__ = "metabolite_proteins"
+    __tablename__ = METABOLITE_PROTEIN_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
 
-    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+    metabolite_id = Column(Integer, ForeignKey("{}.id".format(METABOLITE_TABLE_NAME)))
     metabolite = relationship("Metabolite", backref="proteins")
 
-    protein_id = Column(Integer, ForeignKey("proteins.id"))
-    protein = relationship("Proteins", backref="metabolites")
+    protein_id = Column(Integer, ForeignKey("{}.id".format(PROTEIN_TABLE_NAME)))
+    protein = relationship("Protein", backref="metabolites")
 
 
-class References(Base):
+class Reference(Base):
     """Table storing literature references"""
-    __tablename__ = "references"
+    __tablename__ = REFERENCE_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
-    reference_text = Column(String(255), nullable=False, unique=True, doc="Citation of the reference article")
+
     pubmed_id = Column(String(255), nullable=True, unique=True, doc="PubMed identifier of the article")
+    reference_text = Column(String(255), nullable=False, unique=True, doc="Citation of the reference article")
+
+    def __repr__(self):
+        return '<Reference PMID={}>'.format(self.pubmed_id)
 
 
-class MetaboliteReferences(Base):
+class MetaboliteReference(Base):
     """Table representing the many to many relationship between metabolites and references"""
-    __tablename__ = "metabolite_references"
+    __tablename__ = METABOLITE_REFERENCE_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
-    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+
+    metabolite_id = Column(Integer, ForeignKey("{}.id".format(METABOLITE_TABLE_NAME)))
     metabolite = relationship("Metabolite", backref="references")
-    reference_id = Column(Integer, ForeignKey("references.id"))
-    reference = relationship("References", backref="metabolites")
+
+    reference_id = Column(Integer, ForeignKey("{}.id".format(REFERENCE_TABLE_NAME)))
+    reference = relationship("Reference", backref="metabolites")
 
 
-class Diseases(Base):
+class Disease(Base):
     """Table storing the diseases and their ids"""
-    __tablename__ = "diseases"
+    __tablename__ = DISEASE_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False, unique=True, doc="Name of the disease")
@@ -209,6 +255,9 @@ class Diseases(Base):
     mesh_diseases = Column(String(255), nullable=True,
                            doc="MeSH Disease name for this disease. Found using string matching")
 
+    def __repr__(self):
+        return '<Disease name={}>'.format(self.name)
+
     def serialize_to_bel(self):
         """Function to serialize a disease object to a PyBEL node data dictionary.
 
@@ -217,22 +266,72 @@ class Diseases(Base):
         return pathology(namespace=HMDB_DISEASE, name=str(self.name))
 
 
-class MetaboliteDiseasesReferences(Base):
+class MetaboliteDiseaseReference(Base):
     """Table storing the relations between disease and metabolite"""
-    __tablename__ = "metabolite_disease"
+    __tablename__ = METABOLITE_DISEASE_REFERENCE_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
-    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
+
+    metabolite_id = Column(Integer, ForeignKey("{}.id".format(METABOLITE_TABLE_NAME)))
     metabolite = relationship("Metabolite", backref="diseases")
-    disease_id = Column(Integer, ForeignKey("diseases.id"))
-    disease = relationship("Diseases", backref="metabolites")
-    reference_id = Column(Integer, ForeignKey("references.id"))
-    reference = relationship("References", backref="diseases")
+
+    disease_id = Column(Integer, ForeignKey("{}.id".format(DISEASE_TABLE_NAME)))
+    disease = relationship("Disease", backref="metabolites")
+
+    reference_id = Column(Integer, ForeignKey("{}.id".format(REFERENCE_TABLE_NAME)))
+    reference = relationship("Reference", backref="diseases")
+
+    def __repr__(self):
+        return '{} and {} from {}'.format(self.metabolite, self.disease, self.reference)
+
+
+class CellularLocation(Base):
+    """Table for storing the cellular location GO annotations"""
+    __tablename__ = CELLULAR_LOCATION_TABLE_NAME
+
+    id = Column(Integer, primary_key=True)
+    cellular_location = Column(String(255), nullable=False, unique=True)
+
+
+class MetaboliteCellularLocation(Base):
+    """Table storing the many to many relations between metabolites and cellular location GO annotations"""
+    __tablename__ = METABOLITE_CELLULAR_LOCATION_TABLE_NAME
+
+    id = Column(Integer, primary_key=True)
+
+    metabolite_id = Column(Integer, ForeignKey("{}.id".format(METABOLITE_TABLE_NAME)))
+    metabolite = relationship("Metabolite", backref="cellular_locations")
+
+    cellular_location_id = Column(Integer, ForeignKey("{}.id".format(CELLULAR_LOCATION_TABLE_NAME)))
+    cellular_location = relationship("CellularLocation", backref="metabolites")
+
+
+class Biofunction(Base):
+    """Table for storing the 'biofunctions' annotations"""
+    __tablename__ = BIOFUNCTION_TABLE_NAME
+
+    id = Column(Integer, primary_key=True)
+    biofunction = Column(String(255), nullable=False, unique=True)
+
+
+class MetaboliteBiofunction(Base):
+    """Table storing the many to many relations between metabolites and cellular location GO annotations"""
+    __tablename__ = METABOLITE_BIOFUNCTION_TABLE_NAME
+
+    id = Column(Integer, primary_key=True)
+
+    metabolite_id = Column(Integer, ForeignKey("{}.id".format(METABOLITE_TABLE_NAME)))
+    metabolite = relationship("Metabolite", backref="biofunctions")
+
+    biofunctions_id = Column(Integer, ForeignKey("{}.id".format(BIOFUNCTION_TABLE_NAME)))
+    biofunction = relationship("Biofunction", backref="metabolites")
 
 
 class PropertyValues(Base):
     """Table storing the values of chemical properties.
-    Not used for BEL enrichment"""
+
+    Not used for BEL enrichment
+    """
     __tablename__ = "property_values"
 
     id = Column(Integer, primary_key=True)
@@ -242,7 +341,9 @@ class PropertyValues(Base):
 
 class PropertyKinds(Base):
     """Table storing the 'kind' of chemical properties e.g. logP.
-    Not used for BEL enrichment"""
+
+    Not used for BEL enrichment
+    """
     __tablename__ = "property_kinds"
 
     id = Column(Integer, primary_key=True)
@@ -252,46 +353,10 @@ class PropertyKinds(Base):
 
 class PropertySource(Base):
     """Table storing the sources of properties e.g. software like 'ALOGPS'.
-    Not used for BEL enrichment"""
+
+    Not used for BEL enrichment
+    """
     __tablename__ = "property_source"
 
     id = Column(Integer, primary_key=True)
     source = Column(String(255), nullable=False, unique=True)
-
-
-class CellularLocations(Base):
-    """Table for storing the cellular location GO annotations"""
-    __tablename__ = "cellular_locations"
-
-    id = Column(Integer, primary_key=True)
-    cellular_location = Column(String(255), nullable=False, unique=True)
-
-
-class Biofunctions(Base):
-    """Table for storing the 'biofunctions' annotations"""
-    __tablename__ = "biofunctions"
-
-    id = Column(Integer, primary_key=True)
-    biofunction = Column(String(255), nullable=False, unique=True)
-
-
-class MetaboliteCellularLocations(Base):
-    """Table storing the many to many relations between metabolites and cellular location GO annotations"""
-    __tablename__ = "metabolite_cellular_locations"
-
-    id = Column(Integer, primary_key=True)
-    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
-    metabolite = relationship("Metabolite", backref="cellular_locations")
-    cellular_location_id = Column(Integer, ForeignKey("cellular_locations.id"))
-    cellular_location = relationship("CellularLocations", backref="metabolites")
-
-
-class MetaboliteBiofunctions(Base):
-    """Table storing the many to many relations between metabolites and cellular location GO annotations"""
-    __tablename__ = "metabolite_biofunctions"
-
-    id = Column(Integer, primary_key=True)
-    metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
-    metabolite = relationship("Metabolite", backref="biofunctions")
-    biofunctions_id = Column(Integer, ForeignKey("biofunctions.id"))
-    biofunction = relationship("Biofunctions", backref="metabolites")

@@ -3,6 +3,7 @@
 import os
 import tempfile
 import unittest
+from collections import defaultdict
 
 from bio2bel_hmdb.manager import Manager
 from tests.constants import DatabaseMixin, text_xml_path
@@ -37,7 +38,7 @@ class TestBuildDB(DatabaseMixin):
     def test_populate_secondary_accessions(self):
         """Test if the manager populate function populates the 'SecondaryAccessions' table correctly"""
         seca = self.manager.get_metabolite_by_accession("HMDB00072")
-        self.assertEqual("HMDB00461", seca.secondary_accessions[0].secondary_accession)
+        self.assertEqual("HMDB00461", seca.accessions[0].secondary_accession)
 
     def test_populate_tissue_locations(self):
         """Test if the 'Tissues' table and 'MetaboliteTissues' table are populated by the manager"""
@@ -88,8 +89,7 @@ class TestBuildDB(DatabaseMixin):
         self.assertEqual(3, self.manager.count_biofunctions())
 
         biof2 = self.manager.get_metabolite_by_accession("HMDB00064")
-        self.assertEqual("Component of Arginine and proline metabolism",
-                         biof2[0].biofunctions[0].biofunction.biofunction)
+        self.assertEqual("Component of Arginine and proline metabolism", biof2.biofunctions[0].biofunction.biofunction)
 
 
 class TestDiseaseMapping(unittest.TestCase):
@@ -116,16 +116,34 @@ class TestDiseaseMapping(unittest.TestCase):
     def test_disease_mapping(self):
         """test if diseases are mapped correctly"""
         metabolite = self.manager.get_metabolite_by_accession("HMDB00072")
-        self.assertEqual("Schizophrenia", metabolite.diseases[1].disease.name)
-        self.assertEqual("2415198", metabolite.diseases[1].reference.pubmed_id)
 
-        # test mapping
-        self.assertEqual("lung cancer", metabolite.diseases[2].disease.dion)
+        disease_references = metabolite.diseases
 
-        self.assertIsNotNone(metabolite.diseases[1])
-        self.assertIsNotNone(metabolite.diseases[1].disease)
-        self.assertIsNotNone(metabolite.diseases[1].disease.hpo)
-        self.assertEqual("Schizophrenia", metabolite.diseases[1].disease.hpo)
+        dd = defaultdict(list)
+        for disease_reference in disease_references:
+            dd[disease_reference.disease.name].append(disease_reference)
+
+        self.assertIn('Schizophrenia', dd)
+        self.assertIn('Lung Cancer', dd)
+
+        schz_entries = {
+            entry.reference.pubmed_id: entry
+            for entry in dd['Schizophrenia']
+        }
+        self.assertIn('2415198', schz_entries)
+
+        for entry in schz_entries.values():
+            self.assertIsNotNone(entry.disease)
+            self.assertIsNotNone(entry.disease.hpo)
+            self.assertEqual("Schizophrenia", entry.disease.hpo)
+
+        lc_entries = {
+            entry.reference.pubmed_id: entry
+            for entry in dd['Lung Cancer']
+        }
+
+        for entry in lc_entries.values():
+            self.assertEqual("lung cancer", entry.disease.dion)
 
 
 if __name__ == '__main__':
