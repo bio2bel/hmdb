@@ -13,7 +13,7 @@ INSTALL_REQUIRES = [
     'pybel>=0.11.1',
     'click',
     'sqlalchemy',
-    'bio2bel',
+    'bio2bel>=0.0.2',
     'pybel_tools>=0.5.1',
     'requests',
     'networkx==1.11',

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""The Manager is a key component of PyHMDB. This class is used to create, populate and query the local HMDB version.
+"""The Manager is a key component of HMDB. This class is used to create, populate and query the local HMDB version.
 """
 
 import logging
@@ -8,16 +8,15 @@ import os
 import xml.etree.ElementTree as ET
 import zipfile
 from io import BytesIO
+from urllib.request import urlretrieve
 
 import requests
-from pybel.resources.arty import get_latest_arty_namespace
-from pybel.resources.definitions import get_bel_resource
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from tqdm import tqdm
 
-from bio2bel.utils import get_connection
-from .constants import DATA_FILE, DATA_URL, MODULE_NAME, ONTOLOGIES
+from bio2bel.abstractmanager import AbstractManager
+from pybel.resources.arty import get_latest_arty_namespace
+from pybel.resources.definitions import get_bel_resource
+from .constants import DATA_FILE_UNZIPPED, DATA_PATH, DATA_URL, MODULE_NAME, ONTOLOGIES
 from .models import (
     Base, Biofluids, Biofunctions, CellularLocations, Diseases, Metabolite, MetaboliteBiofluid, MetaboliteBiofunctions,
     MetaboliteCellularLocations, MetaboliteDiseasesReferences, MetabolitePathways, MetaboliteProteins,
@@ -27,60 +26,54 @@ from .models import (
 log = logging.getLogger(__name__)
 
 
+def download_data(force_download=False):
+    """Downloads the data
+
+    :param bool force_download: If true, overwrites a previously cached file
+    :rtype: str
+    """
+    if os.path.exists(DATA_PATH) and not force_download:
+        log.info('using cached data at %s', DATA_PATH)
+    else:
+        log.info('downloading %s to %s', DATA_URL, DATA_PATH)
+        urlretrieve(DATA_URL, DATA_PATH)
+
+    return DATA_PATH
+
+
 def get_data(source=None):
     """Parse .xml file into an ElementTree
 
     :param Optional[str] source: String representing the filename of a .xml file. If None the full HMDB metabolite .xml
                                  will be downloaded and parsed into a tree.
     """
-    if not source:
-        req = requests.get(DATA_URL)
-        hmdb_zip = zipfile.ZipFile(BytesIO(req.content))
-        hmdb_zip.extract(DATA_FILE)
-        source = DATA_FILE
-        tree = ET.parse(source)
-        # clean up
-        os.remove(source)
-    else:
-        tree = ET.parse(source)
+    if source:
+        return ET.parse(source)
+
+    req = requests.get(DATA_URL)
+    hmdb_zip = zipfile.ZipFile(BytesIO(req.content))
+    hmdb_zip.extract(DATA_FILE_UNZIPPED)
+    source = DATA_FILE_UNZIPPED
+    tree = ET.parse(source)
+
+    # clean up
+    os.remove(source)
 
     return tree
 
 
-class Manager(object):
+class Manager(AbstractManager):
     """Managers handle the database construction, population and querying."""
 
-    def __init__(self, connection=None):
-        self.connection = get_connection(MODULE_NAME, connection=connection)
-        self.engine = create_engine(self.connection)
-        self.session_maker = sessionmaker(bind=self.engine, autoflush=False, expire_on_commit=False)
-        self.session = self.session_maker()
-        self.create_all()
+    module_name = MODULE_NAME
+    flask_admin_models = [Metabolite, Diseases, Proteins, Pathways, Biofluids]
 
-    def create_all(self, check_first=True):
-        """Create the empty database (tables)"""
-        Base.metadata.create_all(self.engine, checkfirst=check_first)
-
-    def drop_all(self, check_first=True):
-        """Create the empty database (tables)"""
-        Base.metadata.drop_all(self.engine, checkfirst=check_first)
+    @property
+    def base(self):
+        return Base
 
     @staticmethod
-    def ensure(connection=None):
-        """Checks and allows for a Manager to be passed to the function.
-
-        :param connection: can be either an already build manager or a connection string to build a manager with.
-        """
-        if connection is None or isinstance(connection, str):
-            return Manager(connection=connection)
-
-        if isinstance(connection, Manager):
-            return connection
-
-        raise TypeError
-
-    @staticmethod
-    def get_tag(element_tag):
+    def _get_tag(element_tag):
         """Delete the XML namespace prefix when calling element.tag
 
         :param element_tag: tag attribute of an XML element
@@ -137,7 +130,7 @@ class Manager(object):
         :rtype: dict
         """
         if instance_dict_key is None and len(element) > 0:
-            instance_dict_key = self.get_tag(element[0][0].tag)
+            instance_dict_key = self._get_tag(element[0][0].tag)
 
         for instance_element in element:
             # build pathway object dict to create pathway object
@@ -145,7 +138,7 @@ class Manager(object):
 
             # create pathway instance
             for instance_sub_element in instance_element:
-                cutted_pathway_tag = self.get_tag(instance_sub_element.tag)
+                cutted_pathway_tag = self._get_tag(instance_sub_element.tag)
                 instance_object_dict[cutted_pathway_tag] = instance_sub_element.text
 
             # add MetabolitePathway relation and continue with next pathway if pathway already present in Pathways
@@ -186,7 +179,7 @@ class Manager(object):
 
             for disease_sub_element in disease_element:
 
-                dtag = self.get_tag(disease_sub_element.tag)
+                dtag = self._get_tag(disease_sub_element.tag)
 
                 if dtag != "references":
                     setattr(disease_instance, dtag, disease_sub_element.text)
@@ -212,7 +205,7 @@ class Manager(object):
                         new_reference_object_dict = {}  # dict to check if reference is already presend in table
 
                         for reference_sub_element in reference_element:  # construct new reference object
-                            reference_tag = self.get_tag(reference_sub_element.tag)
+                            reference_tag = self._get_tag(reference_sub_element.tag)
                             new_reference_object_dict[reference_tag] = reference_sub_element.text
 
                         # add if not already in reference table
@@ -242,7 +235,8 @@ class Manager(object):
     def populate(self, source=None, map_dis=True):
         """Populates the database with the HMDB data
 
-        :param str source: Path to an .xml file. If None the whole HMDB will be downloaded and used for population.
+        :param Optional[str] source: Path to an .xml file. If None the whole HMDB will be downloaded and used for
+         population.
         :param bool map_dis: Should diseases be mapped?
         """
 
@@ -275,7 +269,7 @@ class Manager(object):
 
             for element in metabolite:
                 # delete namespace prefix
-                tag = self.get_tag(element.tag)
+                tag = self._get_tag(element.tag)
 
                 # handle wikipedia typo in xml tags
                 if tag == "wikipidia":
@@ -301,7 +295,7 @@ class Manager(object):
 
                 elif tag == "ontology":
                     for ontology_element in element:
-                        ontology_tag = self.get_tag(ontology_element.tag)
+                        ontology_tag = self._get_tag(ontology_element.tag)
 
                         if ontology_tag == "biofunctions":
                             biofunctions_dict = self._populate_with_1_layer_elements(ontology_element,
@@ -441,7 +435,7 @@ class Manager(object):
 
         return [a for a, in accessions]
 
-    def _get_interactions(self, interaction_table):
+    def _get_models(self, interaction_table):
         """Extracts all interactions from the many to many interaction table.
 
         :param type interaction_table: Relation table from the database model. (e.g. MetaboliteProteins)
@@ -450,10 +444,10 @@ class Manager(object):
         return self.session.query(interaction_table).all()
 
     def get_metabolite_disease_interactions(self):
-        return self._get_interactions(MetaboliteDiseasesReferences)
+        return self._get_models(MetaboliteDiseasesReferences)
 
     def get_metabolite_protein_interactions(self):
-        return self._get_interactions(MetaboliteProteins)
+        return self._get_models(MetaboliteProteins)
 
     def count_diseases(self):
         return self.session.query(Diseases).count()
@@ -472,3 +466,23 @@ class Manager(object):
 
     def count_biofunctions(self):
         return self.session.query(Biofunctions).count()
+
+    def count_metabolites(self):
+        return self._count_model(Metabolite)
+
+    def count_pathways(self):
+        return self._count_model(Pathways)
+
+    def count_tissues(self):
+        return self._count_model(Tissues)
+
+    def summarize(self):
+        return dict(
+            proteins=self.count_proteins(),
+            diseases=self.count_diseases(),
+            biofunctions=self.count_biofunctions(),
+            references=self.count_references(),
+            cellular_locations=self.count_cellular_locations(),
+            metabolites=self.count_metabolites(),
+            tissues=self.count_tissues()
+        )

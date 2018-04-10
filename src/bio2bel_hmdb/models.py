@@ -21,41 +21,41 @@ class Metabolite(Base):
     __tablename__ = "metabolite"
 
     id = Column(Integer, primary_key=True)
-    version = Column(String, nullable=False, doc="Current version listing that metabolite")
-    creation_date = Column(String, nullable=False, doc="Date when the metabolite was included into HMDB")
-    update_date = Column(String, nullable=False, doc="Date when the entry was last updated")
-    accession = Column(String, nullable=False, unique=True, doc="Accession ID for the metabolite")
-    name = Column(String, nullable=True, doc="Name of the metabolite")
-    description = Column(String, nullable=True, doc="Description including some information about the metabolite")
-    chemical_formula = Column(String, nullable=False, doc="Chemical formula of the metabolite")
+    version = Column(String(255), nullable=False, doc="Current version listing that metabolite")
+    creation_date = Column(String(255), nullable=False, doc="Date when the metabolite was included into HMDB")
+    update_date = Column(String(255), nullable=False, doc="Date when the entry was last updated")
+    accession = Column(String(255), nullable=False, unique=True, doc="Accession ID for the metabolite")
+    name = Column(String(255), nullable=True, doc="Name of the metabolite")
+    description = Column(String(255), nullable=True, doc="Description including some information about the metabolite")
+    chemical_formula = Column(String(255), nullable=False, doc="Chemical formula of the metabolite")
     average_molecular_weight = Column(Float, nullable=True, doc="Average molecular weight of the metabolite")
     monisotopic_molecular_weight = Column(Float, nullable=True, doc="Monisotopic weight of the molecule")
-    iupac_name = Column(String, nullable=False, doc="IUPAC name of the metabolite")
-    traditional_iupac = Column(String, nullable=True, doc="")
-    trivial = Column(String, nullable=True, doc="Trivial name of the metabolite")
-    cas_registry_number = Column(String, nullable=True, doc="Cas registry number of the metabolite")
-    smiles = Column(String, nullable=True, doc="Smiles representation of the metabolite")
-    inchi = Column(String, nullable=True, doc="Inchi of the metabolite")
-    inchikey = Column(String, nullable=True, doc="Inchikey of the metabolite")
-    state = Column(String, nullable=True, doc="Aggregate state of the metabolite")
-    drugbank_id = Column(String, nullable=True, doc="Drugbank ID of the metabolite")
-    drugbank_metabolite_id = Column(String, nullable=True, doc="Drugbank metabolite ID of the metabolite")
-    phenol_explorer_compound_id = Column(String, nullable=True, doc="Phenol explorer compound ID of the metabolite")
-    phenol_explorer_metabolite_id = Column(String, nullable=True, doc="Phenol explorer metabolite ID of the metabolite")
-    foodb_id = Column(String, nullable=True, doc="FooDB ID of the metabolite")
-    knapsack_id = Column(String, nullable=True, doc="Knapsack ID of the metabolite")
-    chemspider_id = Column(String, nullable=True, doc="Chemspider ID of the metabolite")
-    kegg_id = Column(String, nullable=True, doc="KEGG ID of the metabolite")
-    biocyc_id = Column(String, nullable=True, doc="BioCyc ID of the metabolite")
-    bigg_id = Column(String, nullable=True, doc="Bigg ID of the metabolite")
-    wikipedia = Column(String, nullable=True, doc="Wikipedia name of the metabolite")
-    nugowiki = Column(String, nullable=True, doc="NukoWiki ID of the metabolite")
-    metagene = Column(String, nullable=True, doc="Metagene ID of the metabolite")
-    metlin_id = Column(String, nullable=True, doc="Metlin ID of the metabolite")
-    pubchem_compound_id = Column(String, nullable=True, doc="PubChem compound ID of the metabolite")
-    het_id = Column(String, nullable=True, doc="Het ID of the metabolite")
-    chebi_id = Column(String, nullable=True, doc="Chebi ID of the metabolite")
-    synthesis_reference = Column(String, nullable=True, doc="Synthesis reference citation of the metabolite")
+    iupac_name = Column(String(255), nullable=False, doc="IUPAC name of the metabolite")
+    traditional_iupac = Column(String(255), nullable=True, doc="")
+    trivial = Column(String(255), nullable=True, doc="Trivial name of the metabolite")
+    cas_registry_number = Column(String(255), nullable=True, doc="Cas registry number of the metabolite")
+    smiles = Column(String(255), nullable=True, doc="Smiles representation of the metabolite")
+    inchi = Column(String(255), nullable=True, doc="Inchi of the metabolite")
+    inchikey = Column(String(255), nullable=True, doc="InCHI key of the metabolite")
+    state = Column(String(255), nullable=True, doc="Aggregate state of the metabolite")
+    drugbank_id = Column(String(255), nullable=True, doc="DrugBank identifier of the metabolite")
+    drugbank_metabolite_id = Column(String(255), nullable=True, doc="Drugbank metabolite ID of the metabolite")
+    phenol_explorer_compound_id = Column(String(255), nullable=True, doc="Phenol explorer compound ID of the metabolite")
+    phenol_explorer_metabolite_id = Column(String(255), nullable=True, doc="Phenol explorer metabolite ID of the metabolite")
+    foodb_id = Column(String(255), nullable=True, doc="FooDB ID of the metabolite")
+    knapsack_id = Column(String(255), nullable=True, doc="Knapsack ID of the metabolite")
+    chemspider_id = Column(String(255), nullable=True, doc="Chemspider ID of the metabolite")
+    kegg_id = Column(String(255), nullable=True, doc="KEGG ID of the metabolite")
+    biocyc_id = Column(String(255), nullable=True, doc="BioCyc ID of the metabolite")
+    bigg_id = Column(String(255), nullable=True, doc="Bigg ID of the metabolite")
+    wikipedia = Column(String(255), nullable=True, doc="Wikipedia name of the metabolite")
+    nugowiki = Column(String(255), nullable=True, doc="NukoWiki ID of the metabolite")
+    metagene = Column(String(255), nullable=True, doc="Metagene ID of the metabolite")
+    metlin_id = Column(String(255), nullable=True, doc="Metlin ID of the metabolite")
+    pubchem_compound_id = Column(String(255), nullable=True, doc="PubChem compound ID of the metabolite")
+    het_id = Column(String(255), nullable=True, doc="Het ID of the metabolite")
+    chebi_id = Column(String(255), nullable=True, doc="ChEBI identifier of the metabolite")
+    synthesis_reference = Column(String(255), nullable=True, doc="Synthesis reference citation of the metabolite")
 
     def serialize_to_bel(self):
         """Function to serialize a metabolite object to a PyBEL node data dictionary.
@@ -70,7 +70,7 @@ class SecondaryAccessions(Base):
     __tablename__ = "secondary_accessions"
 
     id = Column(Integer, primary_key=True)
-    secondary_accession = Column(String, nullable=False, unique=True, doc="Other accession numbers for the metabolite")
+    secondary_accession = Column(String(255), nullable=False, unique=True, doc="Other accession numbers for the metabolite")
     metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
     metabolite = relationship("Metabolite", backref="secondary_accessions")
 
@@ -80,7 +80,7 @@ class Biofluids(Base):
     __tablename__ = "biofluids"
 
     id = Column(Integer, primary_key=True)
-    biofluid = Column(String, nullable=False, unique=True, doc="Biofluid in which metabolites are found")
+    biofluid = Column(String(255), nullable=False, unique=True, doc="Biofluid in which metabolites are found")
 
 
 class MetaboliteBiofluid(Base):
@@ -99,7 +99,7 @@ class Synonyms(Base):
     __tablename__ = "synonyms"
 
     id = Column(Integer, primary_key=True)
-    synonym = Column(String, nullable=False, unique=True, doc="Synonym for the metabolite")
+    synonym = Column(String(255), nullable=False, unique=True, doc="Synonym for the metabolite")
     metabolite_id = Column(Integer, ForeignKey("metabolite.id"))
     metabolite = relationship("Metabolite", backref="synonyms")
 
@@ -120,7 +120,7 @@ class Tissues(Base):
     __tablename__ = "tissues"
 
     id = Column(Integer, primary_key=True)
-    tissue = Column(String, nullable=False, unique=True, doc="Tissue type")
+    tissue = Column(String(255), nullable=False, unique=True, doc="Tissue type")
 
 
 class MetabolitePathways(Base):
@@ -139,9 +139,9 @@ class Pathways(Base):
     __tablename__ = "pathways"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=True, unique=True, doc="Name of the pathway.")
-    smpdb_id = Column(String, nullable=True, unique=False, doc="SMPDB identifier of the pathway.")
-    kegg_map_id = Column(String, nullable=True, unique=False, doc="KEGG Map identifier of the pathway.")
+    name = Column(String(255), nullable=True, unique=True, doc="Name of the pathway.")
+    smpdb_id = Column(String(255), nullable=True, unique=False, doc="SMPDB identifier of the pathway.")
+    kegg_map_id = Column(String(255), nullable=True, unique=False, doc="KEGG Map identifier of the pathway.")
 
 
 class Proteins(Base):
@@ -149,11 +149,11 @@ class Proteins(Base):
     __tablename__ = "proteins"
 
     id = Column(Integer, primary_key=True)
-    protein_accession = Column(String, nullable=False, unique=True, doc="HMDB accession number for the protein")
-    name = Column(String, nullable=False)
-    uniprot_id = Column(String, nullable=True, doc="UniProt identifier of the protein")
-    gene_name = Column(String, nullable=True, doc="Gene name of the protein coding gene")
-    protein_type = Column(String, nullable=True, doc="Protein type like 'enzyme' etc.")
+    protein_accession = Column(String(255), nullable=False, unique=True, doc="HMDB accession number for the protein")
+    name = Column(String(255), nullable=False)
+    uniprot_id = Column(String(255), nullable=True, doc="UniProt identifier of the protein")
+    gene_name = Column(String(255), nullable=True, doc="Gene name of the protein coding gene")
+    protein_type = Column(String(255), nullable=True, doc="Protein type like 'enzyme' etc.")
 
     def serialize_to_bel(self):
         """Function to serialize a protein object to a PyBEL node data dictionary.
@@ -181,8 +181,8 @@ class References(Base):
     __tablename__ = "references"
 
     id = Column(Integer, primary_key=True)
-    reference_text = Column(String, nullable=False, unique=True, doc="Citation of the reference article")
-    pubmed_id = Column(String, nullable=True, unique=True, doc="PubMed identifier of the article")
+    reference_text = Column(String(255), nullable=False, unique=True, doc="Citation of the reference article")
+    pubmed_id = Column(String(255), nullable=True, unique=True, doc="PubMed identifier of the article")
 
 
 class MetaboliteReferences(Base):
@@ -201,12 +201,12 @@ class Diseases(Base):
     __tablename__ = "diseases"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False, unique=True, doc="Name of the disease")
-    omim_id = Column(String, nullable=True, doc="OMIM identifier associated with the disease")
-    dion = Column(String, nullable=True, doc="Disease Ontology name for this disease. Found using string matching")
-    hpo = Column(String, nullable=True,
+    name = Column(String(255), nullable=False, unique=True, doc="Name of the disease")
+    omim_id = Column(String(255), nullable=True, doc="OMIM identifier associated with the disease")
+    dion = Column(String(255), nullable=True, doc="Disease Ontology name for this disease. Found using string matching")
+    hpo = Column(String(255), nullable=True,
                  doc="Humand Phenotype Ontology name for this disease. Found using string matching")
-    mesh_diseases = Column(String, nullable=True,
+    mesh_diseases = Column(String(255), nullable=True,
                            doc="MeSH Disease name for this disease. Found using string matching")
 
     def serialize_to_bel(self):
@@ -236,7 +236,7 @@ class PropertyValues(Base):
     __tablename__ = "property_values"
 
     id = Column(Integer, primary_key=True)
-    value = Column(String, nullable=False, unique=True,
+    value = Column(String(255), nullable=False, unique=True,
                    doc="value of a chemical property (e.g. logp) that will be linked to the properts and metabolites")
 
 
@@ -246,7 +246,7 @@ class PropertyKinds(Base):
     __tablename__ = "property_kinds"
 
     id = Column(Integer, primary_key=True)
-    kind = Column(String, nullable=False, unique=True,
+    kind = Column(String(255), nullable=False, unique=True,
                   doc="the 'kind' of chemical properties e.g. logP, melting point etc")
 
 
@@ -256,7 +256,7 @@ class PropertySource(Base):
     __tablename__ = "property_source"
 
     id = Column(Integer, primary_key=True)
-    source = Column(String, nullable=False, unique=True)
+    source = Column(String(255), nullable=False, unique=True)
 
 
 class CellularLocations(Base):
@@ -264,7 +264,7 @@ class CellularLocations(Base):
     __tablename__ = "cellular_locations"
 
     id = Column(Integer, primary_key=True)
-    cellular_location = Column(String, nullable=False, unique=True)
+    cellular_location = Column(String(255), nullable=False, unique=True)
 
 
 class Biofunctions(Base):
@@ -272,7 +272,7 @@ class Biofunctions(Base):
     __tablename__ = "biofunctions"
 
     id = Column(Integer, primary_key=True)
-    biofunction = Column(String, nullable=False, unique=True)
+    biofunction = Column(String(255), nullable=False, unique=True)
 
 
 class MetaboliteCellularLocations(Base):
