@@ -9,6 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 from pybel.dsl import abundance, pathology, protein
+from .constants import MODULE_NAME
 
 HMDB_ID = 'HMDB'
 HMDB_DISEASE = 'HMDB_D'
@@ -16,26 +17,25 @@ UNIPROT = 'UP'
 
 Base = declarative_base()
 
-BASE_TABLE_NAME = 'hmdb'
-METABOLITE_TABLE_NAME = '{}_metabolite'.format(BASE_TABLE_NAME)
-METABOLITE_SECONDARY_ACCESSION_TABLE_NAME = '{}_metaboliteAccession'.format(BASE_TABLE_NAME)
-METABOLITE_SYNONYM_TABLE_NAME = '{}_metaboliteSynonym'.format(BASE_TABLE_NAME)
-BIOFLUID_TABLE_NAME = '{}_biofluid'.format(BASE_TABLE_NAME)
-METABOLITE_BIOFLUID_TABLE_NAME = '{}_metabolite_biofluid'.format(BASE_TABLE_NAME)
-TISSUE_TABLE_NAME = '{}_tissue'.format(BASE_TABLE_NAME)
-METABOLITE_TISSUE_TABLE_NAME = '{}_metabolite_tissue'.format(BASE_TABLE_NAME)
-PATHWAY_TABLE_NAME = '{}_pathway'.format(BASE_TABLE_NAME)
-METABOLITE_PATHWAY_TABLE_NAME = '{}_metabolite_pathway'.format(BASE_TABLE_NAME)
-PROTEIN_TABLE_NAME = '{}_protein'.format(BASE_TABLE_NAME)
-METABOLITE_PROTEIN_TABLE_NAME = '{}_metabolite_protein'.format(BASE_TABLE_NAME)
-REFERENCE_TABLE_NAME = '{}_reference'.format(BASE_TABLE_NAME)
-METABOLITE_REFERENCE_TABLE_NAME = '{}_metabolite_reference'.format(BASE_TABLE_NAME)
-DISEASE_TABLE_NAME = '{}_disease'.format(BASE_TABLE_NAME)
-METABOLITE_DISEASE_REFERENCE_TABLE_NAME = '{}_metabolite_disease'.format(BASE_TABLE_NAME)
-CELLULAR_LOCATION_TABLE_NAME = '{}_cellularLocation'.format(BASE_TABLE_NAME)
-METABOLITE_CELLULAR_LOCATION_TABLE_NAME = '{}_metabolite_cellularLocation'.format(BASE_TABLE_NAME)
-BIOFUNCTION_TABLE_NAME = '{}_biofunction'.format(BASE_TABLE_NAME)
-METABOLITE_BIOFUNCTION_TABLE_NAME = '{}_metabolite_biofunction'.format(BASE_TABLE_NAME)
+METABOLITE_TABLE_NAME = '{}_metabolite'.format(MODULE_NAME)
+METABOLITE_SECONDARY_ACCESSION_TABLE_NAME = '{}_metaboliteAccession'.format(MODULE_NAME)
+METABOLITE_SYNONYM_TABLE_NAME = '{}_metaboliteSynonym'.format(MODULE_NAME)
+BIOFLUID_TABLE_NAME = '{}_biofluid'.format(MODULE_NAME)
+METABOLITE_BIOFLUID_TABLE_NAME = '{}_metabolite_biofluid'.format(MODULE_NAME)
+TISSUE_TABLE_NAME = '{}_tissue'.format(MODULE_NAME)
+METABOLITE_TISSUE_TABLE_NAME = '{}_metabolite_tissue'.format(MODULE_NAME)
+PATHWAY_TABLE_NAME = '{}_pathway'.format(MODULE_NAME)
+METABOLITE_PATHWAY_TABLE_NAME = '{}_metabolite_pathway'.format(MODULE_NAME)
+PROTEIN_TABLE_NAME = '{}_protein'.format(MODULE_NAME)
+METABOLITE_PROTEIN_TABLE_NAME = '{}_metabolite_protein'.format(MODULE_NAME)
+REFERENCE_TABLE_NAME = '{}_reference'.format(MODULE_NAME)
+METABOLITE_REFERENCE_TABLE_NAME = '{}_metabolite_reference'.format(MODULE_NAME)
+DISEASE_TABLE_NAME = '{}_disease'.format(MODULE_NAME)
+METABOLITE_DISEASE_REFERENCE_TABLE_NAME = '{}_metabolite_disease'.format(MODULE_NAME)
+CELLULAR_LOCATION_TABLE_NAME = '{}_cellularLocation'.format(MODULE_NAME)
+METABOLITE_CELLULAR_LOCATION_TABLE_NAME = '{}_metabolite_cellularLocation'.format(MODULE_NAME)
+BIOFUNCTION_TABLE_NAME = '{}_biofunction'.format(MODULE_NAME)
+METABOLITE_BIOFUNCTION_TABLE_NAME = '{}_metabolite_biofunction'.format(MODULE_NAME)
 
 
 class Metabolite(Base):
