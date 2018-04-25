@@ -6,6 +6,8 @@ import xml.etree.ElementTree as ET
 from urllib.request import urlretrieve
 from zipfile import ZipFile
 
+import time
+
 from .constants import DATA_DIR, DATA_FILE_UNZIPPED, DATA_PATH, DATA_URL
 
 log = logging.getLogger(__name__)
@@ -44,11 +46,14 @@ def get_data(source=None, force_download=False):
 
     :param Optional[str] source: String representing the filename of a .xml file. If None the full HMDB metabolite .xml
                                  will be downloaded and parsed into a tree.
+    :param bool force_download: Should the data be re-downloaded? Defaults to False.
     """
     if not source:
         source = _ensure_data(force_download=force_download)
 
+    t = time.time()
     log.info('parsing %s', source)
     tree = ET.parse(source)
+    log.info('done parsing after %.2f seconds', time.time() - t)
 
     return tree
