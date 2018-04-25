@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+"""Setup.py for Bio2BEL HMDB."""
+
 import codecs
 import os
 import re
@@ -9,12 +11,12 @@ import setuptools
 PACKAGES = setuptools.find_packages(where='src')
 META_PATH = os.path.join('src', 'bio2bel_hmdb', '__init__.py')
 INSTALL_REQUIRES = [
-    'pandas',
     'pybel[deployment]>=0.11.1',
+    'pybel_tools>=0.5.1',
+    'bio2bel>=0.0.9',
+    'pandas',
     'click',
     'sqlalchemy',
-    'bio2bel>=0.0.6',
-    'pybel_tools>=0.5.1',
     'requests',
     'networkx==1.11',
     'tqdm',
@@ -44,7 +46,7 @@ META_FILE = read(META_PATH)
 
 
 def find_meta(meta):
-    """Extract __*meta*__ from META_FILE"""
+    """Extract __*meta*__ from META_FILE."""
     meta_match = re.search(
         r'^__{meta}__ = ["\']([^"\']*)["\']'.format(meta=meta),
         META_FILE, re.M
@@ -70,7 +72,7 @@ if __name__ == '__main__':
         url=find_meta('url'),
         author=find_meta('author'),
         author_email=find_meta('email'),
-        maintainer=find_meta('author'),
+        maintainer='Charles Tapley Hoyt',
         maintainer_email=find_meta('email'),
         license=find_meta('license'),
         packages=PACKAGES,

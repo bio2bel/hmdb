@@ -1,9 +1,9 @@
-pandas
 pybel[deployment]>=0.11.1
+pybel_tools>=0.5.1
+bio2bel>=0.0.9
+pandas
 click
 networkx==1.11
-bio2bel>=0.0.6
-pybel_tools>=0.5.1
 sqlalchemy
 requests
 tqdm

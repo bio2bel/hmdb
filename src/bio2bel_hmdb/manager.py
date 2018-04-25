@@ -4,67 +4,21 @@
 """
 
 import logging
-import os
-import xml.etree.ElementTree as ET
-from urllib.request import urlretrieve
-from zipfile import ZipFile
 
 from tqdm import tqdm
 
 from bio2bel.abstractmanager import AbstractManager
 from pybel.resources.arty import get_latest_arty_namespace
 from pybel.resources.definitions import get_bel_resource
-from .constants import DATA_FILE_UNZIPPED, DATA_PATH, DATA_URL, MODULE_NAME, ONTOLOGIES, DATA_DIR
+from .constants import MODULE_NAME, ONTOLOGIES
 from .models import (
     Base, Biofluid, Biofunction, CellularLocation, Disease, Metabolite, MetaboliteBiofluid, MetaboliteBiofunction,
     MetaboliteCellularLocation, MetaboliteDiseaseReference, MetabolitePathway, MetaboliteProtein, MetaboliteReference,
     MetaboliteSynonym, MetaboliteTissue, Pathway, Protein, Reference, SecondaryAccession, Tissue,
 )
+from .parser import get_data
 
 log = logging.getLogger(__name__)
-
-
-def download_data(force_download=False):
-    """Downloads the data
-
-    :param bool force_download: If true, overwrites a previously cached file
-    :rtype: str
-    """
-    if os.path.exists(DATA_PATH) and not force_download:
-        log.info('using cached data at %s', DATA_PATH)
-    else:
-        log.info('downloading %s to %s', DATA_URL, DATA_PATH)
-        urlretrieve(DATA_URL, DATA_PATH)
-
-    return DATA_PATH
-
-
-def _ensure_data(force_download=False):
-    if not os.path.exists(DATA_FILE_UNZIPPED):
-        data_path = download_data(force_download=force_download)
-
-        log.info('extracting %s to %s', data_path, DATA_FILE_UNZIPPED)
-        with ZipFile(data_path) as f:
-            f.extract(member='hmdb_metabolites.xml', path=DATA_DIR)
-
-        assert os.path.exists(DATA_FILE_UNZIPPED) # should correspond to this file
-
-    return DATA_FILE_UNZIPPED
-
-
-def get_data(source=None, force_download=False):
-    """Parse .xml file into an ElementTree
-
-    :param Optional[str] source: String representing the filename of a .xml file. If None the full HMDB metabolite .xml
-                                 will be downloaded and parsed into a tree.
-    """
-    if not source:
-        source = _ensure_data(force_download=force_download)
-
-    log.info('parsing %s', source)
-    tree = ET.parse(source)
-
-    return tree
 
 
 class Manager(AbstractManager):
@@ -74,9 +28,16 @@ class Manager(AbstractManager):
     flask_admin_models = [Metabolite, Disease, Protein, Pathway, Biofluid]
 
     @property
-    def base(self):
+    def _base(self):
         """Returns the declarative base for HMDB"""
         return Base
+
+    def is_populated(self):
+        """Check if the database is already populated.
+
+        :rtype: bool
+        """
+        return 0 < self.count_metabolites()
 
     @staticmethod
     def _get_tag(element_tag):
@@ -189,20 +150,24 @@ class Manager(AbstractManager):
 
                 if dtag != "references":
                     setattr(disease_instance, dtag, disease_sub_element.text)
+
                 else:
                     if disease_instance.name not in diseases_dict:  # add disease instance if not already in table
                         # map to different disease ontologies if map is True
                         if map_dis:
                             disease_lower = disease_instance.name.lower()  # for case insensitivity
                             for ontology in disease_ontologies:
-                                if disease_lower in disease_ontologies[ontology]:
-                                    if ontology == 'disease-ontology':
-                                        setattr(disease_instance, 'dion', disease_ontologies[ontology][disease_lower])
-                                    elif ontology == 'human-phenotype-ontology':
-                                        setattr(disease_instance, 'hpo', disease_ontologies[ontology][disease_lower])
-                                    else:
-                                        setattr(disease_instance, 'mesh_diseases',
-                                                disease_ontologies[ontology][disease_lower])
+                                if disease_lower not in disease_ontologies[ontology]:
+                                    continue
+
+                                v = disease_ontologies[ontology][disease_lower]
+
+                                if ontology == 'disease-ontology':
+                                    setattr(disease_instance, 'dion', v)
+                                elif ontology == 'human-phenotype-ontology':
+                                    setattr(disease_instance, 'hpo', v)
+                                else:
+                                    setattr(disease_instance, 'mesh_diseases', v)
 
                         diseases_dict[disease_instance.name] = disease_instance
                         self.session.add(disease_instance)
@@ -220,11 +185,11 @@ class Manager(AbstractManager):
                                 **new_reference_object_dict)
                             self.session.add(references_dict[new_reference_object_dict['reference_text']])
 
-                        rel_meta_dis_ref = MetaboliteDiseaseReference(metabolite=metabolite_instance,
-                                                                      disease=diseases_dict[disease_instance.name],
-                                                                      reference=references_dict[
-                                                                          new_reference_object_dict[
-                                                                              'reference_text']])
+                        rel_meta_dis_ref = MetaboliteDiseaseReference(
+                            metabolite=metabolite_instance,
+                            disease=diseases_dict[disease_instance.name],
+                            reference=references_dict[new_reference_object_dict['reference_text']]
+                        )
                         self.session.add(rel_meta_dis_ref)
         return references_dict, diseases_dict
 
