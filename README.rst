@@ -1,5 +1,5 @@
-Bio2BEL HMDB |build| |coverage| |docs|
-======================================
+Bio2BEL HMDB |build| |coverage| |documentation|
+===============================================
 Converts the Human Metabolite Database (HMDB) to BEL
 
 Installation |pypi_version| |python_versions| |pypi_license|
@@ -36,11 +36,9 @@ Command Line Utility
 
     bio2bel_hmdb populate
 
-
 Citations
 ---------
 - Wishart DS, *et al.*, HMDB: the Human Metabolome Database. Nucleic Acids Res. 2007 Jan;35(Database issue):D521-6
-
 
 .. |build| image:: https://travis-ci.org/bio2bel/hmdb.svg?branch=master
     :target: https://travis-ci.org/bio2bel/hmdb
