@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
-"""The Manager is a key component of HMDB. This class is used to create, populate and query the local HMDB version.
-"""
+"""The Manager is a key component of HMDB. This class is used to create, populate and query the local HMDB version."""
 
 import logging
-
+from bio2bel.abstractmanager import AbstractManager
 from tqdm import tqdm
 
-from bio2bel.abstractmanager import AbstractManager
-from pybel.resources.arty import get_latest_arty_namespace
 from pybel.resources.definitions import get_bel_resource
-from .constants import MODULE_NAME, ONTOLOGIES
+from .constants import MODULE_NAME, ONTOLOGIES, ONTOLOGY_NAMESPACES
 from .models import (
     Base, Biofluid, Biofunction, CellularLocation, Disease, Metabolite, MetaboliteBiofluid, MetaboliteBiofunction,
     MetaboliteCellularLocation, MetaboliteDiseaseReference, MetabolitePathway, MetaboliteProtein, MetaboliteReference,
@@ -199,7 +196,7 @@ class Manager(AbstractManager):
 
         :rtype: dict
         """
-        doid_path = get_latest_arty_namespace(ontology)
+        doid_path = ONTOLOGY_NAMESPACES[ontology]
         doid_ns = get_bel_resource(doid_path)
         return {value.lower(): value for value in doid_ns['Values']}
 
@@ -217,10 +214,7 @@ class Manager(AbstractManager):
 
         # construct sets for disease ontologies for mapping hmdb diseases
         if map_dis:
-            disease_ontologies = {
-                ontology: self._disease_ontology_dict(ontology)
-                for ontology in ONTOLOGIES
-            }
+            disease_ontologies = ONTOLOGY_NAMESPACES
         else:
             disease_ontologies = None
 

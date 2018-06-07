@@ -26,3 +26,9 @@ ONTOLOGIES = [
     HP,
     MESHD
 ]
+
+ONTOLOGY_NAMESPACES = {
+    DOID: 'https://arty.scai.fraunhofer.de/artifactory/bel/namespace/disease-ontology/disease-ontology-20170725.belns',
+    HP: 'https://arty.scai.fraunhofer.de/artifactory/bel/namespace/hp/hp-20171108.belns',
+    MESHD: 'https://arty.scai.fraunhofer.de/artifactory/bel/namespace/mesh-diseases/mesh-diseases-20170725.belns'
+}

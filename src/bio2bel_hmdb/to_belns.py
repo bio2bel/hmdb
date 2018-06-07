@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from pybel.constants import NAMESPACE_DOMAIN_CHEMICAL, NAMESPACE_DOMAIN_OTHER
-from pybel.resources.arty import get_latest_arty_namespace
 from pybel.resources.definitions import get_bel_resource, write_namespace
 
-from .constants import ONTOLOGIES
+from .constants import ONTOLOGY_NAMESPACES
 from .manager import Manager
 
 
@@ -74,20 +73,17 @@ def construct_hmdb_disease_mapping(connection=None):
     :rtype: dict, int
     """
 
-    def check_ns(ns, terms):
+    def check_ns(doid_path, terms):
         """
         download and extract values from an BEL namespace and create a mapping from the terms to the BEL namespaces,
         if the terms occur in the namespace.
 
-        :param str ns: the name of the namespace which should be checked
+        :param str doid_path: the URL the namespace which should be checked
         :param terms: a list of terms which should be searched for in the namespace
         and that will be mapped to the namespace
         :rtype doid_mapping: dict
         :rtype hmdb_diseases: list
         """
-
-        # download latest version of the namespace
-        doid_path = get_latest_arty_namespace(ns)
         doid_ns = get_bel_resource(doid_path)
         doid_values = {value.lower(): value for value in doid_ns['Values']}
         doid_mapping = {}
@@ -104,9 +100,9 @@ def construct_hmdb_disease_mapping(connection=None):
     hmdb_diseases = m.get_hmdb_diseases()
 
     mapping = {}
-    for ontology in ONTOLOGIES:
+    for ontology, url in ONTOLOGY_NAMESPACES.items():
         # check if disease name exists in the ontology
-        mapping[ontology], hmdb_diseases = check_ns(ontology, hmdb_diseases)
+        mapping[ontology], hmdb_diseases = check_ns(url, hmdb_diseases)
 
         if not hmdb_diseases:
             break
