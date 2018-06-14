@@ -115,35 +115,16 @@ class TestDiseaseMapping(unittest.TestCase):
 
     def test_disease_mapping(self):
         """test if diseases are mapped correctly"""
-        metabolite = self.manager.get_metabolite_by_accession("HMDB00072")
 
-        disease_references = metabolite.diseases
+        def test_disease_mapping(self):
+            """test if diseases are mapped correctly"""
 
-        dd = defaultdict(list)
-        for disease_reference in disease_references:
-            dd[disease_reference.disease.name].append(disease_reference)
-
-        self.assertIn('Schizophrenia', dd)
-        self.assertIn('Lung Cancer', dd)
-
-        schz_entries = {
-            entry.reference.pubmed_id: entry
-            for entry in dd['Schizophrenia']
-        }
-        self.assertIn('2415198', schz_entries)
-
-        for entry in schz_entries.values():
-            self.assertIsNotNone(entry.disease)
-            self.assertIsNotNone(entry.disease.hpo)
-            self.assertEqual("Schizophrenia", entry.disease.hpo)
-
-        lc_entries = {
-            entry.reference.pubmed_id: entry
-            for entry in dd['Lung Cancer']
-        }
-
-        for entry in lc_entries.values():
-            self.assertEqual("lung cancer", entry.disease.dion)
+            dis = self.manager.get_metabolite_by_accession("HMDB00072")
+            self.assertEqual("Schizophrenia", dis.diseases[1].disease.name)
+            self.assertEqual("2415198", dis.diseases[1].reference.pubmed_id)
+            # test mapping
+            self.assertEqual("lung cancer", dis.diseases[2].disease.dion)
+            self.assertEqual("Schizophrenia", dis.diseases[1].disease.hpo)
 
 
 if __name__ == '__main__':
