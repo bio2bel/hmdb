@@ -7,7 +7,7 @@ from bio2bel.abstractmanager import AbstractManager
 from tqdm import tqdm
 
 from pybel.resources.definitions import get_bel_resource
-from .constants import MODULE_NAME, ONTOLOGIES, ONTOLOGY_NAMESPACES
+from .constants import MODULE_NAME, ONTOLOGY_NAMESPACES, ONTOLOGIES, DOID, MESHD, HP
 from .models import (
     Base, Biofluid, Biofunction, CellularLocation, Disease, Metabolite, MetaboliteBiofluid, MetaboliteBiofunction,
     MetaboliteCellularLocation, MetaboliteDiseaseReference, MetabolitePathway, MetaboliteProtein, MetaboliteReference,
@@ -159,11 +159,11 @@ class Manager(AbstractManager):
 
                                 v = disease_ontologies[ontology][disease_lower]
 
-                                if ontology == 'disease-ontology':
+                                if ontology == DOID:
                                     setattr(disease_instance, 'dion', v)
-                                elif ontology == 'human-phenotype-ontology':
+                                elif ontology == HP:
                                     setattr(disease_instance, 'hpo', v)
-                                else:
+                                elif ontology == MESHD:
                                     setattr(disease_instance, 'mesh_diseases', v)
 
                         diseases_dict[disease_instance.name] = disease_instance
@@ -214,7 +214,10 @@ class Manager(AbstractManager):
 
         # construct sets for disease ontologies for mapping hmdb diseases
         if map_dis:
-            disease_ontologies = ONTOLOGY_NAMESPACES
+            disease_ontologies = dict()
+
+            for ontology in ONTOLOGIES:
+                disease_ontologies[ontology] = self._disease_ontology_dict(ontology)
         else:
             disease_ontologies = None
 
@@ -498,3 +501,4 @@ class Manager(AbstractManager):
             metabolites=self.count_metabolites(),
             tissues=self.count_tissues()
         )
+
