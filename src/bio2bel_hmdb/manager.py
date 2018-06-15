@@ -64,12 +64,12 @@ class Manager(AbstractManager):
         for instance_element in element:
             instance_dict_key = instance_element.text
 
-            if instance_dict_key not in instance_dict:  # check if biofluid is already in table
+            if instance_dict_key not in instance_dict:  # check if instance is already in table
                 new_instance_dict = {column_name: instance_dict_key}
                 instance_dict[instance_dict_key] = table(**new_instance_dict)
                 self.session.add(instance_dict[instance_dict_key])
 
-            # create metabolite-biofluid relation object
+            # create metabolite-instance relation object
             new_meta_rel_dict = {"metabolite": metabolite_instance, column_name: instance_dict[instance_dict_key]}
             self.session.add(relation_table(**new_meta_rel_dict))
         return instance_dict
@@ -208,10 +208,6 @@ class Manager(AbstractManager):
         :param bool map_dis: Should diseases be mapped?
         """
 
-        # construct xml tree
-        tree = get_data(source)
-        root = tree.getroot()
-
         # construct sets for disease ontologies for mapping hmdb diseases
         if map_dis:
             disease_ontologies = dict()
@@ -220,6 +216,11 @@ class Manager(AbstractManager):
                 disease_ontologies[ontology] = self._disease_ontology_dict(ontology)
         else:
             disease_ontologies = None
+
+        # construct xml tree
+        tree = get_data(source)
+        root = tree.getroot()
+
 
         # dicts to check unique constraints for specific tables
         biofluids_dict = {}
@@ -231,6 +232,7 @@ class Manager(AbstractManager):
         biofunctions_dict = {}
         cellular_locations_dict = {}
 
+        # iterate through xml tree
         for metabolite in tqdm(root, desc='HMDB Metabolite'):
             # create metabolite dict used to feed in main metabolite table
             metabolite_instance = Metabolite()
@@ -262,22 +264,16 @@ class Manager(AbstractManager):
                     continue
 
                 elif tag == "ontology":
-                    for ontology_element in element:
-                        ontology_tag = self._get_tag(ontology_element.tag)
+                    continue
 
-                        if ontology_tag == "biofunctions":
-                            biofunctions_dict = self._populate_with_1_layer_elements(ontology_element,
-                                                                                     metabolite_instance,
-                                                                                     biofunctions_dict, Biofunction,
-                                                                                     MetaboliteBiofunction,
-                                                                                     "biofunction")
-                        if ontology_tag == "cellular_locations":
-                            cellular_locations_dict = self._populate_with_1_layer_elements(ontology_element,
-                                                                                           metabolite_instance,
-                                                                                           cellular_locations_dict,
-                                                                                           CellularLocation,
-                                                                                           MetaboliteCellularLocation,
-                                                                                           "cellular_location")
+
+                elif tag == "cellular_locations":
+                    cellular_locations_dict = self._populate_with_1_layer_elements(element,
+                                                                                   metabolite_instance,
+                                                                                   cellular_locations_dict,
+                                                                                   CellularLocation,
+                                                                                   MetaboliteCellularLocation,
+                                                                                   "cellular_location")
 
                 elif tag == "experimental_properties":  # will be delayed to later versions since not important for BEL
                     continue
@@ -288,7 +284,7 @@ class Manager(AbstractManager):
                 elif tag == "spectra":  # will not be processed since the corresponding database is down
                     continue
 
-                elif tag == "biofluid_locations":
+                elif tag == "biospecimen_locations":
                     biofluids_dict = self._populate_with_1_layer_elements(element, metabolite_instance, biofluids_dict,
                                                                           Biofluid, MetaboliteBiofluid, 'biofluid')
 
@@ -322,7 +318,9 @@ class Manager(AbstractManager):
                                                                          Protein, MetaboliteProtein, 'protein')
 
                 else:  # feed in main metabolite table
+
                     setattr(metabolite_instance, tag, element.text)
+
 
             self.session.add(metabolite_instance)
 
