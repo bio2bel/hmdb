@@ -318,7 +318,6 @@ class Manager(AbstractManager):
                                                                          Protein, MetaboliteProtein, 'protein')
 
                 else:  # feed in main metabolite table
-
                     setattr(metabolite_instance, tag, element.text)
 
 
