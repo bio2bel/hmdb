@@ -3,7 +3,7 @@
 """The Manager is a key component of HMDB. This class is used to create, populate and query the local HMDB version."""
 
 import logging
-from bio2bel.abstractmanager import AbstractManager
+from bio2bel import AbstractManager
 from tqdm import tqdm
 
 from pybel.resources.definitions import get_bel_resource
