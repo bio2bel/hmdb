@@ -11,14 +11,12 @@ import setuptools
 PACKAGES = setuptools.find_packages(where='src')
 META_PATH = os.path.join('src', 'bio2bel_hmdb', '__init__.py')
 INSTALL_REQUIRES = [
-    'pybel>=0.11.1',
-    'pybel_tools>=0.5.1',
-    'bio2bel>=0.0.9',
+    'pybel>=0.12.0',
+    'bio2bel>=0.1.0',
     'pandas',
     'click',
     'sqlalchemy',
     'requests',
-    'networkx==1.11',
     'tqdm',
 ]
 EXTRAS_REQUIRE = {

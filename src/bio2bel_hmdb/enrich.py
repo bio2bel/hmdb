@@ -48,7 +48,7 @@ This will result in a BEL graph where the diseases are linked to associated meta
 import logging
 
 from pybel.constants import *
-from pybel_tools import pipeline
+from pybel.struct import pipeline
 
 from .manager import Manager
 
