@@ -46,10 +46,14 @@ This will result in a BEL graph where the diseases are linked to associated meta
 """
 
 import logging
+from typing import Optional
 
-from pybel.constants import *
-from pybel_tools import pipeline
-
+from pybel import BELGraph
+from pybel.constants import (
+    ABUNDANCE, ANNOTATIONS, ASSOCIATION, CITATION, CITATION_REFERENCE, CITATION_TYPE, CITATION_TYPE_PUBMED, EVIDENCE,
+    FUNCTION, NAME, NAMESPACE, PATHOLOGY, PROTEIN, RELATION,
+)
+from pybel.struct.pipeline.decorators import in_place_transformation
 from .manager import Manager
 
 log = logging.getLogger(__name__)
@@ -72,19 +76,15 @@ def _check_namespaces(data, bel_function, bel_namespace):
 
 
 # enrich proteins and metabolites
-@pipeline.in_place_mutator
-def enrich_metabolites_proteins(graph, connection=None):
-    """Enriches a given BEL graph, which includes metabolites with proteins, that are associated to the metabolites.
+@in_place_transformation
+def enrich_metabolites_proteins(graph: BELGraph, manager: Optional[Manager] = None):
+    """Enrich a given BEL graph, which includes metabolites with proteins, that are associated to the metabolites."""
+    if manager is None:
+        manager = Manager()
 
-    :param pybel.BELGraph graph: A BEL graph
-    :param str connection: connection for the manager used to connect to a database
-    """
-
-    m = Manager.ensure(connection)
-
-    for node, data in graph.nodes(data=True):
-        if _check_namespaces(data, ABUNDANCE, 'HMDB'):
-            metabolite_protein_interactions = m.query_metabolite_associated_proteins(data[NAME])
+    for node in list(graph):
+        if _check_namespaces(node, ABUNDANCE, 'HMDB'):
+            metabolite_protein_interactions = manager.query_metabolite_associated_proteins(node[NAME])
         else:
             continue
 
@@ -109,20 +109,17 @@ def enrich_metabolites_proteins(graph, connection=None):
             })
 
 
-@pipeline.in_place_mutator
-def enrich_proteins_metabolites(graph, connection=None):
-    """Enriches a given BEL graph, which includes uniprot proteins with HMDB metabolites,
+@in_place_transformation
+def enrich_proteins_metabolites(graph: BELGraph, manager: Optional[Manager] = None):
+    """Enrich a given BEL graph, which includes uniprot proteins with HMDB metabolites,
     that are associated to the proteins.
-
-    :param pybel.BELGraph graph: A BEL graph
-    :param str connection: connection for the manager used to connect to a database
     """
+    if manager is None:
+        manager = Manager()
 
-    m = Manager.ensure(connection)
-
-    for node, data in graph.nodes(data=True):
-        if _check_namespaces(data, PROTEIN, 'UP'):
-            protein_metabolite_interactions = m.query_protein_associated_metabolites(data[NAME])
+    for node in list(graph):
+        if _check_namespaces(node, PROTEIN, 'UP'):
+            protein_metabolite_interactions = manager.query_protein_associated_metabolites(node[NAME])
         else:
             continue
 
@@ -149,24 +146,20 @@ def enrich_proteins_metabolites(graph, connection=None):
 
 
 # enrich diseases and metabolites
-@pipeline.in_place_mutator
-def enrich_metabolites_diseases(graph, connection=None):
-    """Enriches a given BEL graph, which includes metabolites with diseases, to which the metabolites are associated.
+@in_place_transformation
+def enrich_metabolites_diseases(graph: BELGraph, manager: Optional[Manager] = None):
+    """Enrich a given BEL graph, which includes metabolites with diseases, to which the metabolites are associated."""
+    if manager is None:
+        manager = Manager()
 
-    :param pybel.BELGraph graph: A BEL graph
-    :param str connection: connection for the manager used to connect to a database
-    """
-
-    m = Manager.ensure(connection)
-
-    for node, data in graph.nodes(data=True):
+    for data in list(graph):
         if _check_namespaces(data, ABUNDANCE, 'HMDB'):
-            metabolite_disease_interactions = m.query_metabolite_associated_diseases(data[NAME])
+            metabolite_disease_interactions = manager.query_metabolite_associated_diseases(data[NAME])
         else:
             continue
 
         if metabolite_disease_interactions is None:
-            log.warning("Unable to find node: %s", node)
+            log.warning("Unable to find node: %s", data)
             continue
 
         # add edges and collect all the references for this edge
@@ -188,7 +181,7 @@ def enrich_metabolites_diseases(graph, connection=None):
             # add disease node and construct edge
             disease_data = association.disease.serialize_to_bel()
             disease_tuple = graph.add_node_from_data(disease_data)
-            graph.add_edge(disease_tuple, node, attr_dict={
+            graph.add_edge(disease_tuple, data, attr_dict={
                 RELATION: ASSOCIATION,
                 EVIDENCE: None,
                 CITATION: {
@@ -202,24 +195,21 @@ def enrich_metabolites_diseases(graph, connection=None):
             })
 
 
-@pipeline.in_place_mutator
-def enrich_diseases_metabolites(graph, connection=None):
-    """Enriches a given BEL graph, which includes HMDB diseases with HMDB metabolites, which are associated to the diseases.
+@in_place_transformation
+def enrich_diseases_metabolites(graph: BELGraph, manager: Optional[Manager] = None):
+    """Enrich a given BEL graph, which includes HMDB diseases with HMDB metabolites, which are associated to the
+    diseases."""
+    if manager is None:
+        manager = Manager()
 
-    :param pybel.BELGraph graph: A BEL graph
-    :param str connection: connection for the manager used to connect to a database
-    """
-
-    m = Manager.ensure(connection)
-
-    for node, data in graph.nodes(data=True):
+    for data in list(graph):
         if _check_namespaces(data, PATHOLOGY, 'HMDB_D'):
-            disease_metabolite_interactions = m.query_disease_associated_metabolites(data[NAME])
+            disease_metabolite_interactions = manager.query_disease_associated_metabolites(data[NAME])
         else:
             continue
 
         if not disease_metabolite_interactions:
-            log.warning("Unable to find node: %s", node)
+            log.warning("Unable to find node: %s", data)
             continue
 
         # add edges and collect all the references for this edge
@@ -241,7 +231,7 @@ def enrich_diseases_metabolites(graph, connection=None):
             # add disease node and construct edge
             metabolite_data = association.metabolite.serialize_to_bel()
             metabolite_tuple = graph.add_node_from_data(metabolite_data)
-            graph.add_edge(metabolite_tuple, node, attr_dict={
+            graph.add_edge(metabolite_tuple, data, attr_dict={
                 RELATION: ASSOCIATION,
                 EVIDENCE: None,
                 CITATION: {

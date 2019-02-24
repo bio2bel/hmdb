@@ -3,17 +3,23 @@
 """The Manager is a key component of HMDB. This class is used to create, populate and query the local HMDB version."""
 
 import logging
+from typing import List, Mapping, Optional
+
 from bio2bel import AbstractManager
 from tqdm import tqdm
 
-from pybel.resources.definitions import get_bel_resource
-from .constants import MODULE_NAME, ONTOLOGY_NAMESPACES, ONTOLOGIES, DOID, MESHD, HP
+from bel_resources import get_bel_resource
+from .constants import DOID, HP, MESHD, MODULE_NAME, ONTOLOGIES, ONTOLOGY_NAMESPACES
 from .models import (
-    Base, Biofluid, Biofunction, CellularLocation, Disease, Metabolite, MetaboliteBiofluid, MetaboliteBiofunction,
-    MetaboliteCellularLocation, MetaboliteDiseaseReference, MetabolitePathway, MetaboliteProtein, MetaboliteReference,
+    Base, Biofluid, Biofunction, CellularLocation, Disease, Metabolite, MetaboliteBiofluid, MetaboliteCellularLocation,
+    MetaboliteDiseaseReference, MetabolitePathway, MetaboliteProtein, MetaboliteReference,
     MetaboliteSynonym, MetaboliteTissue, Pathway, Protein, Reference, SecondaryAccession, Tissue,
 )
 from .parser import get_data
+
+__all__ = [
+    'Manager',
+]
 
 log = logging.getLogger(__name__)
 
@@ -23,17 +29,10 @@ class Manager(AbstractManager):
 
     module_name = MODULE_NAME
     flask_admin_models = [Metabolite, Disease, Protein, Pathway, Biofluid]
+    _base = Base
 
-    @property
-    def _base(self):
-        """Returns the declarative base for HMDB"""
-        return Base
-
-    def is_populated(self):
-        """Check if the database is already populated.
-
-        :rtype: bool
-        """
+    def is_populated(self) -> bool:
+        """Check if the database is already populated."""
         return 0 < self.count_metabolites()
 
     @staticmethod
@@ -221,7 +220,6 @@ class Manager(AbstractManager):
         tree = get_data(source)
         root = tree.getroot()
 
-
         # dicts to check unique constraints for specific tables
         biofluids_dict = {}
         tissues_dict = {}
@@ -321,16 +319,14 @@ class Manager(AbstractManager):
 
                     setattr(metabolite_instance, tag, element.text)
 
-
             self.session.add(metabolite_instance)
 
         self.session.commit()
 
-    def get_metabolite_by_accession(self, hmdb_metabolite_accession):
+    def get_metabolite_by_accession(self, hmdb_metabolite_accession: str) -> Optional[Metabolite]:
         """Query the constructed HMDB database and extract a metabolite object.
 
-        :param str hmdb_metabolite_accession: HMDB metabolite identifier
-        :rtype: Optional[models.Metabolite]
+        :param hmdb_metabolite_accession: HMDB metabolite identifier
 
         Example:
 
@@ -340,11 +336,10 @@ class Manager(AbstractManager):
         """
         return self.session.query(Metabolite).filter(Metabolite.accession == hmdb_metabolite_accession).one_or_none()
 
-    def query_metabolite_associated_proteins(self, hmdb_metabolite_id):
+    def query_metabolite_associated_proteins(self, hmdb_metabolite_id: str) -> Optional[List[Protein]]:
         """Query the constructed HMDB database to get the metabolite associated protein relations for BEL enrichment
 
-        :param str hmdb_metabolite_id: HMDB metabolite identifier
-        :rtype: Optional[list[models.Protein]]
+        :param hmdb_metabolite_id: HMDB metabolite identifier
         """
         metabolite = self.get_metabolite_by_accession(hmdb_metabolite_id)
 
@@ -353,20 +348,18 @@ class Manager(AbstractManager):
 
         return metabolite.proteins
 
-    def query_metabolite_associated_diseases(self, hmdb_metabolite_id):
+    def query_metabolite_associated_diseases(self, hmdb_metabolite_id: str) -> List[Disease]:
         """Query the constructed HMDB database to get the metabolite associated disease relations for BEL enrichment
 
-        :param str hmdb_metabolite_id: HMDB metabolite identifier
-        :rtype: list
+        :param hmdb_metabolite_id: HMDB metabolite identifier
         """
         metabolite = self.get_metabolite_by_accession(hmdb_metabolite_id)
         return metabolite.diseases
 
-    def query_disease_associated_metabolites(self, disease_name):
+    def query_disease_associated_metabolites(self, disease_name: str) -> List[Metabolite]:
         """Query function that returns a list of metabolite-disease interactions, which are associated to a disease.
 
         :param disease_name: HMDB disease name
-        :rtype: list
         """
         return self.session.query(Disease).filter(Disease.name == disease_name).one_or_none().metabolites
 
@@ -409,87 +402,53 @@ class Manager(AbstractManager):
         """
         return self.session.query(interaction_table).all()
 
-    def get_metabolite_disease_interactions(self):
-        """
-        :rtype: list[MetaboliteDiseaseReference]
-        """
+    def get_metabolite_disease_interactions(self) -> List[MetaboliteDiseaseReference]:
         return self._get_models(MetaboliteDiseaseReference)
 
-    def get_metabolite_protein_interactions(self):
-        """
-        :rtype: list[MetaboliteProtein]
-        """
+    def get_metabolite_protein_interactions(self) -> List[MetaboliteProtein]:
         return self._get_models(MetaboliteProtein)
 
-    def count_diseases(self):
-        """Counts the number of diseases in the database
-
-        :rtype: int
-        """
+    def count_diseases(self) -> int:
+        """Count the number of diseases in the database."""
         return self.session.query(Disease).count()
 
     def count_cellular_locations(self):
-        """Counts the number of cellular locations in the database
-
-        :rtype: int
-        """
+        """Count the number of cellular locations in the database."""
         return self.session.query(CellularLocation).count()
 
     def count_references(self):
-        """Counts the number of literature references in the database
-
-        :rtype: int
-        """
+        """Count the number of literature references in the database."""
         return self.session.query(Reference).count()
 
-    def get_reference_by_pubmed_id(self, pubmed_id):
-        """Gets a reference by its PubMed identifier if it exists
+    def get_reference_by_pubmed_id(self, pubmed_id: str) -> Optional[Reference]:
+        """Get a reference by its PubMed identifier if it exists.
 
-        :param str pubmed_id: The PubMed identifier to search
-        :rtype: Optional[Reference]
+        :param pubmed_id: The PubMed identifier to search
         """
         return self.session.query(Reference).filter(Reference.pubmed_id == pubmed_id).one_or_none()
 
-    def count_proteins(self):
-        """Counts the number of proteins in the database
-
-        :rtype: int
-        """
+    def count_proteins(self) -> int:
+        """Count the number of proteins in the database."""
         return self.session.query(Protein).count()
 
-    def count_biofunctions(self):
-        """Counts the number of biofunctions in the database
-
-        :rtype: int
-        """
+    def count_biofunctions(self) -> int:
+        """Count the number of biofunctions in the database."""
         return self.session.query(Biofunction).count()
 
-    def count_metabolites(self):
-        """Counts the number of metabolites in the database
-
-        :rtype: int
-        """
+    def count_metabolites(self) -> int:
+        """Count the number of metabolites in the database."""
         return self._count_model(Metabolite)
 
-    def count_pathways(self):
-        """Counts the number of pathways in the database
-
-        :rtype: int
-        """
+    def count_pathways(self) -> int:
+        """Count the number of pathways in the database."""
         return self._count_model(Pathway)
 
-    def count_tissues(self):
-        """Counts the number of tissues in the database
-
-        :rtype: int
-        """
+    def count_tissues(self) -> int:
+        """Count the number of tissues in the database."""
         return self._count_model(Tissue)
 
-    def summarize(self):
-        """Summarizes the contents of the database in a dictionary
-
-        :rtype: dict[str,int]
-        """
+    def summarize(self) -> Mapping[str, int]:
+        """Summarize the contents of the database in a dictionary."""
         return dict(
             proteins=self.count_proteins(),
             diseases=self.count_diseases(),
@@ -497,6 +456,5 @@ class Manager(AbstractManager):
             references=self.count_references(),
             cellular_locations=self.count_cellular_locations(),
             metabolites=self.count_metabolites(),
-            tissues=self.count_tissues()
+            tissues=self.count_tissues(),
         )
-

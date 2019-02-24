@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from pybel.constants import NAMESPACE_DOMAIN_CHEMICAL, NAMESPACE_DOMAIN_OTHER
 from pybel.resources.definitions import get_bel_resource, write_namespace
 
+from pybel.constants import NAMESPACE_DOMAIN_CHEMICAL, NAMESPACE_DOMAIN_OTHER
 from .constants import ONTOLOGY_NAMESPACES
 from .manager import Manager
 

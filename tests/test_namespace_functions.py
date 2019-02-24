@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from bio2bel_hmdb.constants import DOID, HP
 from tests.constants import DatabaseMixin
 
 diseases = ['Cirrhosis', 'Lung Cancer', 'Schizophrenia']

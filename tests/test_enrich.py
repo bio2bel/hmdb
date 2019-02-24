@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
 
-from pybel import BELGraph
-
 from bio2bel_hmdb.enrich import *
+from pybel import BELGraph
+from pybel.dsl import Abundance, Pathology, Protein
 from tests.constants import DatabaseMixin
 
-hmdb_tuple1 = ABUNDANCE, 'HMDB', 'HMDB00008'
-protein_tuple = PROTEIN, 'UP', 'P50440'
+hmdb_tuple1 = Abundance('HMDB', 'HMDB00008')
+protein_tuple = Protein('UP', 'P50440')
 
 # test enriching with tissues
-hmdb_tuple2 = ABUNDANCE, 'HMDB', 'HMDB00064'
-disease_tuple = PATHOLOGY, 'HMDB_D', 'Lung Cancer'
+hmdb_tuple2 = Abundance('HMDB', 'HMDB00064')
+disease_tuple = Pathology('HMDB_D', 'Lung Cancer')
 
 
 class TestEnrich(DatabaseMixin):
     def test_enrich_metabolites_proteins(self):
         g = BELGraph()
-        g.add_simple_node(*hmdb_tuple1)
+        g.add_node_from_data(hmdb_tuple1)
 
         self.assertEqual(1, g.number_of_nodes())
         self.assertEqual(0, g.number_of_edges())
@@ -28,7 +28,7 @@ class TestEnrich(DatabaseMixin):
 
     def test_enrich_metabolites_diseases(self):
         g = BELGraph()
-        g.add_simple_node(*hmdb_tuple2)
+        g.add_node_from_data(hmdb_tuple2)
 
         self.assertEqual(1, g.number_of_nodes())
         self.assertEqual(0, g.number_of_edges())
@@ -40,7 +40,7 @@ class TestEnrich(DatabaseMixin):
 
     def test_enrich_diseases_metabolites(self):
         g = BELGraph()
-        g.add_simple_node(*disease_tuple)
+        g.add_node_from_data(disease_tuple)
 
         self.assertEqual(1, g.number_of_nodes())
         self.assertEqual(0, g.number_of_edges())
@@ -52,7 +52,7 @@ class TestEnrich(DatabaseMixin):
 
     def test_enrich_proteins_metabolites(self):
         g = BELGraph()
-        g.add_simple_node(*protein_tuple)
+        g.add_node_from_data(protein_tuple)
 
         self.assertEqual(1, g.number_of_nodes())
         self.assertEqual(0, g.number_of_edges())
