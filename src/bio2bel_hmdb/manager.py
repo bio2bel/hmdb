@@ -5,10 +5,10 @@
 import logging
 from typing import List, Mapping, Optional
 
-from tqdm import tqdm
-
 from bel_resources import get_bel_resource
 from bio2bel import AbstractManager
+from tqdm import tqdm
+
 from .constants import DOID, HP, MESHD, MODULE_NAME, ONTOLOGIES, ONTOLOGY_NAMESPACES
 from .models import (
     Base, Biofluid, Biofunction, CellularLocation, Disease, Metabolite, MetaboliteBiofluid, MetaboliteCellularLocation,
@@ -211,31 +211,26 @@ class Manager(AbstractManager):
         return references_dict, diseases_dict
 
     @staticmethod
-    def _disease_ontology_dict(ontology):
-        """Creates dictionaries from the disease ontologies used for mapping HMDB disease names to those ontologies.
-
-        :rtype: dict
-        """
+    def _disease_ontology_dict(ontology: str) -> Mapping[str, str]:
+        """Create a dictionary from the disease ontologies used for mapping HMDB disease names to those ontologies."""
         doid_path = ONTOLOGY_NAMESPACES[ontology]
         doid_ns = get_bel_resource(doid_path)
         return {value.lower(): value for value in doid_ns['Values']}
 
-    def populate(self, source=None, map_dis=True):
-        """Populates the database with the HMDB data
+    def populate(self, source: Optional[str] = None, map_dis: bool = True, group_size: int = 500_000):
+        """Populate the database with the HMDB data.
 
-        :param Optional[str] source: Path to an .xml file. If None the whole HMDB will be downloaded and used for
-         population.
-        :param bool map_dis: Should diseases be mapped?
+        :param source: Path to an .xml file. If None the whole HMDB will be downloaded and used for population.
+        :param map_dis: Should diseases be mapped?
         """
-
         # construct sets for disease ontologies for mapping hmdb diseases
-        if map_dis:
-            disease_ontologies = dict()
-
-            for ontology in ONTOLOGIES:
-                disease_ontologies[ontology] = self._disease_ontology_dict(ontology)
-        else:
+        if not map_dis:
             disease_ontologies = None
+        else:
+            disease_ontologies = {
+                ontology: self._disease_ontology_dict(ontology)
+                for ontology in ONTOLOGIES
+            }
 
         # construct xml tree
         tree = get_data(source)
@@ -248,39 +243,44 @@ class Manager(AbstractManager):
         proteins_dict = {}
         references_dict = {}
         diseases_dict = {}
-        biofunctions_dict = {}
+        # biofunctions_dict = {}
         cellular_locations_dict = {}
 
         # iterate through xml tree
-        for metabolite in tqdm(root, desc='HMDB Metabolite'):
+        for i, elements in enumerate(tqdm(root, desc='HMDB Metabolite')):
             # create metabolite dict used to feed in main metabolite table
-            metabolite_instance = Metabolite()
+            metabolite = Metabolite()
 
-            for element in metabolite:
+            for element in elements:
                 # delete namespace prefix
                 tag = self._get_tag(element.tag)
 
                 # handle wikipedia typo in xml tags
                 if tag == "wikipidia":
-                    tag = "wikipedia"
-                elif tag == "wikipedia":
                     log.warning("HMDB fixed the 'wikipidia' tag to 'wikipedia'. Change code.")
+                    tag = "wikipedia"
 
                 if tag == "secondary_accessions":
-                    for secondary_accession_element in element:
-                        new_secondary_accession = SecondaryAccession(
-                            metabolite=metabolite_instance,
+                    self.session.add_all([
+                        SecondaryAccession(
+                            metabolite=metabolite,
                             secondary_accession=secondary_accession_element.text
                         )
-                        self.session.add(new_secondary_accession)
+                        for secondary_accession_element in element
+                    ])
 
                 elif tag == "synonyms":
-                    for synonym_element in element:
-                        new_synonym = MetaboliteSynonym(
-                            metabolite=metabolite_instance,
-                            synonym=synonym_element.text,
+                    synonyms = {
+                        synonym_element.text
+                        for synonym_element in element
+                    }
+                    self.session.add_all([
+                        MetaboliteSynonym(
+                            metabolite=metabolite,
+                            synonym=synonym,
                         )
-                        self.session.add(new_synonym)
+                        for synonym in synonyms
+                    ])
 
                 elif tag == "taxonomy":  # will be delayed to later versions since not important for BEL
                     continue
@@ -291,7 +291,7 @@ class Manager(AbstractManager):
                 elif tag == "cellular_locations":
                     cellular_locations_dict = self._populate_with_1_layer_elements(
                         element,
-                        metabolite_instance,
+                        metabolite,
                         cellular_locations_dict,
                         CellularLocation,
                         MetaboliteCellularLocation,
@@ -310,7 +310,7 @@ class Manager(AbstractManager):
                 elif tag == "biospecimen_locations":
                     biofluids_dict = self._populate_with_1_layer_elements(
                         element,
-                        metabolite_instance,
+                        metabolite,
                         biofluids_dict,
                         Biofluid,
                         MetaboliteBiofluid,
@@ -320,7 +320,7 @@ class Manager(AbstractManager):
                 elif tag == "tissue_locations":
                     tissues_dict = self._populate_with_1_layer_elements(
                         element,
-                        metabolite_instance,
+                        metabolite,
                         tissues_dict,
                         Tissue,
                         MetaboliteTissue,
@@ -330,7 +330,7 @@ class Manager(AbstractManager):
                 elif tag == "pathways":
                     pathways_dict = self._populate_with_2_layer_elements(
                         element,
-                        metabolite_instance,
+                        metabolite,
                         pathways_dict,
                         Pathway,
                         MetabolitePathway,
@@ -339,6 +339,7 @@ class Manager(AbstractManager):
 
                 elif tag == "normal_concentrations":  # will be delayed to later versions since not important for BEL
                     continue
+
                 elif tag == "abnormal_concentrations":  # will be delayed to later versions since not important for BEL
                     continue
 
@@ -347,7 +348,7 @@ class Manager(AbstractManager):
                         element,
                         references_dict,
                         diseases_dict,
-                        metabolite_instance,
+                        metabolite,
                         disease_ontologies,
                         map_dis=map_dis,
                     )
@@ -355,7 +356,7 @@ class Manager(AbstractManager):
                 elif tag == "general_references":
                     references_dict = self._populate_with_2_layer_elements(
                         element,
-                        metabolite_instance,
+                        metabolite,
                         references_dict,
                         Reference,
                         MetaboliteReference,
@@ -366,7 +367,7 @@ class Manager(AbstractManager):
                 elif tag == "protein_associations":
                     proteins_dict = self._populate_with_2_layer_elements(
                         element,
-                        metabolite_instance,
+                        metabolite,
                         proteins_dict,
                         Protein,
                         MetaboliteProtein,
@@ -374,9 +375,13 @@ class Manager(AbstractManager):
                     )
 
                 else:  # feed in main metabolite table
-                    setattr(metabolite_instance, tag, element.text)
+                    setattr(metabolite, tag, element.text)
 
-            self.session.add(metabolite_instance)
+            self.session.add(metabolite)
+
+            if (i + 1) % group_size:
+                log.warning('committing')
+                self.session.commit()
 
         self.session.commit()
 
