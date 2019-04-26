@@ -49,15 +49,15 @@ class Metabolite(Base):
     update_date = Column(String(255), nullable=False, doc="Date when the entry was last updated")
     accession = Column(String(255), nullable=False, unique=True, doc="Accession ID for the metabolite")
     name = Column(String(255), nullable=True, doc="Name of the metabolite")
-    description = Column(String(255), nullable=True, doc="Description including some information about the metabolite")
+    description = Column(Text, nullable=True, doc="Description including some information about the metabolite")
     chemical_formula = Column(String(255), nullable=False, doc="Chemical formula of the metabolite")
     average_molecular_weight = Column(Float, nullable=True, doc="Average molecular weight of the metabolite")
     monisotopic_molecular_weight = Column(Float, nullable=True, doc="Monisotopic weight of the molecule")
-    iupac_name = Column(Text, nullable=False, doc="IUPAC name of the metabolite")
+    iupac_name = Column(Text, nullable=True, doc="IUPAC name of the metabolite")
     traditional_iupac = Column(Text, nullable=True, doc="")
     trivial = Column(String(255), nullable=True, doc="Trivial name of the metabolite")
     cas_registry_number = Column(String(255), nullable=True, doc="Cas registry number of the metabolite")
-    smiles = Column(String(255), nullable=True, doc="Smiles representation of the metabolite")
+    smiles = Column(Text, nullable=True, doc="Smiles representation of the metabolite")
     inchi = Column(Text, nullable=True, doc="InChi of the metabolite")
     inchikey = Column(String(255), nullable=True, doc="InCHI key of the metabolite")
     state = Column(String(255), nullable=True, doc="Aggregate state of the metabolite")
@@ -80,7 +80,7 @@ class Metabolite(Base):
     pubchem_compound_id = Column(String(255), nullable=True, doc="PubChem compound ID of the metabolite")
     het_id = Column(String(255), nullable=True, doc="Het ID of the metabolite")
     chebi_id = Column(String(255), nullable=True, doc="ChEBI identifier of the metabolite")
-    synthesis_reference = Column(String(255), nullable=True, doc="Synthesis reference citation of the metabolite")
+    synthesis_reference = Column(Text, nullable=True, doc="Synthesis reference citation of the metabolite")
 
     def __repr__(self):
         return f'<Metabolite hmdb:{self.accession} ! {self.name}>'
