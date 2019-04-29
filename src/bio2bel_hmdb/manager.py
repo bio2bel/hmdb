@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 
 
 class Manager(AbstractManager):
-    """Managers handle the database construction, population and querying."""
+    """Metabolite-proteins and metabolite-disease associations."""
 
     module_name = MODULE_NAME
     flask_admin_models = [Metabolite, Disease, Protein, Pathway, Biofluid]
